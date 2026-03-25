@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <nav>
+        <ul class="sidebar">
+            <li><a href="/">Home</a></li>
+            <li><a href="/research/home" target="_blank">learning</a></li>
+        </ul>
+    </nav>
+
+    <div class="grid-container">
+        {% block body %}{% endblock %}
+    </div>
+
+    <script src="{{ url_for('static', filename='js_files/func_helper.js') }}"></script>
+    <script src="{{ url_for('static', filename='js_files/research.js') }}"></script>
+    <script src="{{ url_for('static', filename='js_files/chat.js') }}"></script>
+    <script src="{{ url_for('static', filename='js_files/ingestion.js')}}"></script>
+    <script src="{{ url_for('static', filename='js_files/retieval.js')}}"></script>
+
+    
+</body>
+</html>
