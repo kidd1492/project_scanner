@@ -1,14 +1,53 @@
-
-function loadExistingProject() {
+// -------------------------
+// Load existing project on page load
+// -------------------------
+window.onload = () => {
     fetch("/project/load")
         .then(r => r.json())
         .then(data => {
             if (data.exists === false) {
-                document.getElementById("summary-box").innerHTML =
-                    "<p>No project loaded…</p>";
+                document.getElementById("analysis-box").innerHTML =
+                    "<p>No project loaded. Enter a path and scan.</p>";
                 return;
             }
-            displayProjectSummary(data);
+            renderProjectSummary(data);
+        });
+};
+
+
+// -------------------------
+// Render Project Summary
+// -------------------------
+function renderProjectSummary(project) {
+    const box = document.getElementById("summary-box");
+
+    box.innerHTML = `
+        <h3>${project.project_name}</h3>
+        <p><strong>Total Files:</strong> ${project.total_files}</p>
+
+        <h4>File Types</h4>
+        <ul>
+            ${project.file_types.map(ft => `
+                <li>${ft.type}: ${ft.count}</li>
+            `).join("")}
+        </ul>
+    `;
+}
+
+
+// -------------------------
+// Load analysis JSON (html, js, api, classes, functions)
+// -------------------------
+function loadAnalysis(type) {
+    fetch(`/static/data/${type}.json`)
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById("analysis-box");
+
+            box.innerHTML = `
+                <h3>${type.toUpperCase()}</h3>
+                <pre>${JSON.stringify(data, null, 4)}</pre>
+            `;
         });
 }
 
@@ -17,61 +56,30 @@ function loadExistingProject() {
 // Scan a new project
 // -------------------------
 function scanProject() {
-    const term = document.getElementById("project-path").value;
+    const path = document.getElementById("project-path").value;
 
-    if (!term) {
+    if (!path) {
         alert("Please enter a project path.");
         return;
     }
 
-    fetch(`/project/${encodeURIComponent(term)}`)
-        .then(r => r.json())
-        .then(data => displayProjectSummary(data));
-}
-
-
-// -------------------------
-// Display project summary
-// -------------------------
-function displayProjectSummary(data) {
-    const box = document.getElementById("summary-box");
-
-    box.innerHTML = `
-        <h3>Project: ${data.project_name}</h3>
-        <p><strong>Total Files:</strong> ${data.total_files}</p>
-
-        <h4>File Types</h4>
-        <ul>
-            ${data.file_types.map(ft => `
-                <li onclick="loadFileList('${ft.type}')">
-                    ${ft.type}: ${ft.count}
-                </li>
-            `).join("")}
-        </ul>
-    `;
-}
-
-
-// -------------------------
-// Load files for a file type
-// -------------------------
-function loadFileList(fileType) {
-    fetch(`/project/files/${fileType}`)
+    fetch(`/project/${encodeURIComponent(path)}`)
         .then(r => r.json())
         .then(data => {
-            const box = document.getElementById("file-box");
-
-            if (data.exists === false) {
-                box.innerHTML = "<p>No project loaded…</p>";
-                return;
-            }
-
-            box.innerHTML = `
-                <h3>Files of type: ${fileType}</h3>
-                <ul>
-                    ${data.files.map(f => `<li>${f}</li>`).join("")}
-                </ul>
-            `;
+            renderProjectSummary(data);
+            alert("Project scanned successfully.");
         });
 }
 
+
+// -------------------------
+// Rescan project
+// -------------------------
+function rescanProject() {
+    const path = prompt("Enter project path to rescan:");
+    if (!path) return;
+
+    fetch(`/project/${encodeURIComponent(path)}`)
+        .then(r => r.json())
+        .then(() => window.location.reload());
+}

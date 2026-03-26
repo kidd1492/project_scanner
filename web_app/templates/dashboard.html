@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+<div class="left-column">
+    <h2>Project Summary</h2>
+    <div class="topic-overview">
+        <p><strong>Name:</strong> {{ project.project_name }}</p>
+        <p><strong>Total Files:</strong> {{ project.total_files }}</p>
+
+        <h3>File Types</h3>
+        <ul>
+            {% for ft in project.file_types %}
+                <li>{{ ft.type }}: {{ ft.count }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="middle-column">
+    <h2>Analysis</h2>
+
+    <div class="analysis-grid">
+        <div class="analysis-card" onclick="loadAnalysis('html')">HTML Triggers</div>
+        <div class="analysis-card" onclick="loadAnalysis('js')">JS Functions</div>
+        <div class="analysis-card" onclick="loadAnalysis('api')">API Routes</div>
+        <div class="analysis-card" onclick="loadAnalysis('classes')">Service Classes</div>
+        <div class="analysis-card" onclick="loadAnalysis('functions')">Core Functions</div>
+    </div>
+
+    <div id="analysis-box" class="doc-viewer"></div>
+</div>
+
+<div class="right-column">
+    <h2>Tools</h2>
+
+    <div class="topic-overview">
+        <button onclick="window.location='/template-maker'">Template Maker</button>
+        <button onclick="window.location='/diagram'">Mermaid Diagram Generator</button>
+        <button onclick="rescanProject()">Rescan Project</button>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js_files/dashboard.js') }}"></script>
+
+{% endblock %}

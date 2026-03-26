@@ -8,17 +8,21 @@ import json
 project_bp = Blueprint("project", __name__)
 
 PROJECT_JSON = "data/project.json"
+DATA_DIR = "data"
 
 
 @project_bp.route("/")
 def index():
-    """Load the main UI page."""
-    return render_template("index.html")
+    if os.path.exists(PROJECT_JSON):
+        with open(PROJECT_JSON, "r", encoding="utf-8") as f:
+            project = json.load(f)
+        return render_template("dashboard.html", project=project)
+
+    return render_template("dashboard_empty.html")
 
 
 @project_bp.route("/project/load")
 def load_project():
-    """Load project.json if it exists."""
     if os.path.exists(PROJECT_JSON):
         with open(PROJECT_JSON, "r", encoding="utf-8") as f:
             return jsonify(json.load(f))
@@ -27,16 +31,15 @@ def load_project():
 
 @project_bp.route("/project/<path:term>")
 def scan_project(term):
-    """Scan a new project and save project.json."""
-    analyze_project(term)  # builds and saves JSON
+    analyze_project(term)
     generate_json_reports(term)
+
     with open(PROJECT_JSON, "r", encoding="utf-8") as f:
         return jsonify(json.load(f))
 
 
 @project_bp.route("/project/files/<file_type>")
 def load_files(file_type):
-    """Return only the files for a specific file type."""
     if not os.path.exists(PROJECT_JSON):
         return jsonify({"exists": False})
 
@@ -48,3 +51,14 @@ def load_files(file_type):
             return jsonify({"exists": True, "files": ft["files"]})
 
     return jsonify({"exists": True, "files": []})
+
+
+@project_bp.route("/analysis/<analysis_type>")
+def load_analysis(analysis_type):
+    path = os.path.join(DATA_DIR, f"{analysis_type}.json")
+
+    if not os.path.exists(path):
+        return jsonify({"error": "Not found"}), 404
+
+    with open(path, "r", encoding="utf-8") as f:
+        return jsonify(json.load(f))

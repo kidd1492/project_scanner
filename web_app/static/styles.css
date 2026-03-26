@@ -24,7 +24,7 @@
 
 
 h2, h3 {
-    color: #2b2a2a;
+    color: #e7e5e5;
 }
 
 /* Background */
@@ -32,7 +32,7 @@ body {
     background: linear-gradient(180deg, #000, #918b8c, #000);
     font-family: Arial, sans-serif;
     line-height: 1.25;
-    color: #222;
+    color: #7a7979;
     margin: 0;
 }
 
