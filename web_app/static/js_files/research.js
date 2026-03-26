@@ -39,13 +39,12 @@ function renderProjectSummary(project) {
 // Load analysis JSON (html, js, api, classes, functions)
 // -------------------------
 function loadAnalysis(type) {
-    fetch(`/static/data/${type}.json`)
+    fetch(`/analysis/${type}`)
         .then(r => r.json())
         .then(data => {
             const box = document.getElementById("analysis-box");
-
             box.innerHTML = `
-                <h3>${type.toUpperCase()}</h3>
+                <h3>${data.length}  ${type.toUpperCase()}</h3>
                 <pre>${JSON.stringify(data, null, 4)}</pre>
             `;
         });

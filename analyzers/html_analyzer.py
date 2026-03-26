@@ -14,7 +14,7 @@ def analyze_files(file_list):
                 results.append({
                     "event": event,
                     "function": func,
-                    "file": file
+                    "file": file,
                 })
 
     return results
