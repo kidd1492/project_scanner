@@ -1,6 +1,6 @@
 # api/project_routes.py
 from flask import Blueprint, render_template, jsonify
-from analyzers.project_analyzer import analyze_project
+from services.project_info_services import get_project_info
 from analyzers.base_analyzer import generate_json_reports
 import os
 import json
@@ -9,6 +9,7 @@ project_bp = Blueprint("project", __name__)
 
 PROJECT_JSON = "data/project.json"
 DATA_DIR = "data"
+
 
 
 @project_bp.route("/")
@@ -21,7 +22,7 @@ def index():
     return render_template("dashboard_empty.html")
 
 
-@project_bp.route("/project/load")
+@project_bp.route("/project/load") 
 def load_project():
     if os.path.exists(PROJECT_JSON):
         with open(PROJECT_JSON, "r", encoding="utf-8") as f:
@@ -31,7 +32,7 @@ def load_project():
 
 @project_bp.route("/project/<path:term>")
 def scan_project(term):
-    analyze_project(term)
+    get_project_info(term)
     generate_json_reports(term)
 
     with open(PROJECT_JSON, "r", encoding="utf-8") as f:

@@ -1,38 +1,20 @@
 {% extends "layout.html" %}
-
-{% block title %}Learning{% endblock %}
+{% block title %}Load Project{% endblock %}
 
 {% block body %}
+<div class="grid-container">
+    <div class="left-column"></div>
 
-<div class="left-column">
-    <h2>Project Summary</h2>
-    <div id="summary-box" class="topic-overview"></div>
-
-    <h2>Files</h2>
-    <div id="file-box" class="topic-overview"></div>
-</div>
-
-<div class="middle-column">
-
-    <div class="sidebar">
-        <input id="project-path" type="text" placeholder="Enter path to project…" class="wiki-input">
-        <button onclick="scanProject()" class="wiki-btn">Scan Project</button>
+    <div class="middle-column">
+        <div class="hero">
+            <h2>No Project Loaded</h2>
+            <input id="project-path" type="text" placeholder="Enter project path…" class="wiki-input">
+            <button onclick="scanProject()" class="wiki-btn">Scan Project</button>
+        </div>
     </div>
 
-    <h2>Analysis Output</h2>
-    <div id="analysis-box" class="doc-viewer"></div>
-
-</div>
-
-<div class="right-column">
-    <h2>Call Chain</h2>
-    <div id="callchain-box" class="topic-overview"></div>
+    <div class="right-column"></div>
 </div>
 
 <script src="{{ url_for('static', filename='js_files/research.js') }}"></script>
-
-<script>
-    window.onload = loadExistingProject;
-</script>
-
 {% endblock %}

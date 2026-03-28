@@ -22,7 +22,7 @@ function renderProjectSummary(project) {
     const box = document.getElementById("summary-box");
 
     box.innerHTML = `
-        <h3>${project.project_name}</h3>
+        <h1>${project.project_name}</h1>
         <p><strong>Total Files:</strong> ${project.total_files}</p>
 
         <h4>File Types</h4>
@@ -42,13 +42,14 @@ function loadAnalysis(type) {
     fetch(`/analysis/${type}`)
         .then(r => r.json())
         .then(data => {
-            const box = document.getElementById("analysis-box");
+            const box = document.getElementById(type);
             box.innerHTML = `
-                <h3>${data.length}  ${type.toUpperCase()}</h3>
+                <h3>${data.length} ${type.toUpperCase()}</h3>
                 <pre>${JSON.stringify(data, null, 4)}</pre>
             `;
         });
 }
+
 
 
 // -------------------------
@@ -81,4 +82,16 @@ function rescanProject() {
     fetch(`/project/${encodeURIComponent(path)}`)
         .then(r => r.json())
         .then(() => window.location.reload());
+}
+
+
+function showTab(type) {
+    document.querySelectorAll('.analysis-window').forEach(div => {
+        div.style.display = 'none';
+    });
+
+    document.getElementById(type).style.display = 'block';
+
+    // Load data only when tab is opened
+    loadAnalysis(type);
 }

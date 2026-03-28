@@ -1,47 +1,19 @@
-/* Global Theme */
-:root {
-    --accent: #b3203b;          /* Deep crimson */
-    --accent-light: #d94a63;    /* Hover crimson */
-
-    /* Light theme neutrals */
-    --panel-bg: #ffffff;        /* White panels */
-    --panel-border: #c8c8c8;    /* Soft light border */
-
-    /* Chat bubbles */
-    --chat-user: #ffffff;
-    --chat-ai: #f7f7f7;
-
-    /* Text */
-    --text-light: #000000;      /* All text black */
-    --text-muted: #000000;
-
-    --hover-accent: #b3203b;
-}
-
-/* Meta text */
-.message-meta {
-    font-size: 0.80rem;
-    color: var(--text-muted);
-    margin-top: 4px;
-}
-
-h2, h3 {
-    color: #000000;
-}
-
 /* Background */
 body {
-    background: #e5e5e5;   /* Light grey background */
+    width: 100%;
+    background: linear-gradient(120deg, #007bff, #d0314c);
     font-family: Arial, sans-serif;
     line-height: 1.25;
     color: #000000;        /* All text black */
+    font-size: large;
     margin: 0;
 }
+
 
 /* Layout grid */
 .grid-container {
     display: grid;
-    grid-template-columns: 25% 50% 25%;
+    grid-template-columns: 15% 50% 35%;
     height: calc(100vh - 50px);
     gap: 10px;
     padding: 10px;
@@ -51,7 +23,7 @@ body {
 .left-column,
 .middle-column,
 .right-column {
-    background: var(--panel-bg);
+    background:#faf9f9;
     padding: 15px;
     border: 1px solid var(--panel-border);
     border-radius: 6px;
@@ -59,30 +31,6 @@ body {
     box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
 
-/* Lists */
-.doc-list,
-.history-list {
-    list-style: none;
-    padding: 0;
-}
-
-.doc-list li,
-.history-list li {
-    padding: 6px 0;
-    border-bottom: 1px solid #ddd;
-    color: #000000;
-}
-
-/* Chat window */
-.chat-window {
-    background: #ffffff;
-    border: 1px solid var(--panel-border);
-    height: 60vh;
-    padding: 10px;
-    border-radius: 6px;
-    overflow-y: auto;
-    color: #000000;
-}
 
 /* Document viewer */
 .doc-viewer {
@@ -114,7 +62,7 @@ body {
 }
 
 /* Sidebar */
-.sidebar {
+.nav {
     list-style: none;
     padding: 10px;
     background: #ffffff;
@@ -125,13 +73,13 @@ body {
     border-bottom: 1px solid var(--panel-border);
 }
 
-.sidebar a {
+.nav a {
     color: #000000;
     text-decoration: none;
     transition: 0.2s ease;
 }
 
-.sidebar a:hover {
+.nav a:hover {
     color: var(--hover-accent);
 }
 
@@ -183,6 +131,7 @@ body {
 
 /* Wiki search */
 .wiki-input {
+    height: 35px;
     width: 90%;
     padding: 8px;
     margin-bottom: 10px;
@@ -190,8 +139,10 @@ body {
 }
 
 .wiki-btn {
+    width: 150px;
+    height: auto;
     background-color: #ffffff;
-    padding: 8px 12px;
+    padding: 18px 12px;
     margin-bottom: 15px;
     border-radius: 6px;
     cursor: pointer;
@@ -233,4 +184,20 @@ body {
 .video-card img.thumb {
     width: 100%;
     border-radius: 4px;
+}
+
+
+.analysis-tabs button {
+    margin-right: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.analysis-window {
+    display: none;
+    background: #fff;
+    padding: 12px;
+    border-radius: 6px;
+    margin-top: 12px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }

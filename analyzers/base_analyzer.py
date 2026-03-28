@@ -1,5 +1,5 @@
-import os
-import json
+import os, json
+from analyzers.helpers import analyze_project
 from analyzers import html_analyzer, python_analyzer, js_analyzer
 
 file_type_analyzer_map = {
@@ -10,7 +10,7 @@ file_type_analyzer_map = {
 
 def generate_json_reports(directory: str, output_dir="data"):
     os.makedirs(output_dir, exist_ok=True)
-    categorized = gather_categorized_files(directory)
+    categorized = analyze_project(directory)
 
     for file_type, file_list in categorized.items():
         analyzer = file_type_analyzer_map.get(file_type)
@@ -43,21 +43,3 @@ def save_python_outputs(results, output_dir):
     with open(functions_path, "w", encoding="utf-8") as f:
         json.dump(results["functions"], f, indent=4)
 
-
-def gather_categorized_files(directory):
-    allowed_extensions = [".py", ".html", ".js"]
-    ignored_directories = [".git", "env", "venv"]
-
-    categorized = {}
-
-    for root, dirs, files in os.walk(directory):
-        dirs[:] = [d for d in dirs if d not in ignored_directories]
-
-        for file in files:
-            if any(file.endswith(ext) for ext in allowed_extensions):
-                ext = file.split('.')[-1]
-                categorized.setdefault(ext, []).append(
-                    os.path.join(root, file)
-                )
-
-    return categorized
