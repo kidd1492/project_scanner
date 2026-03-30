@@ -7,12 +7,16 @@
         <h2>Project Summary</h2>
         <div class="topic-overview">
             <p><strong>Name:</strong> {{ project.project_name }}</p>
-            <p><strong>Total Files:</strong> {{ project.total_files }}</p>
 
             <h3>File Types</h3>
             <ul>
                 {% for ft in project.file_types %}
-                    <li>{{ ft.type }}: {{ ft.count }}</li>
+                    <b><li>{{ ft.type }}: {{ ft.count }}</li><br/></b>
+                    <ul>
+                        {% for file in ft.files %}
+                            <li>{{ file }}</li>
+                        {% endfor %}
+                    </ul></br>
                 {% endfor %}
             </ul>
         </div>
@@ -47,6 +51,5 @@
         </div>
     </div>
 </div>
-<script src="{{ url_for('static', filename='js_files/dashboard.js') }}"></script>
 
 {% endblock %}

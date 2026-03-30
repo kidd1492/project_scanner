@@ -44,13 +44,11 @@ function loadAnalysis(type) {
         .then(data => {
             const box = document.getElementById(type);
             box.innerHTML = `
-                <h3>${data.length} ${type.toUpperCase()}</h3>
+                <h3>${data.length} ${type.toUpperCase()}</h3></br>
                 <pre>${JSON.stringify(data, null, 4)}</pre>
             `;
         });
 }
-
-
 
 // -------------------------
 // Scan a new project

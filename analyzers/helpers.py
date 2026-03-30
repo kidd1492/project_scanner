@@ -68,3 +68,9 @@ def save_json(data, output_file):
         json.dump(data, f, indent=4)
 
     return
+
+
+def open_json(file_path):
+    with open(file_path, "r", encoding="utf-8") as f:
+        content = json.load(f)
+        return content

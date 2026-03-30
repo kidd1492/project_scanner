@@ -1,6 +1,6 @@
 import os, json
-from analyzers.helpers import analyze_project
 from analyzers import html_analyzer, python_analyzer, js_analyzer
+from .helpers import analyze_project, save_json
 
 file_type_analyzer_map = {
     "html": html_analyzer,
@@ -10,20 +10,21 @@ file_type_analyzer_map = {
 
 def generate_json_reports(directory: str, output_dir="data"):
     os.makedirs(output_dir, exist_ok=True)
-    categorized = analyze_project(directory)
+    data = analyze_project(directory)
+    categorized = data.get("file_types")
 
-    for file_type, file_list in categorized.items():
-        analyzer = file_type_analyzer_map.get(file_type)
+    for item in categorized:
+        analyzer = file_type_analyzer_map.get(item.get("type"))
         if not analyzer:
             continue
 
-        results = analyzer.analyze_files(file_list)
+        results = analyzer.analyze_files(item.get("files"))
 
         # Special handling for Python: split into 3 JSON files
-        if file_type == "py":
+        if item.get("type") == "py":
             save_python_outputs(results, output_dir)
         else:
-            output_path = os.path.join(output_dir, f"{file_type}.json")
+            output_path = os.path.join(output_dir, f"{item.get("type")}.json")
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(results, f, indent=4)
 
@@ -42,4 +43,3 @@ def save_python_outputs(results, output_dir):
 
     with open(functions_path, "w", encoding="utf-8") as f:
         json.dump(results["functions"], f, indent=4)
-

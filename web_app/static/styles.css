@@ -13,7 +13,7 @@ body {
 /* Layout grid */
 .grid-container {
     display: grid;
-    grid-template-columns: 15% 50% 35%;
+    grid-template-columns: 38% 50% 12%;
     height: calc(100vh - 50px);
     gap: 10px;
     padding: 10px;
@@ -168,7 +168,7 @@ body {
 }
 
 .wiki-results { height: 44vh; }
-.topic-overview { height: 30vh; }
+.topic-overview { height: 80vh; }
 .subtopic-container { height: 17vh; }
 
 /* Video cards */
