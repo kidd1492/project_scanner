@@ -58,15 +58,15 @@ body {
 
 .ask-btn:hover {
     background: var(--accent);
-    color: white;
+    color:#007bff;
 }
 
 /* Sidebar */
 .nav {
     list-style: none;
     padding: 10px;
-    background: #ffffff;
-    color: #000000;
+    background: #0c0c0c;
+    color: #f7f3f3;
     margin: 0;
     display: flex;
     gap: 20px;
@@ -74,21 +74,22 @@ body {
 }
 
 .nav a {
-    color: #000000;
+    color: #f8f6f6;
     text-decoration: none;
     transition: 0.2s ease;
 }
 
 .nav a:hover {
-    color: var(--hover-accent);
+    color:#007bff;
 }
 
 /* Blocks */
 .chunk-block {
-    padding: 10px;
+    padding: 20px;
     margin-bottom: 12px;
-    background: #ffffff;
-    border: 1px solid var(--panel-border);
+    margin-top: 25px;
+    background: transparent, 50%;
+    border: 5px solid rgb(0, 174, 255);
     border-radius: 6px;
     color: #000000;
 }

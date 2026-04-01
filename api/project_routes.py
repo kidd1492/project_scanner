@@ -16,7 +16,7 @@ def index():
     if os.path.exists(PROJECT_JSON):
         project = open_json(PROJECT_JSON)
         return render_template("dashboard.html", project=project)
-    return render_template("dashboard_empty.html")
+    return render_template("index.html")
 
 
 @project_bp.route("/project/load") 

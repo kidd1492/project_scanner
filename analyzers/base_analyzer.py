@@ -9,7 +9,6 @@ file_type_analyzer_map = {
 }
 
 def generate_json_reports(directory: str, output_dir="data"):
-    os.makedirs(output_dir, exist_ok=True)
     data = analyze_project(directory)
     categorized = data.get("file_types")
 

@@ -1,20 +1,25 @@
 {% extends "layout.html" %}
-{% block title %}Load Project{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-<div class="grid-container">
-    <div class="left-column"></div>
-
     <div class="middle-column">
-        <div class="hero">
+        <div class="chunk-block">
             <h2>No Project Loaded</h2>
             <input id="project-path" type="text" placeholder="Enter project path…" class="wiki-input">
             <button onclick="scanProject()" class="wiki-btn">Scan Project</button>
         </div>
-    </div>
 
-    <div class="right-column"></div>
-</div>
+        <div class="chunk-block">
+            <h2>Existing Pprojects</h2>
+            <ul>
+                <li>project one</li>
+                <li>project one</li>
+                <li>project one</li>
+            </ul>
+            Existing Pprojects
+        </div>
+    </div>
 
 <script src="{{ url_for('static', filename='js_files/research.js') }}"></script>
 {% endblock %}
+
