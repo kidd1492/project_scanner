@@ -10,16 +10,17 @@
         </div>
 
         <div class="chunk-block">
-            <h2>Existing Pprojects</h2>
+            <h2>Existing Projects</h2>
             <ul>
-                <li>project one</li>
-                <li>project one</li>
-                <li>project one</li>
+                {% for p in projects %}
+                    <li><a href="/dashboard/{{ p }}">{{ p }}</a></li>
+                {% else %}
+                    <li>No projects found</li>
+                {% endfor %}
             </ul>
-            Existing Pprojects
         </div>
     </div>
 
-<script src="{{ url_for('static', filename='js_files/research.js') }}"></script>
+
 {% endblock %}
 

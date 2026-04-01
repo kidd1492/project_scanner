@@ -1,58 +1,82 @@
 # api/project_routes.py
-from flask import Blueprint, render_template, jsonify
+from flask import Blueprint, render_template, jsonify, redirect
 from services.project_info_services import get_project_info
-from analyzers.base_analyzer import generate_json_reports
 from analyzers.helpers import save_json, open_json
 import os
-import json
 
 project_bp = Blueprint("project", __name__)
 
-PROJECT_JSON = "data/project.json"
 DATA_DIR = "data"
+
 
 @project_bp.route("/")
 def index():
-    if os.path.exists(PROJECT_JSON):
-        project = open_json(PROJECT_JSON)
-        return render_template("dashboard.html", project=project)
-    return render_template("index.html")
+    project_dirs = []
+
+    if os.path.exists(DATA_DIR):
+        for name in os.listdir(DATA_DIR):
+            full_path = os.path.join(DATA_DIR, name)
+            if os.path.isdir(full_path):
+                project_dirs.append(name)
+
+    return render_template("index.html", projects=project_dirs)
 
 
-@project_bp.route("/project/load") 
+@project_bp.route("/project/load")
 def load_project():
-    if os.path.exists(PROJECT_JSON):
-        project = open_json(PROJECT_JSON)
-        return jsonify(project)
-    return jsonify({"exists": False})
+    projects = []
+
+    if os.path.exists(DATA_DIR):
+        for name in os.listdir(DATA_DIR):
+            full_path = os.path.join(DATA_DIR, name)
+            if os.path.isdir(full_path):
+                projects.append(name)
+
+    return jsonify({"results": projects})
 
 
 @project_bp.route("/project/<path:term>")
 def scan_project(term):
     data = get_project_info(term)
-    generate_json_reports(term)
     return jsonify(data)
 
 
-@project_bp.route("/project/files/<file_type>")
-def load_files(file_type):
-    if not os.path.exists(PROJECT_JSON):
-        return jsonify({"exists": False})
+@project_bp.route("/dashboard/<project_name>")
+def dashboard(project_name):
+    project_dir = os.path.join(DATA_DIR, project_name)
+    project_file = os.path.join(project_dir, f"{project_name}.json")
 
-    data = open_json(PROJECT_JSON)
-    for ft in data["file_types"]:
-        if ft["type"] == file_type:
-            return jsonify({"exists": True, "files": ft["files"]})
+    if not os.path.exists(project_file):
+        return f"Project '{project_name}' not found.", 404
 
-    return jsonify({"exists": True, "files": []})
+    project_data = open_json(project_file)
+    return render_template("dashboard.html", project=project_data)
 
 
-@project_bp.route("/analysis/<analysis_type>")
-def load_analysis(analysis_type):
-    path = os.path.join(DATA_DIR, f"{analysis_type}.json")
+@project_bp.route("/analysis/<project_name>/<analysis_type>")
+def load_analysis(project_name, analysis_type):
+    project_dir = os.path.join(DATA_DIR, project_name)
+    file_path = os.path.join(project_dir, f"{analysis_type}.json")
 
-    if not os.path.exists(path):
-        return jsonify({"error": "Not found"}), 404
+    if not os.path.exists(file_path):
+        return jsonify([])
 
-    with open(path, "r", encoding="utf-8") as f:
-        return jsonify(json.load(f))
+    return jsonify(open_json(file_path))
+
+
+# -----------------------------------------
+# DASHBOARD REDIRECT — load last project
+# -----------------------------------------
+@project_bp.route("/dashboard")
+def dashboard_redirect():
+    last_file = os.path.join(DATA_DIR, "last_project.json")
+
+    if not os.path.exists(last_file):
+        return render_template("index.html", projects=[])
+
+    last = open_json(last_file).get("last")
+
+    if not last:
+        return render_template("index.html", projects=[])
+
+    return redirect(f"/dashboard/{last}")

@@ -1,6 +1,6 @@
 import os, json
 from analyzers import html_analyzer, python_analyzer, js_analyzer
-from .helpers import analyze_project, save_json
+
 
 file_type_analyzer_map = {
     "html": html_analyzer,
@@ -8,8 +8,7 @@ file_type_analyzer_map = {
     "js": js_analyzer
 }
 
-def generate_json_reports(directory: str, output_dir="data"):
-    data = analyze_project(directory)
+def generate_json_reports(data, output_dir):
     categorized = data.get("file_types")
 
     for item in categorized:

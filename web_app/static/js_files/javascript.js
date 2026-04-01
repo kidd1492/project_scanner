@@ -39,20 +39,19 @@ function renderProjectSummary(project) {
 // Load analysis JSON (html, js, api, classes, functions)
 // -------------------------
 function loadAnalysis(type) {
-    fetch(`/analysis/${type}`)
+    fetch(`/analysis/${PROJECT_NAME}/${type}`)
         .then(r => r.json())
         .then(data => {
             const box = document.getElementById(type);
             box.innerHTML = `
-                <h3>${data.length} ${type.toUpperCase()}</h3></br>
+                <h3>${data.length} ${type.toUpperCase()}</h3><br/>
                 <pre>${JSON.stringify(data, null, 4)}</pre>
             `;
         });
 }
 
-// -------------------------
-// Scan a new project
-// -------------------------
+
+
 function scanProject() {
     const path = document.getElementById("project-path").value;
 
@@ -64,6 +63,8 @@ function scanProject() {
     fetch(`/project/${encodeURIComponent(path)}`)
         .then(r => r.json())
         .then(data => {
+            if(data.results)
+                alert("Project Folder Exist")
             renderProjectSummary(data);
             alert("Project scanned successfully.");
         });
@@ -93,3 +94,4 @@ function showTab(type) {
     // Load data only when tab is opened
     loadAnalysis(type);
 }
+
