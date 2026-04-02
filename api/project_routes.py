@@ -9,6 +9,9 @@ project_bp = Blueprint("project", __name__)
 DATA_DIR = "data"
 
 
+# -----------------------------
+# INDEX — List all project dirs
+# -----------------------------
 @project_bp.route("/")
 def index():
     project_dirs = []
@@ -22,6 +25,9 @@ def index():
     return render_template("index.html", projects=project_dirs)
 
 
+# ---------------------------------------------------------
+# LOAD PROJECT LIST — MUST COME BEFORE /project/<path:term>
+# ---------------------------------------------------------
 @project_bp.route("/project/load")
 def load_project():
     projects = []
@@ -35,12 +41,18 @@ def load_project():
     return jsonify({"results": projects})
 
 
+# -----------------------------------------
+# SCAN PROJECT — dynamic route
+# -----------------------------------------
 @project_bp.route("/project/<path:term>")
 def scan_project(term):
     data = get_project_info(term)
     return jsonify(data)
 
 
+# -----------------------------------------
+# DASHBOARD FOR SPECIFIC PROJECT
+# -----------------------------------------
 @project_bp.route("/dashboard/<project_name>")
 def dashboard(project_name):
     project_dir = os.path.join(DATA_DIR, project_name)
@@ -50,9 +62,13 @@ def dashboard(project_name):
         return f"Project '{project_name}' not found.", 404
 
     project_data = open_json(project_file)
+    save_json({"last": project_name}, "data/last_project.json")
     return render_template("dashboard.html", project=project_data)
 
 
+# -----------------------------------------
+# LOAD ANALYSIS JSON FILES
+# -----------------------------------------
 @project_bp.route("/analysis/<project_name>/<analysis_type>")
 def load_analysis(project_name, analysis_type):
     project_dir = os.path.join(DATA_DIR, project_name)
