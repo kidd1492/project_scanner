@@ -1,4 +1,6 @@
 import re
+
+
 def analyze_files(file_list):
     results = []
 

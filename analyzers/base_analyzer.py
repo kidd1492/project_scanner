@@ -1,6 +1,6 @@
 import os, json
 from analyzers import html_analyzer, python_analyzer, js_analyzer
-
+from utilities.file_handling import save_python_outputs
 
 file_type_analyzer_map = {
     "html": html_analyzer,
@@ -26,18 +26,3 @@ def generate_json_reports(data, output_dir):
             with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(results, f, indent=4)
 
-
-def save_python_outputs(results, output_dir):
-    """Save API, classes, and functions as separate JSON files."""
-    api_path = os.path.join(output_dir, "api.json")
-    classes_path = os.path.join(output_dir, "classes.json")
-    functions_path = os.path.join(output_dir, "functions.json")
-
-    with open(api_path, "w", encoding="utf-8") as f:
-        json.dump(results["routes"], f, indent=4)
-
-    with open(classes_path, "w", encoding="utf-8") as f:
-        json.dump(results["classes"], f, indent=4)
-
-    with open(functions_path, "w", encoding="utf-8") as f:
-        json.dump(results["functions"], f, indent=4)

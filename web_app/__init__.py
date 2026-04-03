@@ -12,10 +12,11 @@ def create_app():
     app.config['SECRET_KEY'] = 'dev-key'
 
     # Import blueprints from the api package
-    from api.project_routes import project_bp
-    from api.trace_routes import trace_bp
+    from api.index_routes import index_bp
+    from api.dashboard_routes import dashboard_bp
 
     # Register blueprints
-    app.register_blueprint(project_bp)
-    app.register_blueprint(trace_bp)
+
+    app.register_blueprint(index_bp)
+    app.register_blueprint(dashboard_bp)
     return app
