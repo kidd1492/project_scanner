@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-
-    <nav>
+    <nav>{% block nav%}
         <ul class="nav">
             <li><a href="/">Home</a></li>
             <a href="/dashboard">Dashboard</a>
@@ -20,6 +19,7 @@
             <li><a href="/">Brainstorming</a></li>
             <li><a href="/">Security Scanner</a></li>
         </ul>
+        {% endblock %}
     </nav>
 
     {% block body %}{% endblock %}

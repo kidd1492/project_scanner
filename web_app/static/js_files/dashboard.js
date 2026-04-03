@@ -20,20 +20,6 @@ function renderProjectSummary(project) {
 }
 
 
-// Load analysis JSON (html, js, api, classes, functions)
-function loadAnalysis(type) {
-    fetch(`/analysis/${PROJECT_NAME}/${type}`)
-        .then(r => r.json())
-        .then(data => {
-            const box = document.getElementById(type);
-            box.innerHTML = `
-                <h3>${data.length} ${type.toUpperCase()}</h3><br/>
-                <pre>${JSON.stringify(data, null, 4)}</pre>
-            `;
-        });
-}
-
-
 // Rescan project
 function rescanProject() {
     const path = prompt("Enter project path to rescan:");
@@ -53,4 +39,18 @@ function showTab(type) {
 
     document.getElementById(type).style.display = 'block';
     loadAnalysis(type);
+}
+
+
+// Load analysis JSON (html, js, api, classes, functions)
+function loadAnalysis(type) {
+    fetch(`/analysis/${PROJECT_NAME}/${type}`)
+        .then(r => r.json())
+        .then(data => {
+            const box = document.getElementById(type);
+            box.innerHTML = `
+                <h3>${data.length} ${type.toUpperCase()}</h3><br/>
+                <pre>${JSON.stringify(data, null, 4)}</pre>
+            `;
+        });
 }

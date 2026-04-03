@@ -8,10 +8,9 @@ file_type_analyzer_map = {
     "js": js_analyzer
 }
 
-def generate_json_reports(data, output_dir):
-    categorized = data.get("file_types")
-
-    for item in categorized:
+def generate_json_reports(file_types, output_dir):
+    
+    for item in file_types:
         analyzer = file_type_analyzer_map.get(item.get("type"))
         if not analyzer:
             continue

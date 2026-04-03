@@ -9,34 +9,42 @@
 
 <div class="grid-container">
     <div class="left-column">
-        <h2>Project Summary</h2>
+        <h1>Project Summary</h1>
         <div class="topic-overview">
-            <p><strong>Name:</strong> {{ project.project_name }}</p>
+            <h2><strong>Name:</strong> {{ project.project_name }}</h2>
+            
+            <h3>Total Files: {{ project.total_files }}</h3>
 
-            <h3>File Types</h3>
-            <ul>
-                {% for ft in project.file_types %}
-                    <b><li>{{ ft.type }}: {{ ft.count }}</li><br/></b>
-                    <ul>
-                        {% for file in ft.files %}
-                            <li>{{ file }}</li>
-                        {% endfor %}
-                    </ul></br>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-
-    <div class="middle-column">
-        <h2>Analysis</h2>
-
-        <div class="analysis-tabs">
+            <div class="analysis-tabs">
             <button onclick="showTab('html')">HTML Triggers</button>
             <button onclick="showTab('js')">JS Functions</button>
             <button onclick="showTab('api')">API Routes</button>
             <button onclick="showTab('classes')">Service Classes</button>
             <button onclick="showTab('functions')">Core Functions</button>
+        </div><br/>
+            <div class="index-grid">
+                <div class="middle-column">
+                    <h3>File Types</h3>
+                    <ul>
+                        {% for ft in project.file_types %}
+                            <b><li>{{ ft.type }}: {{ ft.count }}</li></b>
+                            
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="middle-column">
+                    <h3>File Chart</h3>
+                    <img src="/static/projects/{{ project.project_name }}/chat.png"
+                    alt="File Type Chart"
+                    style="width: 100%; max-width: 300px;">
+
+                </div>
+            </div>
         </div>
+    </div>
+
+    <div class="middle-column">
+        <h2>Analysis</h2>
 
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>

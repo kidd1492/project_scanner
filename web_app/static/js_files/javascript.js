@@ -33,10 +33,13 @@ function scanProject() {
     fetch(`/project/${encodeURIComponent(path)}`)
         .then(r => r.json())
         .then(data => {
-            if (data.results)
+            if (data.results) {
                 alert("Project folder exists.");
+                return; // <-- STOP HERE
+            }
 
             alert("Project scanned successfully.");
             window.location.href = `/dashboard/${data.project_name}`;
         });
 }
+
