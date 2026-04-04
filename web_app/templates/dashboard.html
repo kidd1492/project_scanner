@@ -7,61 +7,58 @@
 </script>
 
 
-<div class="grid-container">
-    <div class="left-column">
+<div class="index-grid">
+    <div class="middle-column">
         <h1>Project Summary</h1>
-        <div class="topic-overview">
-            <h2><strong>Name:</strong> {{ project.project_name }}</h2>
-            
-            <h3>Total Files: {{ project.total_files }}</h3>
 
-            <div class="analysis-tabs">
-            <button onclick="showTab('html')">HTML Triggers</button>
-            <button onclick="showTab('js')">JS Functions</button>
-            <button onclick="showTab('api')">API Routes</button>
-            <button onclick="showTab('classes')">Service Classes</button>
-            <button onclick="showTab('functions')">Core Functions</button>
-        </div><br/>
+        <div class="chunk-block">
+            <h2><strong>Name:</strong> {{ project.project_name }}</h2>
+            <h3>Total Files: {{ project.total_files }}</h3>
+        </div>
+
+        <div class="chunk-block", style="max-height: 600px;">
             <div class="index-grid">
-                <div class="middle-column">
+                <div>
                     <h3>File Types</h3>
                     <ul>
                         {% for ft in project.file_types %}
-                            <b><li>{{ ft.type }}: {{ ft.count }}</li></b>
-                            
+                            <b><li>{{ ft.type }}: {{ ft.count }}</li></b>      
                         {% endfor %}
                     </ul>
                 </div>
-                <div class="middle-column">
+
+                <div>
                     <h3>File Chart</h3>
                     <img src="/static/projects/{{ project.project_name }}/chat.png"
                     alt="File Type Chart"
-                    style="width: 100%; max-width: 300px;">
-
+                    style="width: 100%; max-width: 500px; height: 500px">
                 </div>
             </div>
         </div>
     </div>
 
     <div class="middle-column">
-        <h2>Analysis</h2>
+        <div class="chunk-block">
+            <h3>Analysis Chart</h3>
+            <img src="/static/projects/{{ project.project_name }}/analysis.png"
+                alt="Analysis Summary Chart"
+                style="width: 100%; max-width: 700px;">
+        </div>
 
+        <div class="chunk-block">
+            <button onclick="showTab('html')">HTML Triggers</button>
+            <button onclick="showTab('js')">JS Functions</button>
+            <button onclick="showTab('api')">API Routes</button>
+            <button onclick="showTab('classes')">Service Classes</button>
+            <button onclick="showTab('functions')">Core Functions</button>
+        </div><br/>
+        
+        <h2>Analysis</h2>
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>
         <div id="api" class="analysis-window"></div>
         <div id="classes" class="analysis-window"></div>
         <div id="functions" class="analysis-window"></div>
-    </div>
-
-
-    <div class="right-column">
-        <h2>Tools</h2>
-
-        <div class="topic-overview">
-            <button onclick="window.location='/template-maker'">Template Maker</button>
-            <button onclick="window.location='/diagram'">Mermaid Diagram Generator</button>
-            <button onclick="rescanProject()">Rescan Project</button>
-        </div>
     </div>
 </div>
 
