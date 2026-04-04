@@ -9,7 +9,7 @@
 
 <div class="index-grid">
     <div class="middle-column">
-        <div class="chunk-block", style="max-height: 600px;">
+        <div class="chunk-block", style="max-height: 500px;">
             <h2><strong> {{ project.project_name }}</strong></h2>
             <h3>Total Files: {{ project.total_files }}</h3>
 
@@ -31,24 +31,30 @@
                 </div>
             </div>
         </div>
-        <div class="chunk-block">
+
+        <div class="chunk-block", style="max-height: 500px;">
             <h3>Analysis Chart</h3>
-            <img src="/static/projects/{{ project.project_name }}/analysis.png"
-                alt="Analysis Summary Chart"
-                style="width: 100%; max-width: 500px;">
+            <div class="index-grid">
+                <div style="max-width: 200px;">
+                    <ul>
+                    <li><button onclick="showTab('html')">HTML Triggers</button></li>
+                    <li><button onclick="showTab('js')">JS Functions</button></li>
+                    <li><button onclick="showTab('api')">API Routes</button></li>
+                    <li><button onclick="showTab('classes')">Service Classes</button></li>
+                    <li><button onclick="showTab('functions')">Core Functions</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <img src="/static/projects/{{ project.project_name }}/analysis.png"
+                        alt="Analysis Summary Chart"
+                        style="width: 100%; max-width: 500px;">
+                </div>
+            </div>
         </div>
+
     </div>
 
-    <div class="middle-column">
-
-        <div class="chunk-block">
-            <button onclick="showTab('html')">HTML Triggers</button>
-            <button onclick="showTab('js')">JS Functions</button>
-            <button onclick="showTab('api')">API Routes</button>
-            <button onclick="showTab('classes')">Service Classes</button>
-            <button onclick="showTab('functions')">Core Functions</button>
-        </div><br/>
-        
+    <div class="middle-column">        
         <h2>Analysis</h2>
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>
