@@ -2,15 +2,17 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block body %}
+
 <script>
     const PROJECT_NAME = "{{ project.project_name }}";
 </script>
 
-
 <div class="index-grid">
+
     <div class="middle-column">
-        <div class="chunk-block", style="max-height: 500px;">
-            <h2><strong> {{ project.project_name }}</strong></h2>
+
+        <div class="chunk-block block-500">
+            <h2><strong>{{ project.project_name }}</strong></h2>
             <h3>Total Files: {{ project.total_files }}</h3>
 
             <div class="index-grid">
@@ -18,7 +20,7 @@
                     <h3>File Types</h3>
                     <ul>
                         {% for ft in project.file_types %}
-                            <b><li>{{ ft.type }}: {{ ft.count }}</li></b>      
+                        <li><b>{{ ft.type }}: {{ ft.count }}</b></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -26,35 +28,36 @@
                 <div>
                     <h3>File Chart</h3>
                     <img src="/static/projects/{{ project.project_name }}/chat.png"
-                    alt="File Type Chart"
-                    style="width: 100%; max-width: 300px; height: 300px">
+                         alt="File Type Chart"
+                         class="img-chart-small">
                 </div>
             </div>
         </div>
 
-        <div class="chunk-block", style="max-height: 500px;">
+        <div class="chunk-block block-500">
             <h3>Analysis Chart</h3>
             <div class="index-grid">
                 <div style="max-width: 200px;">
                     <ul>
-                    <li><button onclick="showTab('html')">HTML Triggers</button></li>
-                    <li><button onclick="showTab('js')">JS Functions</button></li>
-                    <li><button onclick="showTab('api')">API Routes</button></li>
-                    <li><button onclick="showTab('classes')">Service Classes</button></li>
-                    <li><button onclick="showTab('functions')">Core Functions</button></li>
+                        <li><button onclick="showTab('html')">HTML Triggers</button></li>
+                        <li><button onclick="showTab('js')">JS Functions</button></li>
+                        <li><button onclick="showTab('api')">API Routes</button></li>
+                        <li><button onclick="showTab('classes')">Service Classes</button></li>
+                        <li><button onclick="showTab('functions')">Core Functions</button></li>
                     </ul>
                 </div>
+
                 <div>
                     <img src="/static/projects/{{ project.project_name }}/analysis.png"
-                        alt="Analysis Summary Chart"
-                        style="width: 100%; max-width: 500px;">
+                         alt="Analysis Summary Chart"
+                         class="img-chart-large">
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="middle-column">        
+    <div class="middle-column">
         <h2>Analysis</h2>
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>
@@ -62,6 +65,7 @@
         <div id="classes" class="analysis-window"></div>
         <div id="functions" class="analysis-window"></div>
     </div>
+
 </div>
 
 {% endblock %}

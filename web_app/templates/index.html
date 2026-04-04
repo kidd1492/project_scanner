@@ -3,108 +3,104 @@
 {% block nav %}{% endblock %}
 
 {% block body %}
-    <div class="index-grid">
-        <div class="middle-column">
-            <div class="chunk-block">
-                <h2>Scan a Project</h2>
-                <input id="project-path" type="text" placeholder="Enter project path…" class="wiki-input">
-                <button onclick="scanProject()" class="wiki-btn">Scan Project</button>
-            </div>
+<div class="index-grid">
 
-            <div class="chunk-block">
-                <h2>Existing Projects</h2>
-                <h3>Select an existing project to load Dashboard or Scan a Project</h3>
-                <ul>
-                    {% for p in projects %}
-                        <li><a href="/dashboard/{{ p }}">{{ p }}</a></li>
-                    {% else %}
-                        <li>No projects found</li>
-                    {% endfor %}
-                </ul>
-            </div>
+    <div class="middle-column">
+
+        <div class="chunk-block">
+            <h2>Scan a Project</h2>
+            <input id="project-path" type="text" placeholder="Enter project path..." class="wiki-input">
+            <button onclick="scanProject()" class="wiki-btn">Scan Project</button>
         </div>
 
-<div class="middle-column">
-    <h1>Project scanner Information</h1>
-
-    <div class="chunk-block", style="max-height: 400px;">
-        <h2>Introduction</h2>
-        <div class="index-grid">
-            <div>
-                <p>
-                    The Project Scanner analyzes an entire codebase and converts it into structured, 
-                    easy‑to‑understand data. It scans the filesystem, identifies routes, functions, 
-                    classes, triggers, and internal call relationships, and then presents everything 
-                    through a multi‑page dashboard. The system helps developers understand architecture, 
-                    visualize execution flows, generate documentation, and uncover potential risks.
-                </p>
-            </div>
-            <div>
-                <img src="/static/images/dashboard.jpg"
-                    alt="File Type Chart"
-                    style="width: 100%; max-width: 600px; height: 300px">
-            </div>
-        </div>
-    </div>
-
-    <div class="chunk-block", style="max-height: 400px;">
-        <h2>Traces</h2>
-        <div class="index-grid">
-            <div>
-                <img src="/static/images/trace_templates.jpg"
-                    alt="File Type Chart"
-                    style="width: 100%; max-width: 600px; height: 300px">
-            </div>
-            <div>
-                <p>
-                    The Traces system reconstructs complete end‑to‑end execution chains across the 
-                    application—from an HTML trigger, to the JavaScript function it calls, to the API 
-                    route it hits, to the service method behind that route, and finally to the core 
-                    Python function performing the work. This gives developers a clear picture of how 
-                    user actions flow through the system, making debugging and architectural reasoning 
-                    dramatically easier.
-                </p>
-            </div>
+        <div class="chunk-block">
+            <h2>Existing Projects</h2>
+            <h3>Select an existing project to load Dashboard or Scan a Project</h3>
+            <ul>
+                {% for p in projects %}
+                <li><a href="/dashboard/{{ p }}">{{ p }}</a></li>
+                {% else %}
+                <li>No projects found</li>
+                {% endfor %}
+            </ul>
         </div>
 
     </div>
 
-    <div class="chunk-block">
-        <h2>Mermaid Diagrams</h2>
-        <p>
-            The Mermaid Diagrams page converts trace chains into visual sequence diagrams using 
-            Mermaid syntax. Each UI‑to‑backend flow is rendered as a clear, readable diagram that 
-            helps developers understand system behavior at a glance. These diagrams can be viewed 
-            directly in the dashboard and copied for documentation, architecture reviews, or 
-            onboarding materials.
-        </p>
-    </div>
+    <div class="middle-column">
 
-    <div class="chunk-block">
-        <h2>Brainstorming</h2>
-        <p>
-            The Brainstorming page acts as an AI assistant that understands your project. It loads 
-            all analysis data and provides architecture suggestions, refactoring ideas, naming 
-            improvements, missing tests, error‑handling gaps, and potential abstractions. It’s 
-            essentially a context‑aware design partner that helps you improve the structure and 
-            quality of your codebase.
-        </p>
-    </div>
+        <h1>Project Scanner Information</h1>
 
-    <div class="chunk-block">
-        <h2>Security Scanner</h2>
-        <p>
-            The Security Scanner reviews HTML, JavaScript, and Python files for common 
-            vulnerabilities and risky patterns. It detects unsafe fetch calls, missing error 
-            handling, hardcoded URLs, missing input validation, dangerous imports, and potential 
-            SQL‑injection‑like patterns. It outputs a security.json report along with an AI‑generated 
-            summary and recommended fixes to help strengthen the codebase.
-        </p>
+        <div class="chunk-block block-400">
+            <h2>Introduction</h2>
+            <div class="index-grid">
+                <div>
+                    <p>
+                        The Project Scanner analyzes an entire codebase and converts it into structured,
+                        easy‑to‑understand data. It scans the filesystem, identifies routes, functions,
+                        classes, triggers, and internal call relationships, and then presents everything
+                        through a multi‑page dashboard. The system helps developers understand architecture,
+                        visualize execution flows, generate documentation, and uncover potential risks.
+                    </p>
+                </div>
+                <div>
+                    <img src="/static/images/dashboard.jpg"
+                         alt="File Type Chart"
+                         class="img-dashboard">
+                </div>
+            </div>
+        </div>
+
+        <div class="chunk-block block-400">
+            <h2>Traces</h2>
+            <div class="index-grid">
+                <div>
+                    <img src="/static/images/trace_templates.jpg"
+                         alt="Trace Templates"
+                         class="img-dashboard">
+                </div>
+                <div>
+                    <p>
+                        The Traces system reconstructs complete end-to-end execution chains across the
+                        application—from an HTML trigger, to the JavaScript function it calls, to the API
+                        route it hits, to the service method behind that route, and finally to the core
+                        Python function performing the work. This gives developers a clear picture of how
+                        user actions flow through the system, making debugging and architectural reasoning
+                        dramatically easier.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chunk-block">
+            <h2>Mermaid Diagrams</h2>
+            <p>
+                The Mermaid Diagrams page converts trace chains into visual sequence diagrams using
+                Mermaid syntax. Each UI-to-backend flow is rendered as a clear, readable diagram that
+                helps developers understand system behavior at a glance.
+            </p>
+        </div>
+
+        <div class="chunk-block">
+            <h2>Brainstorming</h2>
+            <p>
+                The Brainstorming page acts as an AI assistant that understands your project. It loads
+                all analysis data and provides architecture suggestions, refactoring ideas, naming
+                improvements, missing tests, error-handling gaps, and potential abstractions.
+            </p>
+        </div>
+
+        <div class="chunk-block">
+            <h2>Security Scanner</h2>
+            <p>
+                The Security Scanner reviews HTML, JavaScript, and Python files for common
+                vulnerabilities and risky patterns. It detects unsafe fetch calls, missing error
+                handling, hardcoded URLs, missing input validation, dangerous imports, and potential
+                SQL-injection-like patterns.
+            </p>
+        </div>
+
     </div>
 
 </div>
-
-    </div>
-
 {% endblock %}
-

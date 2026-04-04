@@ -3,31 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>{% block title %}{% endblock %}</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <nav>{% block nav%}
-        <ul class="nav">
-            <li><a href="/">Home</a></li>
-            <a href="/dashboard">Dashboard</a>
-            <li><a href="/">Traces</a></li>
-            <li><a href="/">Mermaid Diagrams</a></li>
-            <li><a href="/">Template Bulder</a></li>
-            <li><a href="/">Brainstorming</a></li>
-            <li><a href="/">Security Scanner</a></li>
-        </ul>
-        {% endblock %}
-    </nav>
 
-    {% block body %}{% endblock %}
+<nav>
+    {% block nav %}
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/">Traces</a></li>
+        <li><a href="/">Mermaid Diagrams</a></li>
+        <li><a href="/">Template Builder</a></li>
+        <li><a href="/">Brainstorming</a></li>
+        <li><a href="/">Security Scanner</a></li>
+    </ul>
+    {% endblock %}
+</nav>
 
+{% block body %}{% endblock %}
 
-    <script src="{{ url_for('static', filename='js_files/javascript.js') }}"></script>
-    <script src="{{ url_for('static', filename='js_files/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js_files/javascript.js') }}"></script>
+<script src="{{ url_for('static', filename='js_files/dashboard.js') }}"></script>
 
-   
 </body>
 </html>
