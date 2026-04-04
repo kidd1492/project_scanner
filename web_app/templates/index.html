@@ -27,27 +27,46 @@
 <div class="middle-column">
     <h1>Project scanner Information</h1>
 
-    <div class="chunk-block">
+    <div class="chunk-block", style="max-height: 400px;">
         <h2>Introduction</h2>
-        <p>
-            The Project Scanner analyzes an entire codebase and converts it into structured, 
-            easy‑to‑understand data. It scans the filesystem, identifies routes, functions, 
-            classes, triggers, and internal call relationships, and then presents everything 
-            through a multi‑page dashboard. The system helps developers understand architecture, 
-            visualize execution flows, generate documentation, and uncover potential risks.
-        </p>
+        <div class="index-grid">
+            <div>
+                <p>
+                    The Project Scanner analyzes an entire codebase and converts it into structured, 
+                    easy‑to‑understand data. It scans the filesystem, identifies routes, functions, 
+                    classes, triggers, and internal call relationships, and then presents everything 
+                    through a multi‑page dashboard. The system helps developers understand architecture, 
+                    visualize execution flows, generate documentation, and uncover potential risks.
+                </p>
+            </div>
+            <div>
+                <img src="/static/images/dashboard.jpg"
+                    alt="File Type Chart"
+                    style="width: 100%; max-width: 600px; height: 300px">
+            </div>
+        </div>
     </div>
 
-    <div class="chunk-block">
+    <div class="chunk-block", style="max-height: 400px;">
         <h2>Traces</h2>
-        <p>
-            The Traces system reconstructs complete end‑to‑end execution chains across the 
-            application—from an HTML trigger, to the JavaScript function it calls, to the API 
-            route it hits, to the service method behind that route, and finally to the core 
-            Python function performing the work. This gives developers a clear picture of how 
-            user actions flow through the system, making debugging and architectural reasoning 
-            dramatically easier.
-        </p>
+        <div class="index-grid">
+            <div>
+                <img src="/static/images/trace_templates.jpg"
+                    alt="File Type Chart"
+                    style="width: 100%; max-width: 600px; height: 300px">
+            </div>
+            <div>
+                <p>
+                    The Traces system reconstructs complete end‑to‑end execution chains across the 
+                    application—from an HTML trigger, to the JavaScript function it calls, to the API 
+                    route it hits, to the service method behind that route, and finally to the core 
+                    Python function performing the work. This gives developers a clear picture of how 
+                    user actions flow through the system, making debugging and architectural reasoning 
+                    dramatically easier.
+                </p>
+            </div>
+        </div>
+
     </div>
 
     <div class="chunk-block">
@@ -58,17 +77,6 @@
             helps developers understand system behavior at a glance. These diagrams can be viewed 
             directly in the dashboard and copied for documentation, architecture reviews, or 
             onboarding materials.
-        </p>
-    </div>
-
-    <div class="chunk-block">
-        <h2>Template Builder</h2>
-        <p>
-            The Template Builder transforms your analysis data into ready‑made documentation and 
-            code templates. By loading all JSON reports—routes, JS functions, classes, functions, 
-            and traces—it can automatically generate API docs, Markdown summaries, sequence 
-            diagrams, and boilerplate code. This turns your analyzers into a full documentation 
-            engine that saves time and improves consistency.
         </p>
     </div>
 
