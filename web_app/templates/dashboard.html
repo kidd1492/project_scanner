@@ -9,14 +9,10 @@
 
 <div class="index-grid">
     <div class="middle-column">
-        <h1>Project Summary</h1>
-
-        <div class="chunk-block">
-            <h2><strong>Name:</strong> {{ project.project_name }}</h2>
-            <h3>Total Files: {{ project.total_files }}</h3>
-        </div>
-
         <div class="chunk-block", style="max-height: 600px;">
+            <h2><strong> {{ project.project_name }}</strong></h2>
+            <h3>Total Files: {{ project.total_files }}</h3>
+
             <div class="index-grid">
                 <div>
                     <h3>File Types</h3>
@@ -31,19 +27,19 @@
                     <h3>File Chart</h3>
                     <img src="/static/projects/{{ project.project_name }}/chat.png"
                     alt="File Type Chart"
-                    style="width: 100%; max-width: 500px; height: 500px">
+                    style="width: 100%; max-width: 300px; height: 300px">
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="middle-column">
         <div class="chunk-block">
             <h3>Analysis Chart</h3>
             <img src="/static/projects/{{ project.project_name }}/analysis.png"
                 alt="Analysis Summary Chart"
-                style="width: 100%; max-width: 700px;">
+                style="width: 100%; max-width: 500px;">
         </div>
+    </div>
+
+    <div class="middle-column">
 
         <div class="chunk-block">
             <button onclick="showTab('html')">HTML Triggers</button>

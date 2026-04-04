@@ -1,5 +1,5 @@
 import re
-from analyzers.helpers import open_json
+from utilities.file_handling import open_json
 
 
 # -----------------------------
@@ -50,7 +50,7 @@ def route_to_regex(route):
 # Find JS function by trigger
 # -----------------------------
 def find_js_function(trigger_name):
-    js_data = open_json("data/js.json")
+    js_data = open_json("data/expert_in_a_box/js.json")
     func_name = trigger_name.split("(")[0]
 
     for entry in js_data:
@@ -64,7 +64,7 @@ def find_js_function(trigger_name):
 # Match JS fetch → API route
 # -----------------------------
 def find_api_route(api_call_line):
-    api_data = open_json("data/api.json")
+    api_data = open_json("data/expert_in_a_box/api.json")
     js_path = normalize_js_api_call(api_call_line)
 
     for route in api_data:
@@ -78,7 +78,7 @@ def find_api_route(api_call_line):
 # -----------------------------
 # TEST
 # -----------------------------
-html = "runQuery()"
+html = "addWikiSearch()"
 print("Trigger:", html, "\n")
 
 js = find_js_function(html)

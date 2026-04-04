@@ -22,4 +22,9 @@ def discover_files(directory: str):
         {"type": ext, "count": len(paths), "files": paths}
         for ext, paths in categorized.items()
     ]
-    return file_types
+
+    total_files = 0
+    for type in file_types:
+        total_files += type.get("count")
+
+    return file_types, total_files
