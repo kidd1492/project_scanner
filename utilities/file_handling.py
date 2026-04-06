@@ -1,6 +1,15 @@
 import os, json
 
 
+def save_analyzer_results(results, type, output_dir):
+    # Special handling for Python: split into 3 JSON files
+    if type == "py":
+        save_python_outputs(results, output_dir)
+    elif type != "py":
+        output_path = os.path.join(output_dir, f"{type}.json")
+        save_json(results, output_path)
+        
+
 def save_python_outputs(results, output_dir):
     """Save API, classes, and functions as separate JSON files."""
     api_path = os.path.join(output_dir, "api.json")

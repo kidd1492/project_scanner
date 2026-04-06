@@ -1,41 +1,83 @@
+import os
 from utilities.file_handling import save_json, open_json
 from utilities.file_discovery import discover_files
 from utilities import chart_generator
 from analyzers.base_analyzer import generate_json_reports
-import os
 
 
 def ingest_project(directory: str):
+    """
+    Orchestrates the full ingestion pipeline:
+    - project directory setup
+    - file discovery
+    - analysis execution
+    - persistence
+    - visualization
+    - metadata saving
+    """
     project_name = os.path.basename(directory)
-    project_directory = f"data/{project_name}"
+    project_dir = f"data/{project_name}"
 
-    if os.path.exists(project_directory): 
-        save_json({"last": project_name}, "data/last_project.json")
-        return {"results": "Project Exist."}
-    
-    os.makedirs(project_directory, exist_ok=True)
+    if _project_exists(project_dir):
+        return _handle_existing_project(project_name)
 
-    file_types, total_files = discover_files(directory)
-    generate_json_reports(file_types, project_directory)
+    _initialize_project_directory(project_dir)
+    file_types, total_files = _discover_project_files(directory)
+    analysis_counts = _run_analysis_pipeline(file_types, project_dir, project_name)
+    metadata = _save_project_metadata(project_name, directory, file_types, total_files, analysis_counts)
 
-    analysis_counts = get_counts(project_name)
+    return metadata
+
+
+# ---------------------------------------------------------
+# Internal helpers — explicit, testable, single‑purpose
+# ---------------------------------------------------------
+
+def _project_exists(project_dir: str) -> bool:
+    return os.path.exists(project_dir)
+
+
+def _handle_existing_project(project_name: str):
+    save_json({"last": project_name}, "data/last_project.json")
+    return {"results": "Project Exist."}
+
+
+def _initialize_project_directory(project_dir: str):
+    os.makedirs(project_dir, exist_ok=True)
+
+
+def _discover_project_files(directory: str):
+    """Returns (file_types, total_files)."""
+    return discover_files(directory)
+
+
+def _run_analysis_pipeline(file_types, project_dir, project_name):
+    """Runs analyzers, writes JSON outputs, generates charts, returns summary counts."""
+    results = generate_json_reports(file_types, project_dir)
+    analysis_counts = get_counts(results)
 
     chart_generator.file_pie_chat(file_types, project_name)
     chart_generator.analysis_bar_chart(analysis_counts, project_name)
 
+    return analysis_counts
 
-    data = {
+
+def _save_project_metadata(project_name, root_dir, file_types, total_files, analysis_counts):
+    """Persists the project metadata JSON and updates last_project.json."""
+    project_dir = f"data/{project_name}"
+    metadata = {
         "project_name": project_name,
         "total_files": total_files,
-        "root": directory,
+        "root": root_dir,
         "file_types": file_types,
         "analysis_counts": analysis_counts,
     }
 
-    save_json(data, f"{project_directory}/{project_name}.json")
-    # Save last opened project
+    save_json(metadata, f"{project_dir}/{project_name}.json")
     save_json({"last": project_name}, "data/last_project.json")
-    return data
+
+    return metadata
+
 
 
 def get_existing_projects():
@@ -50,13 +92,10 @@ def get_existing_projects():
     return projects
 
 
-def get_counts(project_name):
+def get_counts(results):
     """
-    Opens all analysis JSON files inside data/<project_name>/ 
-    and returns a dictionary of item counts.
+    Takes the in-memory analyzer results list and returns a summary count dict.
     """
-
-    project_dir = os.path.join("data", project_name)
 
     summary = {
         "html_triggers": 0,
@@ -66,25 +105,24 @@ def get_counts(project_name):
         "python_functions": 0
     }
 
-    # Map filenames → summary keys
-    file_map = {
-        "html.json": "html_triggers",
-        "js.json": "js_functions",
-        "api.json": "api_routes",
-        "classes.json": "classes",
-        "functions.json": "python_functions"
-    }
+    for item in results:
+        analyzer_type = item.get("type")
+        analyzer_results = item.get("results", [])
 
-    for filename, key in file_map.items():
-        file_path = os.path.join(project_dir, filename)
+        # HTML → list
+        if analyzer_type == "html":
+            summary["html_triggers"] = len(analyzer_results)
 
-        if os.path.exists(file_path):
-            data = open_json(file_path)
+        # JS → list
+        elif analyzer_type == "js":
+            summary["js_functions"] = len(analyzer_results)
 
-            # Ensure it's a list before counting
-            if isinstance(data, list):
-                summary[key] = len(data)
-            else:
-                summary[key] = 0
+        # PYTHON → dict with 3 lists
+        elif analyzer_type == "py":
+            summary["api_routes"] = len(analyzer_results.get("routes", []))
+            summary["classes"] = len(analyzer_results.get("classes", []))
+            summary["python_functions"] = len(analyzer_results.get("functions", []))
 
     return summary
+
+

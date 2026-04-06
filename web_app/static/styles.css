@@ -123,6 +123,7 @@ body {
 
 /* Blocks */
 .chunk-block {
+    background-color: #fff;
     padding: 20px;
     margin-bottom: 12px;
     margin-top: 25px;
