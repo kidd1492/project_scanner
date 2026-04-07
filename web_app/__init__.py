@@ -14,9 +14,11 @@ def create_app():
     # Import blueprints from the api package
     from api.index_routes import index_bp
     from api.dashboard_routes import dashboard_bp
+    from api.trace_routes import trace_bp
 
     # Register blueprints
 
     app.register_blueprint(index_bp)
     app.register_blueprint(dashboard_bp)
+    app.register_blueprint(trace_bp)
     return app
