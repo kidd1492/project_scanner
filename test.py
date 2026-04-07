@@ -50,7 +50,7 @@ def route_to_regex(route):
 # Find JS function by trigger
 # -----------------------------
 def find_js_function(trigger_name):
-    js_data = open_json("data/expert_in_a_box/js.json")
+    js_data = open_json(f"data/{project_name}/js.json")
     func_name = trigger_name.split("(")[0]
 
     for entry in js_data:
@@ -64,7 +64,7 @@ def find_js_function(trigger_name):
 # Match JS fetch → API route
 # -----------------------------
 def find_api_route(api_call_line):
-    api_data = open_json("data/expert_in_a_box/api.json")
+    api_data = open_json(f"data/{project_name}/api.json")
     js_path = normalize_js_api_call(api_call_line)
 
     for route in api_data:
@@ -74,11 +74,21 @@ def find_api_route(api_call_line):
 
     return None
 
+def get_function_list():
+    functions = open_json(f"data/{project_name}/functions.json")
+    function_list = []
+    for item in functions:
+        function = item.get("function")
+        function_list.append(function)
+    return function_list
+
 
 # -----------------------------
 # TEST
 # -----------------------------
-html = "addWikiSearch()"
+project_name = "expert_in_a_box"
+
+html = "newTopic()"
 print("Trigger:", html, "\n")
 
 js = find_js_function(html)
@@ -86,3 +96,18 @@ print("JS Entry:", js, "\n")
 
 api = find_api_route(js.get("api_calls"))
 print("Matched API Route:", api, "\n")
+
+calls = api.get("calls")
+#print(f"\ncalls : {calls}")
+functions = get_function_list()
+#print(functions)
+print(functions)
+for item in calls:
+    if "." in item:
+        item = item.split(".")[-1]
+        print(item)
+    if item in functions:
+        data = open_json(f"data/{project_name}/functions.json")
+        for _ in data:
+            if _["function"] == item:
+                print(_, "\n")
