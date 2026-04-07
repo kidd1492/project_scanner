@@ -1,21 +1,25 @@
-from flask import Blueprint, render_template, jsonify
-from utilities.file_handling import save_json, open_json
-import os
-
+from flask import Blueprint, render_template, jsonify, request
+from utilities.file_handling import open_json
+from services.trace_service import get_trace
 
 trace_bp = Blueprint('trace', __name__, url_prefix='/trace')
 
-DATA_DIR = "data"
-
-
-# -----------------------------------------
-# DASHBOARD FOR SPECIFIC PROJECT
-# -----------------------------------------
 @trace_bp.route("/traces")
 def traces():
-    last_data =  open_json("data/last_project.json")
+    last_data = open_json("data/last_project.json")
     last = last_data.get("last")
-    print(last)
     return render_template("traces.html", project=last)
+
+
+@trace_bp.route("/run")
+def run_trace():
+    last_data = open_json("data/last_project.json")
+    last = last_data.get("last")
+    trigger = request.args.get("trigger")
+
+    trace = get_trace(last, trigger)
+    return jsonify(trace)
+
+
 
 

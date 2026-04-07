@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Traces{% endblock %}
 
 {% block body %}
 
@@ -10,26 +10,24 @@
 <div class="index-grid">
 
     <div class="middle-column">
-
-        <div class="chunk-block block-500">
-            <h2><strong>{{ project }}</strong></h2>
-        </div>
-
-        <div id="html" class="chunk-block">
-            <h3>Analysis Chart</h3>
-            <div class="index-grid">
-                <div style="max-width: 200px;">
-                    <button onclick="showTab('html')">HTML Triggers</button>
-                </div>
-            </div>
-        </div>
-
+        <div class="chunk-block">{{ project }}</div>
+        <h3>HTML Triggers</h3>
+        <ul id="analysis-items"></ul>
     </div>
 
-    <div class="middle-column">
-        <h2>Analysis</h2>
-        <div class="analysis-window"></div>
+    <div id="result-window" class="middle-column">
+        <h2>Trace</h2>
+        <div id="result-window" class="analysis-window"></div>
     </div>
+
 </div>
+
+<script src="{{ url_for('static', filename='js_files/trace.js') }}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    loadAnalysisOnStart();
+});
+</script>
 
 {% endblock %}

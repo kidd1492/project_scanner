@@ -202,6 +202,7 @@ if __name__ == "__main__":
     project_name = "expert_in_a_box"
     trigger = "uploadFile()"
     trace = build_full_trace(trigger, project_name)
-    mermaid = trace_to_mermaid(trace)
+    print(trace)
+    #mermaid = trace_to_mermaid(trace)
     #print(json.dumps(trace, indent=4))
-    print(mermaid)
+    #print(mermaid)
