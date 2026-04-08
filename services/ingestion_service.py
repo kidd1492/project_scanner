@@ -106,18 +106,6 @@ def _save_project_metadata(project_name, root_dir, file_types, total_files, anal
     return metadata
 
 
-def get_existing_projects():
-    DATA_DIR = "data"
-    projects = []
-
-    if os.path.exists(DATA_DIR):
-        for name in os.listdir(DATA_DIR):
-            full_path = os.path.join(DATA_DIR, name)
-            if os.path.isdir(full_path):
-                projects.append(name)
-    return projects
-
-
 def get_counts(results):
     """
     Takes the in-memory analyzer results list and returns a summary count dict.
