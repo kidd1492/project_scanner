@@ -1,5 +1,6 @@
 import os, json
-from analyzers import html_analyzer, python_analyzer, js_analyzer
+from core.analyzers import python_analyzer
+from core.analyzers import html_analyzer, js_analyzer
 from utilities.file_handling import save_analyzer_results
 
 file_type_analyzer_map = {

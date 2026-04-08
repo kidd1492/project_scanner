@@ -1,6 +1,6 @@
 # api/index_routes.py
 from flask import Blueprint, render_template, jsonify
-from services.project_ingestion_service import ingest_project, get_existing_projects
+from services.ingestion_service import ingest_project, get_existing_projects
 import os
 
 index_bp = Blueprint("index", __name__)

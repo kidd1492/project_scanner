@@ -2,19 +2,11 @@ import os
 from utilities.file_handling import save_json, open_json
 from utilities.file_discovery import discover_files
 from utilities import chart_generator
-from analyzers.base_analyzer import generate_json_reports
+from core.analyzers.base_analyzer import generate_json_reports
+from core.ir.normalizer import build_ir
 
 
 def ingest_project(directory: str):
-    """
-    Orchestrates the full ingestion pipeline:
-    - project directory setup
-    - file discovery
-    - analysis execution
-    - persistence
-    - visualization
-    - metadata saving
-    """
     project_name = os.path.basename(directory)
     project_dir = f"data/{project_name}"
 
@@ -22,12 +14,26 @@ def ingest_project(directory: str):
         return _handle_existing_project(project_name)
 
     _initialize_project_directory(project_dir)
+
+    # 1. Discover files
     file_types, total_files = _discover_project_files(directory)
+
+    # 2. Run analyzers → produce html.json, js.json, api.json, classes.json, functions.json
     analysis_counts = _run_analysis_pipeline(file_types, project_dir, project_name)
-    metadata = _save_project_metadata(project_name, directory, file_types, total_files, analysis_counts)
+
+    # 3. Save metadata FIRST (creates project_scanner.json)
+    metadata = _save_project_metadata(
+        project_name,
+        directory,
+        file_types,
+        total_files,
+        analysis_counts
+    )
+
+    # 4. NOW build IR (requires project_scanner.json to exist)
+    _build_ir(project_dir)
 
     return metadata
-
 
 # ---------------------------------------------------------
 # Internal helpers — explicit, testable, single‑purpose
@@ -52,14 +58,35 @@ def _discover_project_files(directory: str):
 
 
 def _run_analysis_pipeline(file_types, project_dir, project_name):
-    """Runs analyzers, writes JSON outputs, generates charts, returns summary counts."""
+    """
+    Runs analyzers, writes JSON outputs, generates charts, returns summary counts.
+    Produces:
+        - html.json
+        - js.json
+        - api.json
+        - classes.json
+        - functions.json
+        - <project>.json (metadata)
+    """
     results = generate_json_reports(file_types, project_dir)
     analysis_counts = get_counts(results)
 
+    # Charts (still based on old JSONs)
     chart_generator.file_pie_chat(file_types, project_name)
     chart_generator.analysis_bar_chart(analysis_counts, project_name)
 
     return analysis_counts
+
+
+def _build_ir(project_dir: str):
+    """
+    Builds the unified IR (ir.json) from analyzer outputs.
+    """
+    try:
+        build_ir(project_dir)
+    except Exception as e:
+        print(f"[IR ERROR] Failed to build IR for {project_dir}: {e}")
+        raise
 
 
 def _save_project_metadata(project_name, root_dir, file_types, total_files, analysis_counts):
@@ -77,7 +104,6 @@ def _save_project_metadata(project_name, root_dir, file_types, total_files, anal
     save_json({"last": project_name}, "data/last_project.json")
 
     return metadata
-
 
 
 def get_existing_projects():
@@ -124,5 +150,3 @@ def get_counts(results):
             summary["python_functions"] = len(analyzer_results.get("functions", []))
 
     return summary
-
-
