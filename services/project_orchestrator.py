@@ -1,5 +1,7 @@
 # services/project_orchestrator.py
 import os
+from core.analyzers.ir import build_project_ir
+from utilities.file_handling import embed_ir_into_project_json
 from services.project_service import initialize_project
 from services.ingestion_service import (
     discover_project_files,
@@ -9,17 +11,8 @@ from services.analysis_service import run_analysis_pipeline
 
 
 def scan_project_files(directory: str):
-    """
-    High-level orchestration for scanning a project:
-      1. Initialize project
-      2. Discover files
-      3. Run analyzers
-      4. Save metadata
-      5. Build IR
-    """
     init = initialize_project(directory)
 
-    # If project already exists, just return that info
     if init["results"] == "Project Exist.":
         return init
 
@@ -30,9 +23,11 @@ def scan_project_files(directory: str):
     file_types, total_files = discover_project_files(directory)
 
     # 2. Run analyzers
-    analysis_counts = run_analysis_pipeline(file_types, project_dir, project_name)
+    analysis_counts, analyzer_outputs = run_analysis_pipeline(
+        file_types, project_dir, project_name
+    )
 
-    # 3. Save metadata
+    # 3. Save metadata (creates project.json)
     metadata = save_project_metadata(
         project_name=project_name,
         root_dir=directory,
@@ -41,10 +36,14 @@ def scan_project_files(directory: str):
         analysis_counts=analysis_counts,
     )
 
-    # 4. Build IR (optional to make this toggleable later)
-    #build_project_ir(project_dir)
+    # 4. Build IR
+    ir = build_project_ir(file_types, analyzer_outputs)
+
+    # 5. Embed IR into project.json
+    embed_ir_into_project_json(project_dir, project_name, ir)
 
     return metadata
+
 
 
 def get_existing_projects():

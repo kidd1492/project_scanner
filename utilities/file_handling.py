@@ -32,3 +32,16 @@ def open_json(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = json.load(f)
         return content
+    
+
+def embed_ir_into_project_json(project_dir, project_name, ir):
+    project_json_path = os.path.join(project_dir, f"{project_name}.json")
+
+    with open(project_json_path, "r", encoding="utf-8") as f:
+        project_data = json.load(f)
+
+    project_data["ir"] = ir
+
+    with open(project_json_path, "w", encoding="utf-8") as f:
+        json.dump(project_data, f, indent=4)
+

@@ -1,8 +1,6 @@
-import json
-
-def build_project_ir(file_types, analyzer_outputs, project_dir, project_name):
-    # 1. Build file index
+def build_project_ir(file_types, analyzer_outputs):
     files = {}
+
     for ft in file_types:
         for f in ft["files"]:
             files[f] = {
@@ -16,7 +14,6 @@ def build_project_ir(file_types, analyzer_outputs, project_dir, project_name):
                 "functions": []
             }
 
-    # 2. Merge analyzer outputs
     for block in analyzer_outputs:
         atype = block["type"]
         results = block["results"]
@@ -34,26 +31,9 @@ def build_project_ir(file_types, analyzer_outputs, project_dir, project_name):
         elif atype == "py":
             for route in results.get("routes", []):
                 files[route["file"]]["routes"].append(route)
-
             for cls in results.get("classes", []):
                 files[cls["file"]]["classes"].append(cls)
-
             for func in results.get("functions", []):
                 files[func["file"]]["functions"].append(func)
 
-    # 3. Build final IR
-    ir = {
-        "project": {
-            "name": project_name,
-            "root": project_dir,
-            "total_files": len(files)
-        },
-        "files": list(files.values())
-    }
-
-    # 4. Save IR
-    output_path = f"{project_dir}/ir.json"
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(ir, f, indent=4)
-
-    return ir
+    return {"files": list(files.values())}

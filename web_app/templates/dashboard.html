@@ -15,7 +15,7 @@
             <h2><strong>{{ project.project_name }}</strong></h2>
             <h3>Total Files: {{ project.total_files }}</h3>
 
-            <div class="index-grid">
+            <div class="image-grid">
                 <div>
                     <h3>File Types</h3>
                     <ul>
@@ -47,7 +47,7 @@
 
         <div class="chunk-block block-500">
             <h3>Analysis Chart</h3>
-            <div class="index-grid">
+            <div class="image-grid">
                 <div style="max-width: 200px;">
                     <ul>
                         <li><button onclick="showTab('html')">HTML Triggers</button></li>
@@ -70,6 +70,7 @@
 
     <div class="middle-column">
         <h2>Analysis</h2>
+        <div id="file-analysis-box" class="analysis-window"></div>
         <div id="file-display-box" class="analysis-window"></div>
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>

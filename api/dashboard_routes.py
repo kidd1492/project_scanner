@@ -60,3 +60,19 @@ def get_file(filename):
         "filename": filename,
         "content": content
     })
+
+
+@dashboard_bp.route("/fileinfo/<project>/<path:filename>")
+def get_file_info(project, filename):
+    project_data = load_project(project)
+    ir_files = project_data.get("ir", {}).get("files", [])
+
+    # Normalize path
+    filename = filename.replace("\\", "/")
+
+    # Find matching IR entry
+    for f in ir_files:
+        if f["path"] == filename:
+            return jsonify(f)
+
+    return jsonify({"error": "File not found in IR"}), 404

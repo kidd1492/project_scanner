@@ -4,25 +4,14 @@ from utilities import chart_generator
 from core.analyzers.base_analyzer import generate_json_reports
 
 
-def run_analysis_pipeline(file_types, project_dir: str, project_name: str):
-    """
-    Runs analyzers, writes JSON outputs, generates charts, returns summary counts.
-    Produces:
-        - html.json
-        - js.json
-        - api.json
-        - classes.json
-        - functions.json
-    """
+def run_analysis_pipeline(file_types, project_dir, project_name):
     results = generate_json_reports(file_types, project_dir)
     analysis_counts = get_analysis_counts(results)
-    ir = build_project_ir(file_types, results, project_dir, project_name)
 
-    # Charts (still based on analyzer outputs / counts)
     chart_generator.file_pie_chat(file_types, project_name)
     chart_generator.analysis_bar_chart(analysis_counts, project_name)
 
-    return analysis_counts
+    return analysis_counts, results
 
 
 def get_analysis_counts(results):
