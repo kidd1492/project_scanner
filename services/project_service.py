@@ -1,8 +1,9 @@
 import os
-from utilities.file_handling import save_json
+from utilities.file_handling import save_json, open_json
+
+DATA_DIR = "data"
 
 def get_existing_projects():
-    DATA_DIR = "data"
     projects = []
 
     if os.path.exists(DATA_DIR):
@@ -11,6 +12,38 @@ def get_existing_projects():
             if os.path.isdir(full_path):
                 projects.append(name)
     return projects
+
+
+def load_project(project_name):
+    project_dir = os.path.join(DATA_DIR, project_name)
+    project_file = os.path.join(project_dir, f"{project_name}.json")
+
+    if not os.path.exists(project_file):
+        return f"Project '{project_name}' not found.", 404
+
+    project_data = open_json(project_file)
+    save_json({"last": project_name}, "data/last_project.json")
+    return project_data
+
+
+def load_analysis_type(project_name, analysis_type):
+    project_dir = os.path.join(DATA_DIR, project_name)
+    file_path = os.path.join(project_dir, f"{analysis_type}.json")
+
+    if not os.path.exists(file_path):
+        return []
+    data = open_json(file_path)
+    return data
+
+
+def load_last_dashboard():
+    last_file = os.path.join(DATA_DIR, "last_project.json")
+    if not os.path.exists(last_file):
+        return "no_file"
+    last = open_json(last_file).get("last")
+    if not last:
+        return "no_file"
+    return last
 
 
 def initialize_project(directory: str):

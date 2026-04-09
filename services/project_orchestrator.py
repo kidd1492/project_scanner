@@ -1,8 +1,5 @@
-import os
-from utilities.file_handling import save_json
-
 # services/project_orchestrator.py
-
+import os
 from services.project_service import initialize_project
 from services.ingestion_service import (
     discover_project_files,
@@ -12,7 +9,7 @@ from services.ingestion_service import (
 from services.analysis_service import run_analysis_pipeline
 
 
-def scan_project(directory: str):
+def scan_project_files(directory: str):
     """
     High-level orchestration for scanning a project:
       1. Initialize project
