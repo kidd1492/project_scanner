@@ -137,6 +137,7 @@ body {
     border: 5px solid rgb(0, 174, 255);
     border-radius: 6px;
     color: #000000;
+    overflow-x:auto;
 }
 
 /* Analysis */
@@ -153,4 +154,15 @@ body {
     border-radius: 6px;
     margin-top: 12px;
     box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+
+.file-item {
+    cursor: pointer;
+    color: #0077cc;
+    padding: 3px 0;
+}
+
+.file-item:hover {
+    text-decoration: underline;
 }

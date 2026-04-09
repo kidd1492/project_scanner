@@ -20,7 +20,12 @@
                     <h3>File Types</h3>
                     <ul>
                         {% for ft in project.file_types %}
-                        <li><b>{{ ft.type }}: {{ ft.count }}</b></li>
+                        <li>
+                            <button class="filetype-btn"
+                                    onclick="loadFileList('{{ ft.type }}')">
+                                <b>{{ ft.type }}: {{ ft.count }}</b>
+                            </button>
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -33,6 +38,12 @@
                 </div>
             </div>
         </div>
+
+        <div class="chunk-block">
+            <h3>Files</h3>
+            <div id="file-list-box" class="analysis-window"></div>
+        </div>
+
 
         <div class="chunk-block block-500">
             <h3>Analysis Chart</h3>
@@ -59,6 +70,7 @@
 
     <div class="middle-column">
         <h2>Analysis</h2>
+        <div id="file-display-box" class="analysis-window"></div>
         <div id="html" class="analysis-window"></div>
         <div id="js" class="analysis-window"></div>
         <div id="api" class="analysis-window"></div>

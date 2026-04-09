@@ -2,7 +2,6 @@
 
 from utilities.file_discovery import discover_files
 from utilities.file_handling import save_json
-from core.ir.normalizer import build_ir
 
 
 def discover_project_files(directory: str):
@@ -36,13 +35,3 @@ def save_project_metadata(
 
     return metadata
 
-
-def build_project_ir(project_dir: str):
-    """
-    Builds the unified IR (ir.json) from analyzer outputs.
-    """
-    try:
-        build_ir(project_dir)
-    except Exception as e:
-        print(f"[IR ERROR] Failed to build IR for {project_dir}: {e}")
-        raise

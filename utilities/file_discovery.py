@@ -16,6 +16,7 @@ def discover_files(directory: str):
             if any(file.endswith(ext) for ext in allowed_extensions):
                 ext = file.split('.')[-1]
                 full_path = os.path.abspath(os.path.join(root, file))
+                full_path = full_path.replace("\\", "/")
                 categorized.setdefault(ext, []).append(full_path)
 
     file_types = [

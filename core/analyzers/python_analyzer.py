@@ -12,6 +12,7 @@ def analyze_files(file_list):
     }
 
     for file in file_list:
+        file = file.replace("\\", "/")
         with open(file, "r", encoding="utf-8") as f:
             tree = ast.parse(f.read())
 

@@ -7,6 +7,7 @@ def analyze_files(file_list):
     TRIGGER_PATTERN = r'on(click|change|input|submit)\s*=\s*["\']([^"\']+)["\']'
 
     for file in file_list:
+        file = file.replace("\\", "/")
         with open(file, "r", encoding="utf-8") as f:
             content = f.read()
 

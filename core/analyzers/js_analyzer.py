@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 
 # Detect function declarations
 FUNCTION_PATTERN = r"""
@@ -39,6 +40,8 @@ def analyze_files(file_list):
     results = []
 
     for file in file_list:
+        file = file.replace("\\", "/")
+
         with open(file, "r", encoding="utf-8") as f:
             content = f.read()
 

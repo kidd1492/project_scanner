@@ -4,7 +4,7 @@ from .helpers import get_call_name, get_return_value
 
 class ClassExtractor(ast.NodeVisitor):
     def __init__(self, file_path):
-        self.file_path = file_path
+        self.file_path = file_path.replace("\\", "/")
         self.classes = []
 
     def visit_ClassDef(self, node):

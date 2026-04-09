@@ -4,7 +4,7 @@ from .helpers import get_call_name, get_return_value
 
 class FunctionExtractor(ast.NodeVisitor):
     def __init__(self, file_path):
-        self.file_path = file_path
+        self.file_path = file_path.replace("\\", "/")
         self.functions = []
 
     def visit_FunctionDef(self, node):

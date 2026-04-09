@@ -4,7 +4,6 @@ from services.project_service import initialize_project
 from services.ingestion_service import (
     discover_project_files,
     save_project_metadata,
-    build_project_ir,
 )
 from services.analysis_service import run_analysis_pipeline
 
