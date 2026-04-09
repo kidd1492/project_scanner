@@ -1,7 +1,13 @@
 import os, json
 from core.analyzers import python_analyzer
-from core.analyzers import html_analyzer, js_analyzer
+from core.analyzers.js_analyzer import JSAnalyzer
+from core.analyzers.html_analyzer import HTMLAnalyzer
 from utilities.file_handling import save_analyzer_results
+
+
+html_analyzer = HTMLAnalyzer()
+js_analyzer = JSAnalyzer()
+
 
 file_type_analyzer_map = {
     "html": html_analyzer,

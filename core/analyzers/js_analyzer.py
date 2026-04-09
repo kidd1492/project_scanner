@@ -2,69 +2,94 @@ import re
 from pathlib import Path
 
 # Detect function declarations
-FUNCTION_PATTERN = r"""
-    (?:function\s+(\w+)\s*\() |
-    (?:const\s+(\w+)\s*=\s*\([^)]*\)\s*=>) |
-    (?:async\s+function\s+(\w+)\s*\()
-"""
+FUNCTION_PATTERN = re.compile(
+    r"""
+    # function foo() { ... }
+    function\s+(\w+)\s*\(
 
-# Detect any line containing fetch(
-API_CALL_PATTERN = r"fetch\s*\("
+    |
 
+    # const foo = () => { ... }
+    const\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{
 
-def extract_function_body(content, start_index):
-    """Extract full function body using brace counting."""
-    brace_count = 0
-    body = []
-    started = False
+    |
 
-    for i in range(start_index, len(content)):
-        c = content[i]
+    # let foo = function() { ... }
+    (?:let|var)\s+(\w+)\s*=\s*function\s*\(
 
-        if c == "{":
-            brace_count += 1
-            started = True
+    |
 
-        if started:
-            body.append(c)
+    # async function foo() { ... }
+    async\s+function\s+(\w+)\s*\(
+    """,
+    re.VERBOSE
+)
 
-        if c == "}":
-            brace_count -= 1
-            if brace_count == 0 and started:
-                break
-
-    return "".join(body)
+# Detect fetch() anywhere
+API_CALL_PATTERN = re.compile(r"fetch\s*\(")
 
 
-def analyze_files(file_list):
-    results = []
+class JSAnalyzer:
+    def __init__(self):
+        self.file_type = "js"
+        self.results = []
 
-    for file in file_list:
-        file = file.replace("\\", "/")
+    def analyze_files(self, file_list):
+        self.results = []
 
-        with open(file, "r", encoding="utf-8") as f:
-            content = f.read()
+        for file in file_list:
+            file = file.replace("\\", "/")
+            content = Path(file).read_text(encoding="utf-8", errors="ignore")
 
-        # Find all functions in the file
-        for match in re.finditer(FUNCTION_PATTERN, content, re.VERBOSE):
-            func_name = next((m for m in match.groups() if m), None)
+            for match in FUNCTION_PATTERN.finditer(content):
+                func_name = next((g for g in match.groups() if g), None)
 
-            # Extract full function body
-            func_body = extract_function_body(content, match.end())
+                # Extract function body
+                func_body = self._extract_function_body(content, match.end())
 
-            # Default: no API call
-            api_call = ""
+                # Detect fetch() inside the function
+                api_call = self._find_fetch(func_body)
 
-            # Scan body line-by-line for fetch(
-            for line in func_body.splitlines():
-                if re.search(API_CALL_PATTERN, line):
-                    api_call = line.strip()
+                self.results.append({
+                    "file": file,
+                    "file_type": self.file_type,
+                    "function": func_name,
+                    "api_calls": api_call,
+                    "source": file.split('/')[-1]
+                })
+
+        return self.results
+
+    # ---------------------------------------------------------
+    # Extract full function body using brace counting
+    # ---------------------------------------------------------
+    def _extract_function_body(self, content, start_index):
+        brace_count = 0
+        body = []
+        started = False
+
+        for i in range(start_index, len(content)):
+            c = content[i]
+
+            if c == "{":
+                brace_count += 1
+                started = True
+
+            if started:
+                body.append(c)
+
+            if c == "}":
+                brace_count -= 1
+                if brace_count == 0 and started:
                     break
 
-            results.append({
-                "file": file,
-                "function": func_name,
-                "api_calls": api_call
-            })
+        return "".join(body)
 
-    return results
+    # ---------------------------------------------------------
+    # Detect fetch() inside the function body
+    # ---------------------------------------------------------
+    def _find_fetch(self, func_body):
+        for line in func_body.splitlines():
+            if API_CALL_PATTERN.search(line):
+                return line.strip()
+        return ""
