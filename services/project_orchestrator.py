@@ -1,8 +1,8 @@
 # services/project_orchestrator.py
 
 import os
-from core.analyzers.ir import build_project_ir
-from utilities.file_handling import embed_ir_into_project_json
+from core.ir_system.ir import build_project_ir
+from core.ir_system.ir_writer import embed_ir_into_project_json
 from services.project_service import initialize_project
 from services.ingestion_service import (
     discover_project_files,

@@ -1,7 +1,7 @@
 # services/analysis_service.py
 
 from core.analyzers.analyzer_runner import run_analyzers
-from utilities import chart_generator
+from core.chart_system import chart_generator
 
 
 def run_analysis_pipeline(file_types, project_dir, project_name):
