@@ -1,4 +1,5 @@
 # services/project_orchestrator.py
+
 import os
 from core.analyzers.ir import build_project_ir
 from utilities.file_handling import embed_ir_into_project_json
@@ -27,7 +28,7 @@ def scan_project_files(directory: str):
         file_types, project_dir, project_name
     )
 
-    # 3. Save metadata (creates project.json)
+    # 3. Save metadata
     metadata = save_project_metadata(
         project_name=project_name,
         root_dir=directory,
@@ -43,7 +44,6 @@ def scan_project_files(directory: str):
     embed_ir_into_project_json(project_dir, project_name, ir)
 
     return metadata
-
 
 
 def get_existing_projects():

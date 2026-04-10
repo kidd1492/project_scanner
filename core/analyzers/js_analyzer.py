@@ -1,67 +1,58 @@
+# core/analyzers/js_analyzer.py
+
 import re
 from pathlib import Path
+from .base_analyzer import BaseAnalyzer
 
-# Detect function declarations
 FUNCTION_PATTERN = re.compile(
     r"""
-    # function foo() { ... }
     function\s+(\w+)\s*\(
-
     |
-
-    # const foo = () => { ... }
     const\s+(\w+)\s*=\s*\([^)]*\)\s*=>\s*\{
-
     |
-
-    # let foo = function() { ... }
     (?:let|var)\s+(\w+)\s*=\s*function\s*\(
-
     |
-
-    # async function foo() { ... }
     async\s+function\s+(\w+)\s*\(
     """,
     re.VERBOSE
 )
 
-# Detect fetch() anywhere
 API_CALL_PATTERN = re.compile(r"fetch\s*\(")
 
-
-class JSAnalyzer:
-    def __init__(self):
-        self.file_type = "js"
-        self.results = []
+class JSAnalyzer(BaseAnalyzer):
+    file_type = "js"
 
     def analyze_files(self, file_list):
-        self.results = []
+        results = []
 
         for file in file_list:
             file = file.replace("\\", "/")
+            source = file.split("/")[-1]
             content = Path(file).read_text(encoding="utf-8", errors="ignore")
 
             for match in FUNCTION_PATTERN.finditer(content):
                 func_name = next((g for g in match.groups() if g), None)
+                start_index = match.end()
 
                 # Extract function body
-                func_body = self._extract_function_body(content, match.end())
+                func_body = self._extract_function_body(content, start_index)
 
                 # Detect fetch() inside the function
                 api_call = self._find_fetch(func_body)
 
-                self.results.append({
-                    "file": file,
-                    "file_type": self.file_type,
-                    "function": func_name,
+                results.append({
+                    "type": "js_function",
+                    "name": func_name,
+                    "args": [],
+                    "calls": [],  # JS call graph can be added later
                     "api_calls": api_call,
-                    "source": file.split('/')[-1]
+                    "file": file,
+                    "source": source,
+                    "line": content.count("\n", 0, match.start()) + 1
                 })
 
-        return self.results
+        return results
 
-    # ---------------------------------------------------------
-    # Extract full function body using brace counting
     # ---------------------------------------------------------
     def _extract_function_body(self, content, start_index):
         brace_count = 0
@@ -85,8 +76,6 @@ class JSAnalyzer:
 
         return "".join(body)
 
-    # ---------------------------------------------------------
-    # Detect fetch() inside the function body
     # ---------------------------------------------------------
     def _find_fetch(self, func_body):
         for line in func_body.splitlines():

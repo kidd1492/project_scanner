@@ -1,10 +1,12 @@
+# core/analyzers/route_extractor.py
+
 import ast
 from .helpers import get_call_name, get_return_value
-
 
 class RouteExtractor(ast.NodeVisitor):
     def __init__(self, file_path):
         self.file_path = file_path.replace("\\", "/")
+        self.source = self.file_path.split("/")[-1]
         self.routes = []
 
     def visit_FunctionDef(self, node):
@@ -21,7 +23,6 @@ class RouteExtractor(ast.NodeVisitor):
         if not route_path:
             return
 
-        # Extract calls inside the function
         calls = []
         for child in ast.walk(node):
             if isinstance(child, ast.Call):
@@ -29,16 +30,16 @@ class RouteExtractor(ast.NodeVisitor):
                 if name:
                     calls.append(name)
 
-        # Extract return value
-        return_value = get_return_value(node)
-
         self.routes.append({
+            "type": "route",
+            "name": node.name,
             "route": route_path,
-            "function": node.name,
             "args": [arg.arg for arg in node.args.args],
-            "returns": return_value,
             "calls": calls,
-            "file": self.file_path
+            "returns": get_return_value(node),
+            "file": self.file_path,
+            "source": self.source,
+            "line": node.lineno
         })
 
         self.generic_visit(node)

@@ -1,17 +1,24 @@
 # services/analysis_service.py
-from core.analyzers.ir import build_project_ir
+
+from core.analyzers.analyzer_runner import run_analyzers
 from utilities import chart_generator
-from core.analyzers.base_analyzer import generate_json_reports
 
 
 def run_analysis_pipeline(file_types, project_dir, project_name):
-    results = generate_json_reports(file_types, project_dir)
-    analysis_counts = get_analysis_counts(results)
+    """
+    Runs all analyzers, saves their JSON outputs, and returns:
+    - analysis_counts: summary counts for dashboard
+    - analyzer_outputs: raw analyzer results for IR builder
+    """
 
+    analyzer_outputs = run_analyzers(file_types, project_dir)
+    analysis_counts = get_analysis_counts(analyzer_outputs)
+
+    # Generate charts
     chart_generator.file_pie_chat(file_types, project_name)
     chart_generator.analysis_bar_chart(analysis_counts, project_name)
 
-    return analysis_counts, results
+    return analysis_counts, analyzer_outputs
 
 
 def get_analysis_counts(results):
@@ -39,7 +46,7 @@ def get_analysis_counts(results):
         elif analyzer_type == "js":
             summary["js_functions"] = len(analyzer_results)
 
-        # PYTHON → dict with 3 lists
+        # PYTHON → dict with lists
         elif analyzer_type == "py":
             summary["api_routes"] = len(analyzer_results.get("routes", []))
             summary["classes"] = len(analyzer_results.get("classes", []))

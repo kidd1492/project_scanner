@@ -1,30 +1,26 @@
-import os, json
-from core.analyzers import python_analyzer
+# core/analyzers/base_analyzer.py
+
+class BaseAnalyzer:
+    """
+    Base class for all analyzers.
+    Each analyzer must implement analyze_files(file_list) and return a list of structured items.
+    """
+    file_type = None
+
+    def analyze_files(self, file_list):
+        raise NotImplementedError("Analyzer must implement analyze_files()")
+
+
+# ---------------------------------------------------------
+# Analyzer registry (maps file extensions to analyzer classes)
+# ---------------------------------------------------------
+
+from core.analyzers.python_analyzer import PythonAnalyzer
 from core.analyzers.js_analyzer import JSAnalyzer
 from core.analyzers.html_analyzer import HTMLAnalyzer
-from utilities.file_handling import save_analyzer_results
-
-
-html_analyzer = HTMLAnalyzer()
-js_analyzer = JSAnalyzer()
-
 
 file_type_analyzer_map = {
-    "html": html_analyzer,
-    "py": python_analyzer,
-    "js": js_analyzer
+    "py": PythonAnalyzer(),
+    "js": JSAnalyzer(),
+    "html": HTMLAnalyzer()
 }
-
-def generate_json_reports(file_types, output_dir):
-    final = []
-    for item in file_types:
-        type = item.get("type")
-        analyzer = file_type_analyzer_map.get(type)
-        if not analyzer:
-            continue
-
-        results = analyzer.analyze_files(item.get("files"))
-        final.append({"type": type, "results":results})
-        save_analyzer_results(results, type, output_dir)
-    return final
-

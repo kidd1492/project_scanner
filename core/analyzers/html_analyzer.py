@@ -1,34 +1,40 @@
+# core/analyzers/html_analyzer.py
+
 from bs4 import BeautifulSoup
 import re
 from pathlib import Path
+from .base_analyzer import BaseAnalyzer
 
-EVENT_ATTR_PATTERN = re.compile(r"^on[a-zA-Z]+$")   # onclick, onchange, etc.
+EVENT_ATTR_PATTERN = re.compile(r"^on[a-zA-Z]+$")
 FUNC_CALL_PATTERN = re.compile(r"([a-zA-Z_]\w*)\s*\(")
 
-class HTMLAnalyzer:
-    def __init__(self):
-        self.file_type = "html"
-        self.results = []
+class HTMLAnalyzer(BaseAnalyzer):
+    file_type = "html"
 
     def analyze_files(self, file_list):
-        self.results = []
+        results = []
 
         for file in file_list:
+            file = file.replace("\\", "/")
+            source = file.split("/")[-1]
             content = Path(file).read_text(encoding="utf-8", errors="ignore")
             soup = BeautifulSoup(content, "html.parser")
 
-            # 1. Extract event attributes
+            # 1. Extract event attributes (onclick, onchange, etc.)
             for tag in soup.find_all(True):
                 for attr, value in tag.attrs.items():
                     if EVENT_ATTR_PATTERN.match(attr):
                         funcs = FUNC_CALL_PATTERN.findall(value or "")
                         for func in funcs:
-                            self.results.append({
-                                "file": file,
-                                "file_type": self.file_type,
+                            results.append({
+                                "type": "html_event",
                                 "event": attr,
-                                "function": func,
-                                "source": file.split('/')[-1]
+                                "name": func,
+                                "args": [],
+                                "calls": [],
+                                "file": file,
+                                "source": source,
+                                "line": getattr(tag, "sourceline", None)
                             })
 
             # 2. Extract JS inside <script> tags
@@ -37,12 +43,15 @@ class HTMLAnalyzer:
                     js_code = script.string
                     funcs = FUNC_CALL_PATTERN.findall(js_code)
                     for func in funcs:
-                        self.results.append({
-                            "file": file,
-                            "file_type": self.file_type,
+                        results.append({
+                            "type": "html_script_function",
                             "event": "script_block",
-                            "function": func,
-                            "source": file.split('/')[-1]
+                            "name": func,
+                            "args": [],
+                            "calls": [],
+                            "file": file,
+                            "source": source,
+                            "line": getattr(script, "sourceline", None)
                         })
 
-        return self.results
+        return results

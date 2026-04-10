@@ -15,10 +15,12 @@ def save_python_outputs(results, output_dir):
     api_path = os.path.join(output_dir, "api.json")
     classes_path = os.path.join(output_dir, "classes.json")
     functions_path = os.path.join(output_dir, "functions.json")
+    imports_path = os.path.join(output_dir, "imports.json")
 
     save_json(results["routes"], api_path)
     save_json(results["classes"], classes_path)
     save_json(results["functions"], functions_path)
+    save_json(results["imports"], imports_path)
 
 
 def save_json(data, output_file):
