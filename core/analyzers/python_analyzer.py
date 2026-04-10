@@ -1,11 +1,14 @@
 # core/analyzers/python_analyzer.py
 
 import ast
-from .helpers import attach_parents
-from .route_extractor import RouteExtractor
-from .class_extractor import ClassExtractor
-from .function_extractor import FunctionExtractor
-from .import_extractor import ImportExtractor
+from .python_extractors import (
+    RouteExtractor,
+    ClassExtractor,
+    FunctionExtractor,
+    ImportExtractor,
+    attach_parents
+)
+ 
 from .base_analyzer import BaseAnalyzer
 
 class PythonAnalyzer(BaseAnalyzer):
