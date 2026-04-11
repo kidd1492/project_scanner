@@ -1,32 +1,42 @@
+# services/dashboard_service.py
+
 import os
-from utilities.file_handling import save_json, open_json
+from utilities.file_handling import open_json
+
+from core.ir_system.ir_reader import load_ir
+from core.ir_system.ir_counter import compute_ir_counts
+from core.chart_system.chart_generator import generate_all_charts
 
 DATA_DIR = "data"
 
-"""TODO make functions for get_counts and get_charts"""
 
-def get_counts():
-    ...
-
-def get_charts():
-    ...
-
-
-def load_analysis_type(project_name, analysis_type):
-    project_dir = os.path.join(DATA_DIR, project_name)
-    file_path = os.path.join(project_dir, f"{analysis_type}.json")
-
-    if not os.path.exists(file_path):
-        return []
-    data = open_json(file_path)
-    return data
+# ---------------------------------------------------------
+# 1. Return IR-based counts for the overview panel
+# ---------------------------------------------------------
+def get_counts(project_name):
+    ir = load_ir(project_name)
+    return compute_ir_counts(ir)
 
 
+# ---------------------------------------------------------
+# 2. Generate all dashboard charts (5 PNGs)
+# ---------------------------------------------------------
+def generate_charts(project_name):
+    ir = load_ir(project_name)
+    generate_all_charts(ir, project_name)
+    return {"status": "ok"}
+
+
+# ---------------------------------------------------------
+# 3. Load last opened project
+# ---------------------------------------------------------
 def load_last_dashboard():
     last_file = os.path.join(DATA_DIR, "last_project.json")
     if not os.path.exists(last_file):
         return "no_file"
+
     last = open_json(last_file).get("last")
     if not last:
         return "no_file"
+
     return last

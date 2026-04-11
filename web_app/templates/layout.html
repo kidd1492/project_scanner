@@ -13,20 +13,31 @@
     {% block nav %}
     <ul class="nav">
         <li><a href="/">Home</a></li>
+
+        <!-- Always available -->
         <li><a href="/dashboard">Dashboard</a></li>
-        <li><a href="/trace/traces">Traces</a></li>
-        <li><a href="/">Mermaid Diagrams</a></li>
-        <li><a href="/">Template Builder</a></li>
-        <li><a href="/">Brainstorming</a></li>
-        <li><a href="/">Security Scanner</a></li>
+
+        <!-- Only show these if a project is loaded -->
+        {% if project %}
+            <li><a href="/explorer/{{ project.project_name }}">Explorer</a></li>
+            <li><a href="/trace/{{ project.project_name }}">Traces</a></li>
+            <li><a href="/mermaid/{{ project.project_name }}">Mermaid Diagrams</a></li>
+        {% endif %}
+
+        <!-- Always available (future tools) -->
+        <li><a href="/template-builder">Template Builder</a></li>
+        <li><a href="/brainstorm">Brainstorming</a></li>
+        <li><a href="/security">Security Scanner</a></li>
     </ul>
     {% endblock %}
 </nav>
+
 
 {% block body %}{% endblock %}
 
 <script src="{{ url_for('static', filename='js_files/javascript.js') }}"></script>
 <script src="{{ url_for('static', filename='js_files/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js_files/explorer.js') }}"></script>
 
 </body>
 </html>

@@ -1,106 +1,60 @@
-
-// Tab switching
-function showTab(type) {
-    document.querySelectorAll('.analysis-window').forEach(div => {
-        div.style.display = 'none';
-    });
-
-    document.getElementById(type).style.display = 'block';
-    loadAnalysis(type);
-}
+document.addEventListener("DOMContentLoaded", () => {
+    loadOverview();
+    loadCharts();
+});
 
 
-// Load analysis JSON (html, js, api, classes, functions)
-function loadAnalysis(type) {
-    fetch(`/analysis/${PROJECT_NAME}/${type}`)
+// ---------------------------------------------------------
+// Load IR-based counts for overview panel
+// ---------------------------------------------------------
+function loadOverview() {
+    fetch(`/dashboard/${PROJECT_NAME}/counts`)
         .then(r => r.json())
-        .then(data => {
-            const box = document.getElementById(type);
-            box.innerHTML = `
-                <h3>${data.length} ${type.toUpperCase()}</h3><br/>
-                <pre>${JSON.stringify(data, null, 4)}</pre>
-            `;
-        });
-}
+        .then(counts => {
+            const box = document.getElementById("overview-content");
 
-function loadFileList(type) {
-    fetch(`/files/${PROJECT_NAME}/${type}`)
-        .then(r => r.json())
-        .then(data => {
-            const box = document.getElementById("file-list-box");
-
-            box.style.display = "block";
             box.innerHTML = `
-                <h3>${data.files.length} ${type.toUpperCase()} FILES</h3>
                 <ul>
-                    ${data.files
-                        .map(f => `<li class="file-item" onclick="loadFile('${f}')">${f}</li>`)
-                        .join("")}
+                    <li><b>Total Files:</b> ${counts.total_files}</li>
+                    <li><b>Python Files:</b> ${counts.py_files}</li>
+                    <li><b>JS Files:</b> ${counts.js_files}</li>
+                    <li><b>HTML Files:</b> ${counts.html_files}</li>
+                    <li><b>CSS Files:</b> ${counts.css_files}</li>
+                    <li><b>Functions:</b> ${counts.functions}</li>
+                    <li><b>Classes:</b> ${counts.classes}</li>
+                    <li><b>Methods:</b> ${counts.methods}</li>
+                    <li><b>Imports:</b> ${counts.imports}</li>
+                    <li><b>Routes:</b> ${counts.routes}</li>
+                    <li><b>JS Functions:</b> ${counts.js_functions}</li>
+                    <li><b>HTML Events:</b> ${counts.html_events}</li>
+                    <li><b>API Calls:</b> ${counts.api_calls}</li>
                 </ul>
             `;
-
         });
 }
 
-function loadFile(filename) {
-    // Load file content
-    fetch(`/file/${encodeURIComponent(filename)}`)
+
+// ---------------------------------------------------------
+// Load all charts (PNG files)
+// ---------------------------------------------------------
+function loadCharts() {
+    fetch(`/dashboard/${PROJECT_NAME}/charts`)
         .then(r => r.json())
-        .then(data => {
-            const box = document.getElementById("file-display-box");
-            box.style.display = "block";
-            box.innerHTML = `
-                <h3>${filename}</h3>
-                <pre>${data.content}</pre>
-            `;
+        .then(() => {
+            // After charts are generated, load them into the DOM
+            document.getElementById("chart-file-types").src =
+                `/static/projects/${PROJECT_NAME}/file_types.png`;
+
+            document.getElementById("chart-symbols").src =
+                `/static/projects/${PROJECT_NAME}/symbol_distribution.png`;
+
+            document.getElementById("chart-routes-js").src =
+                `/static/projects/${PROJECT_NAME}/routes_vs_js.png`;
+
+            document.getElementById("chart-api-calls").src =
+                `/static/projects/${PROJECT_NAME}/api_calls.png`;
+
+            document.getElementById("chart-html-events").src =
+                `/static/projects/${PROJECT_NAME}/html_events.png`;
         });
-
-    // Load file analysis
-    fetch(`/fileinfo/${PROJECT_NAME}/${encodeURIComponent(filename)}`)
-        .then(r => r.json())
-        .then(info => {
-            const box = document.getElementById("file-analysis-box");
-            box.style.display = "block";
-
-            if (info.error) {
-                box.innerHTML = `<p>No analysis available.</p>`;
-                return;
-            }
-
-            box.innerHTML = buildFileAnalysisHTML(info);
-        });
-}
-
-
-function buildFileAnalysisHTML(info) {
-    return `
-        <h3>Analysis Summary</h3>
-        <p><b>Type:</b> ${info.type}</p>
-
-        <ul>
-            <li><b>HTML Events:</b> ${info.html_events.length}</li>
-            <li><b>JS Functions:</b> ${info.js_functions.length}</li>
-            <li><b>API Calls:</b> ${info.api_calls.length}</li>
-            <li><b>Routes:</b> ${info.routes.length}</li>
-            <li><b>Classes:</b> ${info.classes.length}</li>
-            <li><b>Functions:</b> ${info.functions.length}</li>
-        </ul>
-
-        ${renderSection("HTML Events", info.html_events, e => `${e.event} → ${e.function}`)}
-        ${renderSection("JS Functions", info.js_functions, f => `${f.function}()`)}
-        ${renderSection("API Calls", info.api_calls, a => a)}
-        ${renderSection("Routes", info.routes, r => `${r.route} → ${r.function}()`)}
-        ${renderSection("Classes", info.classes, c => `${c.class} (${c.methods.length} methods)`)}
-        ${renderSection("Functions", info.functions, f => `${f.function}(${f.args.join(", ")})`)}
-    `;
-}
-
-function renderSection(title, items, formatter) {
-    if (!items || items.length === 0) return "";
-    return `
-        <h4>${title}</h4>
-        <ul>
-            ${items.map(i => `<li>${formatter(i)}</li>`).join("")}
-        </ul>
-    `;
 }

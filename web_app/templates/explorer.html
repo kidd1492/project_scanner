@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block title %}Explorer — {{ project.project_name }}{% endblock %}
+
+{% block body %}
+
+<script>
+    const PROJECT_NAME = "{{ project.project_name }}";
+</script>
+
+<script src="/static/js/explorer.js" defer></script>
+
+<div class="explorer-container">
+
+    <!-- LEFT: File List -->
+    <div class="explorer-panel" id="file-list-panel">
+        <h3>Files</h3>
+        <ul id="file-list"></ul>
+    </div>
+
+    <!-- MIDDLE: File Details -->
+    <div class="explorer-panel" id="file-details-panel">
+        <h3>File Details</h3>
+        <div id="file-details"></div>
+    </div>
+
+    <!-- RIGHT: Symbol Details -->
+    <div class="explorer-panel" id="symbol-details-panel">
+        <h3>Symbol Details</h3>
+        <div id="symbol-details"></div>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,11 +1,10 @@
 from flask import Blueprint, render_template, jsonify, request
 from utilities.file_handling import open_json
-from services.trace_service import get_trace
-from test import trace_to_mermaid
+'''from services.trace_service import get_trace'''
 
 
 trace_bp = Blueprint('trace', __name__, url_prefix='/trace')
-
+'''
 @trace_bp.route("/traces")
 def traces():
     last_data = open_json("data/last_project.json")
@@ -19,7 +18,7 @@ def run_trace():
     trigger = request.args.get("trigger")
     trace = get_trace(last, trigger)
     return jsonify(trace)
-
+'''
 
 
 

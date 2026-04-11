@@ -174,3 +174,50 @@ body {
 .file-item:hover {
     text-decoration: underline;
 }
+
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    padding: 20px;
+}
+
+.dash-box {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.chart-img {
+    width: 60%;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.explorer-container {
+    display: grid;
+    grid-template-columns: 25% 35% 40%;
+    gap: 20px;
+    padding: 20px;
+}
+
+.explorer-panel {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    max-height: 85vh;
+}
+
+#file-list li {
+    cursor: pointer;
+    padding: 5px 0;
+}
+
+#file-list li:hover {
+    color: #0078ff;
+}
+

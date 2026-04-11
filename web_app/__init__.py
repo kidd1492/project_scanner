@@ -15,10 +15,12 @@ def create_app():
     from api.index_routes import index_bp
     from api.dashboard_routes import dashboard_bp
     from api.trace_routes import trace_bp
+    from api.explorer_routes import explorer_bp
 
     # Register blueprints
 
     app.register_blueprint(index_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(trace_bp)
+    app.register_blueprint(explorer_bp) 
     return app

@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard — {{ project.project_name }}{% endblock %}
 
 {% block body %}
 
@@ -7,76 +7,47 @@
     const PROJECT_NAME = "{{ project.project_name }}";
 </script>
 
-<div class="index-grid">
+<link rel="stylesheet" href="/static/css/dashboard.css">
+<script src="/static/js/dashboard.js" defer></script>
 
-    <div class="middle-column">
+<div class="dashboard-container">
 
-        <div class="chunk-block block-500">
-            <h2><strong>{{ project.project_name }}</strong></h2>
-            <h3>Total Files: {{ project.total_files }}</h3>
-
-            <div class="image-grid">
-                <div>
-                    <h3>File Types</h3>
-                    <ul>
-                        {% for ft in project.file_types %}
-                        <li>
-                            <button class="filetype-btn"
-                                    onclick="loadFileList('{{ ft.type }}')">
-                                <b>{{ ft.type }}: {{ ft.count }}</b>
-                            </button>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-
-                <div>
-                    <h3>File Chart</h3>
-                    <img src="/static/projects/{{ project.project_name }}/chat.png"
-                         alt="File Type Chart"
-                         class="img-chart-small">
-                </div>
-            </div>
+    <!-- Overview Panel -->
+    <div class="dash-box" id="overview-box">
+        <h2>{{ project.project_name }}</h2>
+        <div id="overview-content">
+            <!-- Filled by JS -->
         </div>
-
-        <div class="chunk-block">
-            <h3>Files</h3>
-            <div id="file-list-box" class="analysis-window"></div>
-        </div>
-
-
-        <div class="chunk-block block-500">
-            <h3>Analysis Chart</h3>
-            <div class="image-grid">
-                <div style="max-width: 200px;">
-                    <ul>
-                        <li><button onclick="showTab('html')">HTML Triggers</button></li>
-                        <li><button onclick="showTab('js')">JS Functions</button></li>
-                        <li><button onclick="showTab('api')">API Routes</button></li>
-                        <li><button onclick="showTab('classes')">Service Classes</button></li>
-                        <li><button onclick="showTab('functions')">Core Functions</button></li>
-                    </ul>
-                </div>
-
-                <div>
-                    <img src="/static/projects/{{ project.project_name }}/analysis.png"
-                         alt="Analysis Summary Chart"
-                         class="img-chart-large">
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <div class="middle-column">
-        <h2>Analysis</h2>
-        <div id="file-analysis-box" class="analysis-window"></div>
-        <div id="file-display-box" class="analysis-window"></div>
-        <div id="html" class="analysis-window"></div>
-        <div id="js" class="analysis-window"></div>
-        <div id="api" class="analysis-window"></div>
-        <div id="classes" class="analysis-window"></div>
-        <div id="functions" class="analysis-window"></div>
+    <!-- File Type Pie -->
+    <div class="dash-box">
+        <h3>File Type Distribution</h3>
+        <img id="chart-file-types" class="chart-img" />
+    </div>
+
+    <!-- Symbol Distribution -->
+    <div class="dash-box">
+        <h3>Functions / Classes / Methods / Imports</h3>
+        <img id="chart-symbols" class="chart-img" />
+    </div>
+
+    <!-- Routes vs JS -->
+    <div class="dash-box">
+        <h3>Routes vs JS Functions</h3>
+        <img id="chart-routes-js" class="chart-img" />
+    </div>
+
+    <!-- API Calls -->
+    <div class="dash-box">
+        <h3>API Call Distribution</h3>
+        <img id="chart-api-calls" class="chart-img" />
+    </div>
+
+    <!-- HTML Events -->
+    <div class="dash-box">
+        <h3>HTML Event Distribution</h3>
+        <img id="chart-html-events" class="chart-img" />
     </div>
 
 </div>
