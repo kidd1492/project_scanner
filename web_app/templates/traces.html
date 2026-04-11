@@ -1,33 +1,11 @@
 {% extends "layout.html" %}
-{% block title %}Traces{% endblock %}
+{% block title %}Trace — {{ project.project_name }}{% endblock %}
 
 {% block body %}
 
 <script>
-    const PROJECT_NAME = "{{ project }}";
+    const PROJECT_NAME = "{{ project.project_name }}";
 </script>
 
-<div class="index-grid">
-
-    <div class="middle-column">
-        <div class="chunk-block">{{ project }}</div>
-        <h3>HTML Triggers</h3>
-        <ul id="analysis-items"></ul>
-    </div>
-
-    <div id="result-window" class="middle-column">
-        <h2>Trace</h2>
-        <div id="result-window" class="analysis-window"></div>
-    </div>
-
-</div>
-
-<script src="{{ url_for('static', filename='js_files/trace.js') }}"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    loadAnalysisOnStart();
-});
-</script>
 
 {% endblock %}
