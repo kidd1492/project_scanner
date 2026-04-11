@@ -10,7 +10,7 @@ function loadAnalysisList(type) {
             list.innerHTML = "";
 
             data.forEach(item => {
-                const funcName = item.function;   // e.g. "chatAsk()"
+                const funcName = item.name;   // e.g. "chatAsk()"
 
                 const li = document.createElement("li");
                 li.className = "analysis-item";
