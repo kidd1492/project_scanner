@@ -1,7 +1,7 @@
 # api/dashboard_routes.py
 from flask import Blueprint, render_template, jsonify, redirect
-from services.project_service import load_project, load_analysis_type, load_last_dashboard
-import os
+from services.project_service import load_project
+from services.dashboard_service import load_analysis_type, load_last_dashboard
 from pathlib import Path
 
 dashboard_bp = Blueprint("dashboard", __name__)

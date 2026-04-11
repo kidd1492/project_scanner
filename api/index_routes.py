@@ -1,8 +1,6 @@
 # api/index_routes.py
 from flask import Blueprint, render_template, jsonify
-from services.project_service import get_existing_projects
-from core.project_system.project_generator import scan_project_files
-
+from services.project_service import get_existing_projects, generate_project_data
 
 index_bp = Blueprint("index", __name__)
 DATA_DIR = "data"
@@ -19,5 +17,5 @@ def index():
 
 @index_bp.route("/project/<path:term>")
 def scan_project(term):
-    result = scan_project_files(term)
+    result = generate_project_data(term)
     return jsonify(result)

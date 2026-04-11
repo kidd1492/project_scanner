@@ -5,8 +5,7 @@ from core.analyzers.analyzer_runner import run_analyzers
 from core.chart_system import chart_generator
 from core.ir_system.ir import build_project_ir
 from core.ir_system.ir_writer import embed_ir_into_project_json
-from services.project_service import initialize_project
-
+import os
 
 
 def scan_project_files(directory: str):
@@ -22,7 +21,7 @@ def scan_project_files(directory: str):
     file_types, total_files = discover_project_files(directory)
 
     # 2. Run analyzers
-    analysis_counts, analyzer_outputs = run_analysis_pipeline(
+    analyzer_outputs = run_analysis_pipeline(
         file_types, project_dir, project_name
     )
 
@@ -32,7 +31,6 @@ def scan_project_files(directory: str):
         root_dir=directory,
         file_types=file_types,
         total_files=total_files,
-        analysis_counts=analysis_counts,
     )
 
     # 4. Build IR
@@ -56,7 +54,6 @@ def save_project_metadata(
     root_dir: str,
     file_types,
     total_files: int,
-    analysis_counts: dict
 ):
     """
     Persists the project metadata JSON and updates last_project.json.
@@ -67,7 +64,6 @@ def save_project_metadata(
         "total_files": total_files,
         "root": root_dir,
         "file_types": file_types,
-        "analysis_counts": analysis_counts,
     }
 
     save_json(metadata, f"{project_dir}/{project_name}.json")
@@ -76,38 +72,30 @@ def save_project_metadata(
     return metadata
 
 
-def get_analysis_counts(results):
-    """
-    Takes the in-memory analyzer results list and returns a summary count dict.
-    """
+def initialize_project(directory: str):
+    project_name = os.path.basename(directory)
+    project_dir = f"data/{project_name}"
 
-    summary = {
-        "html_triggers": 0,
-        "js_functions": 0,
-        "api_routes": 0,
-        "classes": 0,
-        "python_functions": 0
+    if _project_exists(project_dir):
+        return _handle_existing_project(project_name)
+
+    _initialize_project_directory(project_dir)
+    return {
+        "results": "OK",
+        "project_name": project_name,
+        "project_dir": project_dir
     }
 
-    for item in results:
-        analyzer_type = item.get("type")
-        analyzer_results = item.get("results", [])
+def _project_exists(project_dir: str) -> bool:
+    return os.path.exists(project_dir)
 
-        # HTML → list
-        if analyzer_type == "html":
-            summary["html_triggers"] = len(analyzer_results)
 
-        # JS → list
-        elif analyzer_type == "js":
-            summary["js_functions"] = len(analyzer_results)
+def _handle_existing_project(project_name: str):
+    save_json({"last": project_name}, "data/last_project.json")
+    return {"results": "Project Exist."}
 
-        # PYTHON → dict with lists
-        elif analyzer_type == "py":
-            summary["api_routes"] = len(analyzer_results.get("routes", []))
-            summary["classes"] = len(analyzer_results.get("classes", []))
-            summary["python_functions"] = len(analyzer_results.get("functions", []))
-
-    return summary
+def _initialize_project_directory(project_dir: str):
+    os.makedirs(project_dir, exist_ok=True)
 
 
 def run_analysis_pipeline(file_types, project_dir, project_name):
@@ -118,13 +106,13 @@ def run_analysis_pipeline(file_types, project_dir, project_name):
     """
 
     analyzer_outputs = run_analyzers(file_types, project_dir)
-    analysis_counts = get_analysis_counts(analyzer_outputs)
+    #analysis_counts = get_analysis_counts(analyzer_outputs)
 
     # Generate charts
-    chart_generator.file_pie_chat(file_types, project_name)
-    chart_generator.analysis_bar_chart(analysis_counts, project_name)
+    #chart_generator.file_pie_chat(file_types, project_name)
+    #chart_generator.analysis_bar_chart(analysis_counts, project_name)
 
-    return analysis_counts, analyzer_outputs
+    return analyzer_outputs
 
 
 def save_project_metadata(
@@ -132,7 +120,6 @@ def save_project_metadata(
     root_dir: str,
     file_types,
     total_files: int,
-    analysis_counts: dict
 ):
     """
     Persists the project metadata JSON and updates last_project.json.
@@ -143,7 +130,6 @@ def save_project_metadata(
         "total_files": total_files,
         "root": root_dir,
         "file_types": file_types,
-        "analysis_counts": analysis_counts,
     }
 
     save_json(metadata, f"{project_dir}/{project_name}.json")

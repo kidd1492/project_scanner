@@ -1,5 +1,7 @@
 import os
 from utilities.file_handling import save_json, open_json
+from core.project_system.project_generator import scan_project_files
+
 
 DATA_DIR = "data"
 
@@ -26,47 +28,5 @@ def load_project(project_name):
     return project_data
 
 
-def load_analysis_type(project_name, analysis_type):
-    project_dir = os.path.join(DATA_DIR, project_name)
-    file_path = os.path.join(project_dir, f"{analysis_type}.json")
-
-    if not os.path.exists(file_path):
-        return []
-    data = open_json(file_path)
-    return data
-
-
-def load_last_dashboard():
-    last_file = os.path.join(DATA_DIR, "last_project.json")
-    if not os.path.exists(last_file):
-        return "no_file"
-    last = open_json(last_file).get("last")
-    if not last:
-        return "no_file"
-    return last
-
-
-def initialize_project(directory: str):
-    project_name = os.path.basename(directory)
-    project_dir = f"data/{project_name}"
-
-    if _project_exists(project_dir):
-        return _handle_existing_project(project_name)
-
-    _initialize_project_directory(project_dir)
-    return {
-        "results": "OK",
-        "project_name": project_name,
-        "project_dir": project_dir
-    }
-
-def _project_exists(project_dir: str) -> bool:
-    return os.path.exists(project_dir)
-
-
-def _handle_existing_project(project_name: str):
-    save_json({"last": project_name}, "data/last_project.json")
-    return {"results": "Project Exist."}
-
-def _initialize_project_directory(project_dir: str):
-    os.makedirs(project_dir, exist_ok=True)
+def generate_project_data(directory):
+    return scan_project_files(directory)
