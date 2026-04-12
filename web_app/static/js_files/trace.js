@@ -43,14 +43,12 @@ function renderTriggerList(triggers) {
 }
 
 function runTrace(trigger) {
-    // Load trace tree
     fetch(`/trace/${PROJECT_NAME}/run?trigger=${encodeURIComponent(trigger)}`)
         .then(r => r.json())
         .then(renderTraceTree)
         .catch(err => console.error("Trace error:", err));
 
-    // Load mermaid diagram
-    fetch(`/trace/${PROJECT_NAME}/mermaid?trigger=${encodeURIComponent(trigger)}&type=sequence`)
+    fetch(`/trace/${PROJECT_NAME}/mermaid?trigger=${encodeURIComponent(trigger)}&type=flow`)
         .then(r => r.json())
         .then(renderMermaid)
         .catch(err => console.error("Mermaid error:", err));

@@ -12,13 +12,14 @@ def to_sequence(trace):
     """
     lines = ["sequenceDiagram"]
 
-    # If no edges, just show the root node as a note
-    if not trace.get("edges"):
-        root = trace.get("root", "root")
+    edges = trace.get("edges", [])
+    root = trace.get("root", "root")
+
+    if not edges:
         lines.append(f"Note over {root}: single node")
         return "\n".join(lines)
 
-    for edge in trace["edges"]:
+    for edge in edges:
         src = edge["from"]
         dst = edge["to"]
         lines.append(f"{src} ->> {dst}: calls")
@@ -32,13 +33,14 @@ def to_flow(trace):
     """
     lines = ["flowchart TD"]
 
-    # If no edges, just show the root node
+    edges = trace.get("edges", [])
     root = trace.get("root", "root")
-    if not trace.get("edges"):
+
+    if not edges:
         lines.append(f"{root}((root))")
         return "\n".join(lines)
 
-    for edge in trace["edges"]:
+    for edge in edges:
         src = edge["from"]
         dst = edge["to"]
         lines.append(f"{src} --> {dst}")

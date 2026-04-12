@@ -1,7 +1,7 @@
 def build(raw_tree):
     """
     Convert raw resolver output into a structured trace object.
-    raw_tree is expected to be:
+    raw_tree is:
     { "id": "...", "type": "...", "meta": {...}, "children": [ ... ] }
     """
     if not raw_tree:
