@@ -1,18 +1,31 @@
 {% extends "layout.html" %}
-{% block title %}Trace — {{ project.project_name }}{% endblock %}
+{% block title %}Trace - {{ project.project_name }}{% endblock %}
 
 {% block body %}
-
 <script>
     const PROJECT_NAME = "{{ project.project_name }}";
 </script>
 
+<div class="trace-container">
+    <div class="trace-left">
+        <h3>Triggers</h3>
+        <div id="trigger-list" class="trigger-list"></div>
+    </div>
 
-<div id="trace-container">
-    <div id="trigger-list"></div>
-    <div id="trace-tree"></div>
-    <div id="mermaid-diagram"></div>
+    <div class="trace-middle">
+        <h3>Trace Tree</h3>
+        <pre id="trace-tree" class="trace-tree"></pre>
+    </div>
+
+    <div class="trace-right">
+        <h3>Mermaid Diagram</h3>
+        <div id="mermaid-diagram" class="mermaid-diagram"></div>
+    </div>
 </div>
 
-
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: false });
+</script>
+<script src="{{ url_for('static', filename='js_files/trace.js') }}"></script>
 {% endblock %}

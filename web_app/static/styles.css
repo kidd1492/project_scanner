@@ -160,3 +160,45 @@ body {
     color: #0078ff;
 }
 
+.trace-container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+.trace-left, .trace-middle, .trace-right {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 15px;
+    background: #fafafa;
+    border-radius: 6px;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.trigger-btn {
+    display: block;
+    width: 100%;
+    margin: 4px 0;
+    padding: 6px 10px;
+    background: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 4px;
+}
+
+.trigger-btn:hover {
+    background: #ddd;
+}
+
+.trace-tree {
+    white-space: pre-wrap;
+    font-size: 14px;
+}
+
+.mermaid-diagram {
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+}

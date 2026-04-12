@@ -1,7 +1,12 @@
 def build(raw_tree):
     """
     Convert raw resolver output into a structured trace object.
+    raw_tree is expected to be:
+    { "id": "...", "type": "...", "meta": {...}, "children": [ ... ] }
     """
+    if not raw_tree:
+        return {"root": None, "nodes": [], "edges": []}
+
     nodes = []
     edges = []
 
@@ -9,8 +14,8 @@ def build(raw_tree):
         node_id = normalize_id(node)
         nodes.append({
             "id": node_id,
-            "type": node["type"],
-            "meta": node.get("meta", {})
+            "type": node.get("type"),
+            "meta": node.get("meta", {}),
         })
 
         if parent_id:
@@ -24,10 +29,10 @@ def build(raw_tree):
     return {
         "root": normalize_id(raw_tree),
         "nodes": nodes,
-        "edges": edges
+        "edges": edges,
     }
 
 
 def normalize_id(node):
     """Convert node into a stable ID string."""
-    return f"{node['type']}:{node['id']}"
+    return f"{node.get('type', 'node')}:{node.get('id', 'unknown')}"
