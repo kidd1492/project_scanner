@@ -11,7 +11,7 @@ function scanProject() {
         .then(r => r.json())
         .then(data => {
             if (data.results) {
-                alert("Project folder exists.");
+                alert(data.results);
                 return; // <-- STOP HERE
             }
 

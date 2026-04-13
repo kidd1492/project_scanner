@@ -1,5 +1,4 @@
 # core/analyzers/ir.py
-
 import os
 
 # ---------------------------------------------------------
@@ -7,6 +6,8 @@ import os
 # Format: <folder>/<source>::<symbol_name>
 # Example: api/dashboard_routes.py::dashboard
 # ---------------------------------------------------------
+
+
 def make_symbol_id(path, name):
     norm = path.replace("\\", "/")
     parts = norm.split("/")
