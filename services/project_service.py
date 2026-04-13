@@ -1,5 +1,5 @@
 import os
-from utilities.file_handling import save_json, open_json
+from utilities.file_handling import open_json
 from core.project_system.project_generator import scan_project_files
 
 
@@ -24,7 +24,6 @@ def load_project(project_name):
         return f"Project '{project_name}' not found.", 404
 
     project_data = open_json(project_file)
-    save_json({"last": project_name}, "data/last_project.json")
     return project_data
 
 

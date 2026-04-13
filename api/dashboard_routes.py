@@ -1,11 +1,10 @@
 # api/dashboard_routes.py
 
-from flask import Blueprint, render_template, jsonify, redirect
+from flask import Blueprint, render_template, jsonify
 from services.project_service import load_project
 from services.dashboard_service import (
     get_counts,
-    generate_charts,
-    load_last_dashboard
+    generate_charts
 )
 
 dashboard_bp = Blueprint("dashboard", __name__)
@@ -29,11 +28,3 @@ def dashboard_counts(project_name):
 def dashboard_charts(project_name):
     return jsonify(generate_charts(project_name))
 
-
-# Redirect to last opened project
-@dashboard_bp.route("/dashboard")
-def dashboard_redirect():
-    last = load_last_dashboard()
-    if last == "no_file":
-        return render_template("index.html", projects=[])
-    return redirect(f"/dashboard/{last}")
