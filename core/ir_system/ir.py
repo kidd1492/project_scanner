@@ -19,11 +19,10 @@ def make_symbol_id(path, name):
         return f"{parts[-1]}::{name}"
 
 
-def build_project_ir(file_types, analyzer_outputs):
+def build_project_ir(analyzer_outputs):
     """
     Builds a file-centric IR structure using the new analyzer output schema.
     """
-
     files = {}
 
     # ---------------------------------------------------------
