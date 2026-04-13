@@ -1,12 +1,3 @@
-from utilities.file_handling import open_json
-import os
-
-DATA_DIR = "data"
-
-def load_ir(project_name):
-    project_file = os.path.join(DATA_DIR, project_name, f"{project_name}.json")
-    data = open_json(project_file)
-    return data.get("ir", {})
 
 def list_files(ir):
     return ir.get("files", [])

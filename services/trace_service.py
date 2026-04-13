@@ -1,10 +1,5 @@
-from utilities.file_handling import open_json
+from utilities.file_handling import load_ir
 from core.trace import trace_resolver, trace_builder, trace_mermaid
-
-
-def load_ir(project_name):
-    """Load IR JSON from disk."""
-    return open_json(f"data/{project_name}/{project_name}.json")
 
 
 def _get_files(ir):

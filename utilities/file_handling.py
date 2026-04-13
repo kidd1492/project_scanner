@@ -11,4 +11,7 @@ def open_json(file_path):
     with open(file_path, "r", encoding="utf-8") as f:
         content = json.load(f)
         return content
-    
+
+def load_ir(project_name):
+    """Load IR JSON from disk."""
+    return open_json(f"data/{project_name}/{project_name}.json") 
