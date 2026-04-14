@@ -1,8 +1,5 @@
 import re
-from core.ir_system.ir_reader import list_files
-# -----------------------------
-# Helpers from old system
-# -----------------------------
+
 def normalize_js_api_call(api_call):
     if not api_call:
         return ""

@@ -1,18 +1,16 @@
 # services/explorer_service.py
 from services.trace_service import load_ir
 from core.ir_system.ir_reader import (
-    list_files,
     get_file,
     get_symbol_by_id
 )
 
 
-# ---------------------------------------------------------
+
 # Return list of all files in the IR
-# ---------------------------------------------------------
 def list_project_files(project_name):
     ir = load_ir(project_name).get("ir", {})
-    return list_files(ir)
+    return ir.get("files")
 
 
 # ---------------------------------------------------------

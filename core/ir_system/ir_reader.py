@@ -1,15 +1,10 @@
-from utilities.file_handling import load_ir
-
-
-def list_files(ir):
-    return ir.get("files", [])
-
 
 def get_file(ir, path):
     for f in ir.get("files", []):
         if f["path"] == path:
             return f
     return None
+
 
 def get_symbol_by_id(ir, symbol_id):
     for f in ir.get("files", []):
@@ -18,6 +13,7 @@ def get_symbol_by_id(ir, symbol_id):
                 if item.get("symbol_id") == symbol_id:
                     return item
     return None
+
 
 def list_triggers(ir):
     triggers = []
