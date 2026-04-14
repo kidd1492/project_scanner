@@ -7,7 +7,11 @@
     const PROJECT_NAME = "{{ project.project_name }}";
 </script>
 
-<script src="/static/js/explorer.js" defer></script>
+<script src="{{ url_for('static', filename='js_files/explorer.js') }}" defer></script>
+
+<!-- Prism for syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
 <div class="explorer-container">
 
@@ -17,10 +21,15 @@
         <ul id="file-list"></ul>
     </div>
 
-    <!-- MIDDLE: File Details -->
+    <!-- MIDDLE: File Details + Code Viewer -->
     <div class="explorer-panel" id="file-details-panel">
         <h3>File Details</h3>
         <div id="file-details"></div>
+
+        <hr>
+
+        <h3>Source Code</h3>
+        <pre id="code-viewer" class="code-block"><code class="language-python"></code></pre>
     </div>
 
     <!-- RIGHT: Symbol Details -->

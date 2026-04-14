@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     loadFileList();
 });
 
-
 // ---------------------------------------------------------
 // Load all files from IR
 // ---------------------------------------------------------
@@ -17,9 +16,8 @@ function loadFileList() {
         });
 }
 
-
 // ---------------------------------------------------------
-// Load file details (symbols inside file)
+// Load file details + source code
 // ---------------------------------------------------------
 function loadFileDetails(path) {
     fetch(`/explorer/${PROJECT_NAME}/file/${encodeURIComponent(path)}`)
@@ -44,9 +42,10 @@ function loadFileDetails(path) {
                 ${renderSymbolList("JS Functions", file.js_functions)}
                 ${renderSymbolList("HTML Events", file.html_events)}
             `;
+
+            loadSourceCode(path);
         });
 }
-
 
 // ---------------------------------------------------------
 // Render symbol list with clickable items
@@ -58,17 +57,16 @@ function renderSymbolList(title, items) {
         <h4>${title}</h4>
         <ul>
             ${items
-                .map(i => `<li onclick="loadSymbolDetails('${i.symbol_id}')">${i.name}</li>`)
+                .map(i => `<li onclick="loadSymbolDetails('${i.symbol_id}', ${i.line})">${i.name}</li>`)
                 .join("")}
         </ul>
     `;
 }
 
-
 // ---------------------------------------------------------
-// Load symbol details (args, calls, returns, relationships)
+// Load symbol details + scroll to line + highlight
 // ---------------------------------------------------------
-function loadSymbolDetails(symbol_id) {
+function loadSymbolDetails(symbol_id, line) {
     fetch(`/explorer/${PROJECT_NAME}/symbol/${encodeURIComponent(symbol_id)}`)
         .then(r => r.json())
         .then(sym => {
@@ -84,9 +82,57 @@ function loadSymbolDetails(symbol_id) {
                 ${renderList("Calls", sym.calls)}
                 ${renderList("Returns", sym.returns ? [sym.returns] : [])}
             `;
+
+            scrollToLine(sym.line);
         });
 }
 
+// ---------------------------------------------------------
+// Load source code + highlight
+// ---------------------------------------------------------
+function loadSourceCode(path) {
+    fetch(`/explorer/${PROJECT_NAME}/source/${encodeURIComponent(path)}`)
+        .then(r => r.json())
+        .then(data => {
+            const codeBlock = document.querySelector("#code-viewer code");
+
+            const safe = data.source
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;");
+
+            codeBlock.innerHTML = safe;
+
+            Prism.highlightAll();
+        });
+}
+
+// ---------------------------------------------------------
+// Scroll to a specific line in the code viewer
+// ---------------------------------------------------------
+function scrollToLine(line) {
+    const viewer = document.getElementById("code-viewer");
+    const codeLines = viewer.innerText.split("\n");
+
+    if (line < 1 || line > codeLines.length) return;
+
+    const approxHeight = 18; // px per line
+    viewer.scrollTop = (line - 1) * approxHeight;
+
+    highlightLine(line);
+}
+
+// ---------------------------------------------------------
+// Highlight a specific line
+// ---------------------------------------------------------
+function highlightLine(line) {
+    const viewer = document.getElementById("code-viewer");
+
+    viewer.classList.remove("highlight-line");
+    void viewer.offsetWidth;
+
+    viewer.style.setProperty("--highlight-line", line);
+    viewer.classList.add("highlight-line");
+}
 
 // ---------------------------------------------------------
 // Helper: render list sections

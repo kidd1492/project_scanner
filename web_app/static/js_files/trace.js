@@ -66,7 +66,7 @@ function renderTraceTree(tree) {
 function renderMermaid(data) {
     const el = document.getElementById("mermaid-diagram");
     const code = data.mermaid || "";
-
+    console.log(code)
     el.innerHTML = `<div class="mermaid">${code}</div>`;
     mermaid.init(undefined, el.querySelectorAll(".mermaid"));
 }

@@ -27,3 +27,8 @@ def get_file_details(project_name, path):
 def get_symbol_details(project_name, symbol_id):
     ir = load_ir(project_name).get("ir", {})
     return get_symbol_by_id(ir, symbol_id)
+
+
+def get_file_source(project_name, path):
+    with open(path, "r", encoding="utf-8") as f:
+        return f.read()

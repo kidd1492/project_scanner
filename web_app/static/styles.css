@@ -137,7 +137,7 @@ body {
 
 .explorer-container {
     display: grid;
-    grid-template-columns: 37% 30% 30%;
+    grid-template-columns: 30% 37% 30%;
     gap: 20px;
     padding: 20px;
 }
@@ -201,4 +201,28 @@ body {
     background: white;
     padding: 10px;
     border-radius: 6px;
+}
+
+
+#code-viewer {
+    max-height: 500px;
+    overflow-y: scroll;
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.highlight-line code {
+    position: relative;
+}
+
+.highlight-line code::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 18px;
+    top: calc((var(--highlight-line) - 1) * 18px);
+    background: rgba(255, 255, 0, 0.2);
+    pointer-events: none;
 }

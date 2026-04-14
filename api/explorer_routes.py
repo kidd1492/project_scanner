@@ -4,7 +4,8 @@ from flask import Blueprint, jsonify, render_template
 from services.explorer_service import (
     list_project_files,
     get_file_details,
-    get_symbol_details
+    get_symbol_details,
+    get_file_source
 )
 
 explorer_bp = Blueprint("explorer", __name__)
@@ -48,3 +49,9 @@ def explorer_symbol_details(project_name, symbol_id):
     if details is None:
         return jsonify({"error": "Symbol not found"}), 404
     return jsonify(details)
+
+
+@explorer_bp.route("/explorer/<project_name>/source/<path:filepath>")
+def explorer_file_source(project_name, filepath):
+    full = get_file_source(project_name, filepath)
+    return jsonify({"source": full})
