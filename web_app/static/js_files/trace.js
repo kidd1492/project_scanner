@@ -55,7 +55,11 @@ function runTrace(trigger) {
 }
 
 function renderTraceTree(tree) {
+    let nodeCount = tree.nodes
+    let edgeCount = tree.edges
+    const count_ele = document.getElementById("counts")
     const el = document.getElementById("trace-tree");
+    count_ele.innerHTML = `edges : ${edgeCount.length} : nodes ${nodeCount.length}`
     el.textContent = JSON.stringify(tree, null, 2);
 }
 

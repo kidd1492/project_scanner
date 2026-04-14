@@ -35,7 +35,7 @@ def who_called(project_name, function_name):
 
 if __name__ == "__main__":
     project_name = "project_scanner"
-    function_name = 'list_project_files'
+    function_name = '_ensure_output_dir'
 
     #ir_reader = compair_ir(project_name)
     #print(ir_reader)
