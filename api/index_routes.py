@@ -8,12 +8,13 @@ DATA_DIR = "data"
 
 @index_bp.route("/")
 def index():
-    projects = project_service.get_existing_projects()
+    projects = index_bp.project_service.get_existing_projects()
     return render_template("index.html", projects=projects)
 
 @index_bp.route("/project/<path:term>")
 def scan_project(term):
     if not os.path.isdir(term):
         return jsonify({"results": "Invalid Path"}), 400
-    result = project_service.generate_project_data(term)
+    result = index_bp.project_service.generate_project_data(term)
     return jsonify(result)
+

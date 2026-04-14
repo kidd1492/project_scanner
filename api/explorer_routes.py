@@ -1,12 +1,11 @@
 # api/explorer_routes.py
 from flask import Blueprint, jsonify, render_template
-from services.project_service import load_project
 
 explorer_bp = Blueprint("explorer", __name__)
 
 @explorer_bp.route("/explorer/<project_name>")
 def explorer_page(project_name):
-    project_data = load_project(project_name)
+    project_data = explorer_bp.project_service.load_project(project_name)
     return render_template("explorer.html", project=project_data)
 
 @explorer_bp.route("/explorer/<project_name>/files")

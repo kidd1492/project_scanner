@@ -7,6 +7,7 @@ from utilities.file_handling import load_ir
 from services.dashboard_service import DashboardService
 from services.explorer_service import ExplorerService
 from services.trace_service import TraceService
+from services.project_service import ProjectService
 
 
 def ensure_directories():
@@ -29,6 +30,7 @@ def create_app():
     dashboard_service = DashboardService(ir_cache)
     explorer_service = ExplorerService(ir_cache)
     trace_service = TraceService(ir_cache)
+    project_service = ProjectService()
 
     # -----------------------------------
     # API layer (Blueprints)
@@ -39,6 +41,10 @@ def create_app():
     from api.explorer_routes import explorer_bp
 
     # Inject services into blueprints
+    index_bp.project_service = project_service
+    dashboard_bp.project_service = project_service
+    explorer_bp.project_service = project_service
+
     dashboard_bp.dashboard_service = dashboard_service
     explorer_bp.explorer_service = explorer_service
     trace_bp.trace_service = trace_service

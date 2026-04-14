@@ -1,12 +1,11 @@
 # api/dashboard_routes.py
 from flask import Blueprint, render_template, jsonify
-from services.project_service import load_project
 
 dashboard_bp = Blueprint("dashboard", __name__)
 
 @dashboard_bp.route("/dashboard/<project_name>")
 def dashboard(project_name):
-    project_data = load_project(project_name)
+    project_data = dashboard_bp.project_service.load_project(project_name)
     return render_template("dashboard.html", project=project_data)
 
 @dashboard_bp.route("/dashboard/<project_name>/counts")
