@@ -2,15 +2,10 @@ from utilities.file_handling import load_ir
 from core.trace import trace_resolver, trace_builder, trace_mermaid
 
 
-def _get_files(ir):
-    # Your IR nests files under ir["ir"]["files"]
-    return ir.get("ir", {}).get("files", [])
-
-
 def get_triggers(project_name):
     """Return all possible triggers from IR."""
     ir = load_ir(project_name)
-    files = _get_files(ir)
+    files = ir["ir"]["files"]
 
     js = []
     html = []

@@ -1,10 +1,5 @@
 import re
-
-
-def _get_files(ir):
-    return ir.get("ir", {}).get("files", [])
-
-
+from core.ir_system.ir_reader import list_files
 # -----------------------------
 # Helpers from old system
 # -----------------------------
@@ -39,7 +34,7 @@ def route_to_regex(route):
 # IR search helpers
 # -----------------------------
 def _find_js_function(ir, trigger_name):
-    files = _get_files(ir)
+    files = ir["ir"]["files"]
     func_name = trigger_name.split("(")[0]
 
     for f in files:
@@ -52,7 +47,7 @@ def _find_js_function(ir, trigger_name):
 
 
 def _find_api_route_by_name(ir, route_name):
-    files = _get_files(ir)
+    files = ir["ir"]["files"]
     for f in files:
         for r in f.get("routes", []):
             if r.get("name") == route_name:
@@ -63,7 +58,7 @@ def _find_api_route_by_name(ir, route_name):
 
 
 def _find_api_route_by_path(ir, js_api_call_line):
-    files = _get_files(ir)
+    files = ir["ir"]["files"]
     js_path = normalize_js_api_call(js_api_call_line)
     if not js_path:
         return None
@@ -82,7 +77,7 @@ def _find_api_route_by_path(ir, js_api_call_line):
 
 
 def _find_python_function(ir, call_name):
-    files = _get_files(ir)
+    files = ir["ir"]["files"]
     short = call_name.split(".")[-1]
 
     # Free functions

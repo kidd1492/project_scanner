@@ -1,6 +1,9 @@
+from utilities.file_handling import load_ir
+
 
 def list_files(ir):
     return ir.get("files", [])
+
 
 def get_file(ir, path):
     for f in ir.get("files", []):
