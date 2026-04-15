@@ -1,13 +1,6 @@
-def to_mermaid(trace, diagram_type="sequence"):
-    if not trace:
-        return ""
-    if diagram_type == "sequence":
-        return to_sequence(trace)
-    return to_flow(trace)
-
+# trace/trace_mermaid.py
 
 def sanitize(s):
-    """Make IDs safe for Mermaid syntax."""
     return (
         str(s)
         .replace(":", "_")
@@ -20,11 +13,7 @@ def sanitize(s):
 
 
 def to_sequence(trace):
-    """
-    Convert trace edges into a Mermaid sequence diagram.
-    """
     lines = ["sequenceDiagram"]
-
     edges = trace.get("edges", [])
     root = sanitize(trace.get("root", "root"))
 
@@ -41,11 +30,7 @@ def to_sequence(trace):
 
 
 def to_flow(trace):
-    """
-    Convert trace edges into a Mermaid flowchart.
-    """
     lines = ["flowchart TD"]
-
     edges = trace.get("edges", [])
     root = sanitize(trace.get("root", "root"))
 
@@ -59,3 +44,13 @@ def to_flow(trace):
         lines.append(f"{src} --> {dst}")
 
     return "\n".join(lines)
+
+
+def to_mermaid(trace, diagram_type="sequence"):
+    if not trace:
+        return ""
+
+    if diagram_type == "sequence":
+        return to_sequence(trace)
+
+    return to_flow(trace)

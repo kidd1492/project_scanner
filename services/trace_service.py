@@ -2,6 +2,7 @@
 
 from core.trace import trace_builder, trace_mermaid, trace_resolver
 
+
 class TraceService:
     def __init__(self, ir_cache):
         self.ir_cache = ir_cache
@@ -15,7 +16,7 @@ class TraceService:
         python = []
 
         for f in project_ir["files"]:
-            js.extend(j["name"] for j in f.get("js_functions", []))
+            js.extend(fn["name"] for fn in f.get("js_functions", []))
             html.extend(e["name"] for e in f.get("html_events", []))
             api.extend(r["name"] for r in f.get("routes", []))
             python.extend(fn["name"] for fn in f.get("functions", []))

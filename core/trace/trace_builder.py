@@ -1,9 +1,13 @@
+# trace/trace_builder.py
+
+def normalize_id(node):
+    node_type = node.get("type") or "node"
+    node_id = node.get("id") or "unknown"
+    node_id = str(node_id).replace(" ", "_").replace("/", "_")
+    return f"{node_type}:{node_id}"
+
+
 def build(raw_tree):
-    """
-    Convert raw resolver output into a structured trace object.
-    raw_tree is:
-    { "id": "...", "type": "...", "meta": {...}, "children": [ ... ] }
-    """
     if not raw_tree:
         return {"root": None, "nodes": [], "edges": []}
 
@@ -32,14 +36,3 @@ def build(raw_tree):
         "nodes": nodes,
         "edges": edges,
     }
-
-
-def normalize_id(node):
-    """Convert node into a stable ID string."""
-    node_type = node.get("type") or "node"
-    node_id = node.get("id") or "unknown"
-
-    # Clean up weird characters
-    node_id = str(node_id).replace(" ", "_").replace("/", "_")
-
-    return f"{node_type}:{node_id}"
