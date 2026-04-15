@@ -1,3 +1,5 @@
+# services/dashboard_service.py
+
 from core.ir_system.ir_counter import compute_ir_counts
 from core.chart_system.chart_generator import generate_all_charts
 
@@ -6,13 +8,29 @@ class DashboardService:
         self.ir_cache = ir_cache
 
     def get_counts(self, project_name):
-        raw = self.ir_cache.get_raw(project_name)
-        ir = raw["ir"]
-        return compute_ir_counts(ir)
+        project_ir = self.ir_cache.load(project_name)
+
+        # Debug: print what IRCache returned
+        print("DEBUG: Loaded IR for counts:", type(project_ir), project_ir)
+
+        if not project_ir:
+            return {"error": "IR not found", "total_files": 0}
+
+        # Ensure correct shape
+        if "files" not in project_ir:
+            print("ERROR: IR missing 'files' key")
+            return {"error": "Invalid IR format", "total_files": 0}
+
+        return compute_ir_counts(project_ir)
 
     def generate_charts(self, project_name):
-        raw = self.ir_cache.get_raw(project_name)
-        ir = raw["ir"]
-        generate_all_charts(ir, project_name)
-        return {"status": "ok"}
+        project_ir = self.ir_cache.load(project_name)
 
+        print("DEBUG: Loaded IR for charts:", type(project_ir), project_ir)
+
+        if not project_ir or "files" not in project_ir:
+            print("ERROR: Cannot generate charts, IR invalid")
+            return {"status": "error"}
+
+        generate_all_charts(project_ir, project_name)
+        return {"status": "ok"}
