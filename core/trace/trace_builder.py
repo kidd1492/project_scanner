@@ -12,16 +12,17 @@ def build(raw_tree):
 
     def walk(node, parent_id=None):
         node_id = normalize_id(node)
+
         nodes.append({
             "id": node_id,
-            "type": node.get("type"),
-            "meta": node.get("meta", {}),
+            "type": node.get("type") or "node",
+            "meta": node.get("meta") or {},
         })
 
         if parent_id:
             edges.append({"from": parent_id, "to": node_id})
 
-        for child in node.get("children", []):
+        for child in node.get("children") or []:
             walk(child, node_id)
 
     walk(raw_tree)
@@ -35,4 +36,10 @@ def build(raw_tree):
 
 def normalize_id(node):
     """Convert node into a stable ID string."""
-    return f"{node.get('type', 'node')}:{node.get('id', 'unknown')}"
+    node_type = node.get("type") or "node"
+    node_id = node.get("id") or "unknown"
+
+    # Clean up weird characters
+    node_id = str(node_id).replace(" ", "_").replace("/", "_")
+
+    return f"{node_type}:{node_id}"
