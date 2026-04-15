@@ -24,6 +24,7 @@ function loadFileDetails(path) {
         .then(r => r.json())
         .then(file => {
             const box = document.getElementById("file-details");
+            console.log("FILE DETAILS:", file);
 
             box.innerHTML = `
                 <h4>${file.path}</h4>
@@ -38,7 +39,7 @@ function loadFileDetails(path) {
 
                 ${renderSymbolList("Routes", file.routes)}
                 ${renderSymbolList("Functions", file.functions)}
-                ${renderSymbolList("Classes", file.classes)}
+                ${renderClassList(file.classes)}
                 ${renderSymbolList("JS Functions", file.js_functions)}
                 ${renderSymbolList("HTML Events", file.html_events)}
             `;
@@ -48,7 +49,7 @@ function loadFileDetails(path) {
 }
 
 // ---------------------------------------------------------
-// Render symbol list with clickable items
+// Render symbol list (flat items with symbol_id)
 // ---------------------------------------------------------
 function renderSymbolList(title, items) {
     if (!items || items.length === 0) return "";
@@ -64,9 +65,44 @@ function renderSymbolList(title, items) {
 }
 
 // ---------------------------------------------------------
+// Render classes + nested methods
+// ---------------------------------------------------------
+function renderClassList(classes) {
+    if (!classes || classes.length === 0) return "";
+
+    let html = `<h4>Classes</h4><ul>`;
+
+    classes.forEach(cls => {
+        html += `<li><b>${cls.name}</b>`;
+
+        // Render methods under each class
+        if (cls.methods && cls.methods.length > 0) {
+            html += `<ul>`;
+            cls.methods.forEach(m => {
+                html += `
+                    <li onclick="loadSymbolDetails('${m.symbol_id}', ${m.line})">
+                        ${m.name}
+                    </li>`;
+            });
+            html += `</ul>`;
+        }
+
+        html += `</li>`;
+    });
+
+    html += `</ul>`;
+    return html;
+}
+
+// ---------------------------------------------------------
 // Load symbol details + scroll to line + highlight
 // ---------------------------------------------------------
 function loadSymbolDetails(symbol_id, line) {
+    if (!symbol_id) {
+        console.warn("No symbol_id provided — likely a class (classes have no symbol details).");
+        return;
+    }
+
     fetch(`/explorer/${PROJECT_NAME}/symbol/${encodeURIComponent(symbol_id)}`)
         .then(r => r.json())
         .then(sym => {
