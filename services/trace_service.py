@@ -5,7 +5,8 @@ class TraceService:
         self.ir_cache = ir_cache
 
     def get_triggers(self, project_name):
-        ir = self.ir_cache.get(project_name)["ir"]
+        raw = self.ir_cache.get_raw(project_name)
+        ir = raw["ir"]
         files = ir["files"]
 
         js = []
@@ -27,12 +28,12 @@ class TraceService:
         }
 
     def run_trace(self, project_name, trigger_name):
-        ir = self.ir_cache.get(project_name)
-        raw_tree = trace_resolver.resolve(ir, project_name, trigger_name)
+        raw = self.ir_cache.get_raw(project_name)
+        raw_tree = trace_resolver.resolve(raw, project_name, trigger_name)
         return trace_builder.build(raw_tree)
 
     def get_mermaid(self, project_name, trigger_name, diagram_type):
-        ir = self.ir_cache.get(project_name)
-        raw_tree = trace_resolver.resolve(ir, project_name, trigger_name)
+        raw = self.ir_cache.get_raw(project_name)
+        raw_tree = trace_resolver.resolve(raw, project_name, trigger_name)
         structured = trace_builder.build(raw_tree)
         return trace_mermaid.to_mermaid(structured, diagram_type)
