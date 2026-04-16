@@ -10,9 +10,6 @@ class DashboardService:
     def get_counts(self, project_name):
         project_ir = self.ir_cache.load(project_name)
 
-        # Debug: print what IRCache returned
-        print("DEBUG: Loaded IR for counts:", type(project_ir), project_ir)
-
         if not project_ir:
             return {"error": "IR not found", "total_files": 0}
 

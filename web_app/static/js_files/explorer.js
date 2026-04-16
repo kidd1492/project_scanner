@@ -38,7 +38,7 @@ function loadFileDetails(path) {
 
                 ${renderSymbolList("Routes", file.routes)}
                 ${renderSymbolList("Functions", file.functions)}
-                ${renderSymbolList("Classes", file.classes)}
+                ${renderClassList(file.classes)}
                 ${renderSymbolList("JS Functions", file.js_functions)}
                 ${renderSymbolList("HTML Events", file.html_events)}
             `;
@@ -142,5 +142,33 @@ function renderList(title, items) {
     return `
         <h4>${title}</h4>
         <ul>${items.map(i => `<li>${i}</li>`).join("")}</ul>
+    `;
+}
+
+
+function renderClassList(classes) {
+    if (!classes || classes.length === 0) return "";
+
+    return `
+        <h4>Classes</h4>
+        <ul>
+            ${classes.map(cls => `
+                <li>
+                    <span onclick="loadSymbolDetails('${cls.symbol_id}', ${cls.line})">
+                        ${cls.name}
+                    </span>
+
+                    ${cls.methods && cls.methods.length > 0 ? `
+                        <ul class="method-list">
+                            ${cls.methods.map(m => `
+                                <li onclick="loadSymbolDetails('${m.symbol_id}', ${m.line})">
+                                    ${m.name}
+                                </li>
+                            `).join("")}
+                        </ul>
+                    ` : ""}
+                </li>
+            `).join("")}
+        </ul>
     `;
 }

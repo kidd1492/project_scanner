@@ -3,7 +3,6 @@
 class BaseAnalyzer:
     """
     Minimal base class for analyzers.
-    NO imports. NO registry. NO circular dependencies.
     """
     file_type = None
 
