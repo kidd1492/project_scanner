@@ -4,6 +4,7 @@ import os
 from utilities.file_handling import open_json
 from core.ir_system.builder import build_project_ir
 from core.ir_system.ir_writer import save_project_ir
+from infrastructure.ir_cache import TypedIRCache
 
 
 class ProjectService:
@@ -48,5 +49,9 @@ class ProjectService:
         }
 
         save_project_ir(project_dir, project_name, project_ir.to_dict(), metadata)
+        # inside generate_project_data
+        typed_cache = TypedIRCache()
+        typed_cache.save(project_ir)
+
 
         return metadata
