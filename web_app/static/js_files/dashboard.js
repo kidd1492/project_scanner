@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // Load IR-based counts for overview panel
 // ---------------------------------------------------------
 function loadOverview() {
-    fetch(`/dashboard/${PROJECT_NAME}/counts`)
+    fetch(`/counts/${PROJECT_NAME}`)
+
         .then(async r => {
             const raw = await r.text();
             try {
@@ -18,7 +19,7 @@ function loadOverview() {
             }
         })
         .then(counts => {
-            console.log("📦 Parsed counts object:", counts);
+            console.log("Parsed counts object:", counts);
 
             const box = document.getElementById("overview-content");
 

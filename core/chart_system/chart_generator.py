@@ -1,5 +1,3 @@
-# core/chart_system/chart_generator.py
-
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,12 +12,12 @@ def _ensure_output_dir(project_name):
     return project_image_directory
 
 
-def file_type_pie(ir, project_name):
-    files = ir.get("files", [])
+def file_type_pie(project_ir, project_name):
+    files = project_ir.files
     type_counts = {}
 
     for f in files:
-        ftype = f.get("type", "unknown")
+        ftype = f.type
         type_counts[ftype] = type_counts.get(ftype, 0) + 1
 
     labels = list(type_counts.keys())
@@ -34,8 +32,8 @@ def file_type_pie(ir, project_name):
     plt.close()
 
 
-def symbol_distribution_bar(ir, project_name):
-    counts = compute_ir_counts(ir)
+def symbol_distribution_bar(project_ir, project_name):
+    counts = compute_ir_counts(project_ir)
 
     labels = ["Functions", "Classes", "Methods", "Imports"]
     values = [
@@ -58,8 +56,8 @@ def symbol_distribution_bar(ir, project_name):
     plt.close()
 
 
-def route_vs_js_bar(ir, project_name):
-    counts = compute_ir_counts(ir)
+def route_vs_js_bar(project_ir, project_name):
+    counts = compute_ir_counts(project_ir)
 
     labels = ["API Routes", "JS Functions"]
     values = [
@@ -80,11 +78,11 @@ def route_vs_js_bar(ir, project_name):
     plt.close()
 
 
-def api_call_distribution_bar(ir, project_name):
-    counts = compute_ir_counts(ir)
+def api_call_distribution_bar(project_ir, project_name):
+    counts = compute_ir_counts(project_ir)
 
     labels = ["API Calls"]
-    values = [counts.get("api_calls", 0)]
+    values = [counts["api_calls"]]
 
     plt.figure(figsize=(6, 5))
     plt.bar(labels, values, color="#2ca02c")
@@ -99,9 +97,8 @@ def api_call_distribution_bar(ir, project_name):
     plt.close()
 
 
-
-def html_event_distribution_bar(ir, project_name):
-    counts = compute_ir_counts(ir)
+def html_event_distribution_bar(project_ir, project_name):
+    counts = compute_ir_counts(project_ir)
 
     labels = ["HTML Events"]
     values = [counts["html_events"]]
@@ -119,9 +116,9 @@ def html_event_distribution_bar(ir, project_name):
     plt.close()
 
 
-def generate_all_charts(ir, project_name):
-    file_type_pie(ir, project_name)
-    symbol_distribution_bar(ir, project_name)
-    route_vs_js_bar(ir, project_name)
-    api_call_distribution_bar(ir, project_name)
-    html_event_distribution_bar(ir, project_name)
+def generate_all_charts(project_ir, project_name):
+    file_type_pie(project_ir, project_name)
+    symbol_distribution_bar(project_ir, project_name)
+    route_vs_js_bar(project_ir, project_name)
+    api_call_distribution_bar(project_ir, project_name)
+    html_event_distribution_bar(project_ir, project_name)

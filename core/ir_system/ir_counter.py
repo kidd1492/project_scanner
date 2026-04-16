@@ -1,7 +1,10 @@
-# core/ir_system/ir_counter.py
+def compute_ir_counts(project_ir) -> dict:
+    """
+    Strict typed‑IR version.
+    Expects a ProjectIR instance.
+    """
 
-def compute_ir_counts(ir: dict) -> dict:
-    files = ir.get("files", [])
+    files = project_ir.files  # List[IRFile]
 
     summary = {
         "total_files": len(files),
@@ -20,7 +23,7 @@ def compute_ir_counts(ir: dict) -> dict:
     }
 
     for f in files:
-        ftype = f.get("type")
+        ftype = f.type
 
         if ftype == "py":
             summary["py_files"] += 1
@@ -31,19 +34,19 @@ def compute_ir_counts(ir: dict) -> dict:
         elif ftype == "css":
             summary["css_files"] += 1
 
-        summary["functions"] += len(f.get("functions", []))
-        summary["classes"] += len(f.get("classes", []))
-        summary["imports"] += len(f.get("imports", []))
-        summary["routes"] += len(f.get("routes", []))
-        summary["js_functions"] += len(f.get("js_functions", []))
-        summary["html_events"] += len(f.get("html_events", []))
+        summary["functions"] += len(f.functions)
+        summary["classes"] += len(f.classes)
+        summary["imports"] += len(f.imports)
+        summary["routes"] += len(f.routes)
+        summary["js_functions"] += len(f.js_functions)
+        summary["html_events"] += len(f.html_events)
 
         # derive API calls from js_functions[*].api_call
-        for jsf in f.get("js_functions", []):
-            if jsf.get("api_call"):
+        for jsf in f.js_functions:
+            if jsf.api_call:
                 summary["api_calls"] += 1
 
-        for cls in f.get("classes", []):
-            summary["methods"] += len(cls.get("methods", []))
+        for cls in f.classes:
+            summary["methods"] += len(cls.methods)
 
     return summary
