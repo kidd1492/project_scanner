@@ -4,6 +4,10 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 
+# -------------------------
+# ROUTES
+# -------------------------
+
 @dataclass
 class Route:
     name: str
@@ -16,6 +20,17 @@ class Route:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d):
+        return Route(**d)
+
+
+# -------------------------
+# METHODS
+# -------------------------
 
 @dataclass
 class IRMethod:
@@ -26,6 +41,17 @@ class IRMethod:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d):
+        return IRMethod(**d)
+
+
+# -------------------------
+# CLASSES
+# -------------------------
 
 @dataclass
 class IRClass:
@@ -36,6 +62,31 @@ class IRClass:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "methods": [m.to_dict() for m in self.methods],
+            "file": self.file,
+            "source": self.source,
+            "line": self.line,
+            "symbol_id": self.symbol_id,
+        }
+
+    @staticmethod
+    def from_dict(d):
+        return IRClass(
+            name=d["name"],
+            methods=[IRMethod.from_dict(m) for m in d["methods"]],
+            file=d["file"],
+            source=d["source"],
+            line=d["line"],
+            symbol_id=d["symbol_id"],
+        )
+
+
+# -------------------------
+# PYTHON FUNCTIONS
+# -------------------------
 
 @dataclass
 class IRFunction:
@@ -48,9 +99,16 @@ class IRFunction:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d):
+        return IRFunction(**d)
+
 
 # -------------------------
-# NEW: JS + HTML IR TYPES
+# JS FUNCTIONS
 # -------------------------
 
 @dataclass
@@ -64,6 +122,17 @@ class IRJSFunction:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d):
+        return IRJSFunction(**d)
+
+
+# -------------------------
+# HTML EVENTS
+# -------------------------
 
 @dataclass
 class IREvent:
@@ -74,6 +143,17 @@ class IREvent:
     line: int
     symbol_id: str
 
+    def to_dict(self):
+        return self.__dict__
+
+    @staticmethod
+    def from_dict(d):
+        return IREvent(**d)
+
+
+# -------------------------
+# IR FILE
+# -------------------------
 
 @dataclass
 class IRFile:
@@ -93,21 +173,34 @@ class IRFile:
             "path": self.path,
             "source": self.source,
             "type": self.type,
-            "routes": [r.__dict__ for r in self.routes],
-            "functions": [f.__dict__ for f in self.functions],
-            "classes": [
-                {
-                    **c.__dict__,
-                    "methods": [m.__dict__ for m in c.methods]
-                }
-                for c in self.classes
-            ],
+            "routes": [r.to_dict() for r in self.routes],
+            "functions": [f.to_dict() for f in self.functions],
+            "classes": [c.to_dict() for c in self.classes],
             "imports": self.imports,
-            "html_events": [e.__dict__ for e in self.html_events],
-            "js_functions": [j.__dict__ for j in self.js_functions],
+            "html_events": [e.to_dict() for e in self.html_events],
+            "js_functions": [j.to_dict() for j in self.js_functions],
             "api_calls": self.api_calls,
         }
 
+    @staticmethod
+    def from_dict(d):
+        return IRFile(
+            path=d["path"],
+            source=d["source"],
+            type=d["type"],
+            routes=[Route.from_dict(r) for r in d["routes"]],
+            functions=[IRFunction.from_dict(f) for f in d["functions"]],
+            classes=[IRClass.from_dict(c) for c in d["classes"]],
+            imports=d["imports"],
+            html_events=[IREvent.from_dict(e) for e in d["html_events"]],
+            js_functions=[IRJSFunction.from_dict(j) for j in d["js_functions"]],
+            api_calls=d["api_calls"],
+        )
+
+
+# -------------------------
+# PROJECT IR
+# -------------------------
 
 @dataclass
 class ProjectIR:
@@ -125,3 +218,13 @@ class ProjectIR:
             "file_types": self.file_types,
             "files": [f.to_dict() for f in self.files],
         }
+
+    @staticmethod
+    def from_dict(d):
+        return ProjectIR(
+            project_name=d["project_name"],
+            total_files=d["total_files"],
+            root=d["root"],
+            file_types=d["file_types"],
+            files=[IRFile.from_dict(f) for f in d["files"]],
+        )

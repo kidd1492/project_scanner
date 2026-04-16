@@ -18,7 +18,8 @@ FUNCTION_PATTERN = re.compile(
     re.VERBOSE
 )
 
-API_CALL_PATTERN = re.compile(r"fetch\s*\(")
+# NEW: extract only the fetch(...) call
+FETCH_CALL_PATTERN = re.compile(r"fetch\s*\([^)]*\)")
 
 
 class JSAnalyzer(BaseAnalyzer):
@@ -85,6 +86,7 @@ class JSAnalyzer(BaseAnalyzer):
 
     def _find_fetch(self, func_body):
         for line in func_body.splitlines():
-            if API_CALL_PATTERN.search(line):
-                return line.strip()
+            match = FETCH_CALL_PATTERN.search(line)
+            if match:
+                return match.group(0)  # return only "fetch('/api')"
         return ""
