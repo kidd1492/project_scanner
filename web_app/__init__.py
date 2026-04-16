@@ -2,12 +2,12 @@ from flask import Flask
 import os
 
 from infrastructure.ir_cache import IRCache
-from utilities.file_handling import load_ir
 
 from services.dashboard_service import DashboardService
 from services.explorer_service import ExplorerService
 from services.trace_service import TraceService
 from services.project_service import ProjectService
+
 
 
 def ensure_directories():
@@ -22,7 +22,10 @@ def create_app():
     # -----------------------------------
     # Infrastructure layer
     # -----------------------------------
-    ir_cache = IRCache(load_ir)
+    # ❌ WRONG BEFORE: IRCache(load_ir)
+    # ❌ WRONG BEFORE: IRCache
+    # ✔ RIGHT NOW:
+    ir_cache = IRCache()   # <-- THIS IS THE FIX
 
     # -----------------------------------
     # Service layer

@@ -1,3 +1,5 @@
+# core/chart_system/chart_generator.py
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -6,18 +8,12 @@ import os
 from core.ir_system.ir_counter import compute_ir_counts
 
 
-# ---------------------------------------------------------
-# Helper: ensure output directory exists
-# ---------------------------------------------------------
 def _ensure_output_dir(project_name):
     project_image_directory = f"web_app/static/projects/{project_name}"
     os.makedirs(project_image_directory, exist_ok=True)
     return project_image_directory
 
 
-# ---------------------------------------------------------
-# 1. FILE TYPE DISTRIBUTION (PIE)
-# ---------------------------------------------------------
 def file_type_pie(ir, project_name):
     files = ir.get("files", [])
     type_counts = {}
@@ -30,12 +26,7 @@ def file_type_pie(ir, project_name):
     sizes = list(type_counts.values())
 
     plt.figure(figsize=(8, 8))
-    plt.pie(
-        sizes,
-        labels=labels,
-        autopct='%1.1f%%',
-        startangle=140
-    )
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
     plt.title("File Type Distribution")
 
     out = _ensure_output_dir(project_name)
@@ -43,9 +34,6 @@ def file_type_pie(ir, project_name):
     plt.close()
 
 
-# ---------------------------------------------------------
-# 2. FUNCTION / CLASS / METHOD / IMPORT COUNTS (BAR)
-# ---------------------------------------------------------
 def symbol_distribution_bar(ir, project_name):
     counts = compute_ir_counts(ir)
 
@@ -70,9 +58,6 @@ def symbol_distribution_bar(ir, project_name):
     plt.close()
 
 
-# ---------------------------------------------------------
-# 3. ROUTE COUNT VS JS FUNCTION COUNT (BAR)
-# ---------------------------------------------------------
 def route_vs_js_bar(ir, project_name):
     counts = compute_ir_counts(ir)
 
@@ -95,14 +80,11 @@ def route_vs_js_bar(ir, project_name):
     plt.close()
 
 
-# ---------------------------------------------------------
-# 4. API CALL DISTRIBUTION (BAR)
-# ---------------------------------------------------------
 def api_call_distribution_bar(ir, project_name):
     counts = compute_ir_counts(ir)
 
     labels = ["API Calls"]
-    values = [counts["api_calls"]]
+    values = [counts.get("api_calls", 0)]
 
     plt.figure(figsize=(6, 5))
     plt.bar(labels, values, color="#2ca02c")
@@ -117,9 +99,7 @@ def api_call_distribution_bar(ir, project_name):
     plt.close()
 
 
-# ---------------------------------------------------------
-# 5. HTML EVENT DISTRIBUTION (BAR)
-# ---------------------------------------------------------
+
 def html_event_distribution_bar(ir, project_name):
     counts = compute_ir_counts(ir)
 
@@ -139,9 +119,6 @@ def html_event_distribution_bar(ir, project_name):
     plt.close()
 
 
-# ---------------------------------------------------------
-# MASTER FUNCTION: Generate all dashboard charts
-# ---------------------------------------------------------
 def generate_all_charts(ir, project_name):
     file_type_pie(ir, project_name)
     symbol_distribution_bar(ir, project_name)

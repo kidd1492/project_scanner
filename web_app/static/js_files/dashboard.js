@@ -9,9 +9,27 @@ document.addEventListener("DOMContentLoaded", () => {
 // ---------------------------------------------------------
 function loadOverview() {
     fetch(`/dashboard/${PROJECT_NAME}/counts`)
-        .then(r => r.json())
+        .then(async r => {
+            const raw = await r.text();
+            try {
+                return JSON.parse(raw);
+            } catch (e) {
+                return null;
+            }
+        })
         .then(counts => {
+            console.log("📦 Parsed counts object:", counts);
+
             const box = document.getElementById("overview-content");
+
+            if (!box) {
+                return;
+            }
+
+            if (!counts || typeof counts !== "object") {
+                box.innerHTML = `<p style="color:red;">Counts failed to load.</p>`;
+                return;
+            }
 
             box.innerHTML = `
                 <ul>
@@ -32,6 +50,8 @@ function loadOverview() {
             `;
         });
 }
+
+
 
 
 // ---------------------------------------------------------

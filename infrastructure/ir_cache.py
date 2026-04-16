@@ -1,12 +1,21 @@
+# infrastructure/ir_cache.py
+
+import os
+from utilities.file_handling import open_json
+
 class IRCache:
-    def __init__(self, loader):
-        self.loader = loader
-        self._cache = {}
+    def __init__(self, cache_dir="data"):
+        self.cache_dir = cache_dir
 
-    def get(self, project_name):
-        if project_name not in self._cache:
-            self._cache[project_name] = self.loader(project_name)
-        return self._cache[project_name]
+    def load(self, project_name):
+        project_dir = os.path.join(self.cache_dir, project_name)
+        project_file = os.path.join(project_dir, f"{project_name}.json")
 
-    def invalidate(self, project_name):
-        self._cache.pop(project_name, None)
+        if not os.path.exists(project_file):
+            return None
+
+        return open_json(project_file)
+
+    def exists(self, project_name):
+        project_dir = os.path.join(self.cache_dir, project_name)
+        return os.path.exists(project_dir)

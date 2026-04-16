@@ -3,6 +3,7 @@
 import re
 from pathlib import Path
 from .base_analyzer import BaseAnalyzer
+from core.ir_system.typed_ir import IRJSFunction, IRFile
 
 FUNCTION_PATTERN = re.compile(
     r"""
@@ -19,41 +20,47 @@ FUNCTION_PATTERN = re.compile(
 
 API_CALL_PATTERN = re.compile(r"fetch\s*\(")
 
+
 class JSAnalyzer(BaseAnalyzer):
     file_type = "js"
 
+    def analyze_file(self, file: str) -> IRFile:
+        file = file.replace("\\", "/")
+        source = Path(file).name
+        content = Path(file).read_text(encoding="utf-8", errors="ignore")
+
+        js_functions = []
+
+        for match in FUNCTION_PATTERN.finditer(content):
+            func_name = next((g for g in match.groups() if g), None)
+            start_index = match.end()
+
+            func_body = self._extract_function_body(content, start_index)
+            api_call = self._find_fetch(func_body)
+
+            js_functions.append(
+                IRJSFunction(
+                    name=func_name,
+                    args=[],
+                    calls=[],
+                    api_call=api_call,
+                    file=file,
+                    source=source,
+                    line=content.count("\n", 0, match.start()) + 1,
+                    symbol_id=f"{source}::{func_name}",
+                )
+            )
+
+        return IRFile(
+            path=file,
+            source=content,
+            type="js",
+            js_functions=js_functions,
+        )
+
     def analyze_files(self, file_list):
-        results = []
+        return [self.analyze_file(f) for f in file_list]
 
-        for file in file_list:
-            file = file.replace("\\", "/")
-            source = file.split("/")[-1]
-            content = Path(file).read_text(encoding="utf-8", errors="ignore")
-
-            for match in FUNCTION_PATTERN.finditer(content):
-                func_name = next((g for g in match.groups() if g), None)
-                start_index = match.end()
-
-                # Extract function body
-                func_body = self._extract_function_body(content, start_index)
-
-                # Detect fetch() inside the function
-                api_call = self._find_fetch(func_body)
-
-                results.append({
-                    "type": "js_function",
-                    "name": func_name,
-                    "args": [],
-                    "calls": [],  # JS call graph can be added later
-                    "api_calls": api_call,
-                    "file": file,
-                    "source": source,
-                    "line": content.count("\n", 0, match.start()) + 1
-                })
-
-        return results
-
-    # ---------------------------------------------------------
     def _extract_function_body(self, content, start_index):
         brace_count = 0
         body = []
@@ -76,7 +83,6 @@ class JSAnalyzer(BaseAnalyzer):
 
         return "".join(body)
 
-    # ---------------------------------------------------------
     def _find_fetch(self, func_body):
         for line in func_body.splitlines():
             if API_CALL_PATTERN.search(line):
