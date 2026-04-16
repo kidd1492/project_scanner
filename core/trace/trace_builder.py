@@ -36,3 +36,19 @@ def build(raw_tree):
         "nodes": nodes,
         "edges": edges,
     }
+
+class TraceBuilder:
+    """Thin OO wrapper around the existing build() function."""
+
+    def build_trace(self, project_name: str, trigger: str, raw_tree=None):
+        # For now, just delegate to the existing build() if raw_tree is provided.
+        # Your real implementation will likely derive raw_tree from IR + trigger.
+        if raw_tree is None:
+            return {
+                "project": project_name,
+                "trigger": trigger,
+                "nodes": [],
+                "edges": [],
+            }
+
+        return build(raw_tree)

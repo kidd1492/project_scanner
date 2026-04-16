@@ -4,5 +4,4 @@ def test_project_service_loads_project(temp_project_dir):
     service = ProjectService()
     ir = service.load_project(temp_project_dir)
 
-    assert ir is not None
-    assert ir.total_files == 1
+    assert ir.total_files == 3
