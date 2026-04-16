@@ -4,3 +4,4 @@ __pycache__
 data
 web_app/static/projects
 .pytest_cache
+/cache
