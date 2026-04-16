@@ -15,7 +15,6 @@ class DashboardService:
 
         # Ensure correct shape
         if "files" not in project_ir:
-            print("ERROR: IR missing 'files' key")
             return {"error": "Invalid IR format", "total_files": 0}
 
         return compute_ir_counts(project_ir)
@@ -23,10 +22,7 @@ class DashboardService:
     def generate_charts(self, project_name):
         project_ir = self.ir_cache.load(project_name)
 
-        print("DEBUG: Loaded IR for charts:", type(project_ir), project_ir)
-
         if not project_ir or "files" not in project_ir:
-            print("ERROR: Cannot generate charts, IR invalid")
             return {"status": "error"}
 
         generate_all_charts(project_ir, project_name)
