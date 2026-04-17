@@ -1,10 +1,11 @@
+# services/dashboard_service.py
+
 from core.ir_system.ir_counter import compute_ir_counts
 from core.chart_system.chart_generator import generate_all_charts
 
 class DashboardService:
-    def __init__(self, typed_ir_cache): #ir_cache, 
-        #self.ir_cache = ir_cache          # dict IR (legacy)
-        self.typed_ir_cache = typed_ir_cache  # typed IR
+    def __init__(self, typed_ir_cache):
+        self.typed_ir_cache = typed_ir_cache
 
     def get_counts_typed(self, project_name):
         project_ir = self.typed_ir_cache.load(project_name)

@@ -1,7 +1,7 @@
 from flask import Flask
 import os
- 
-from infrastructure.ir_cache import TypedIRCache
+
+from infrastructure.typed_ir_cache import TypedIRCache
 
 from services.dashboard_service import DashboardService
 from services.explorer_service import ExplorerService
@@ -10,7 +10,6 @@ from services.project_service import ProjectService
 
 
 def ensure_directories():
-    os.makedirs("data", exist_ok=True)
     os.makedirs("cache", exist_ok=True)
 
 
@@ -22,15 +21,15 @@ def create_app():
     # -----------------------------------
     # Infrastructure layer
     # -----------------------------------
-    typed_ir_cache = TypedIRCache()      # typed IR
+    typed_ir_cache = TypedIRCache()
 
     # -----------------------------------
     # Service layer
     # -----------------------------------
+    project_service = ProjectService()
     dashboard_service = DashboardService(typed_ir_cache)
     explorer_service = ExplorerService(typed_ir_cache)
     trace_service = TraceService(typed_ir_cache)
-    project_service = ProjectService()
 
     # -----------------------------------
     # API layer (Blueprints)
