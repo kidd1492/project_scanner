@@ -1,7 +1,6 @@
 from flask import Flask
 import os
-
-from infrastructure.ir_cache import IRCache
+ 
 from infrastructure.ir_cache import TypedIRCache
 
 from services.dashboard_service import DashboardService
