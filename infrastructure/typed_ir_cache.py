@@ -44,7 +44,7 @@ class TypedIRCache:
         project_file = os.path.join(project_dir, "project.json")
         with open(project_file, "w", encoding="utf-8") as f:
             json.dump(project_ir.to_dict(), f, indent=2)
-
+        self._cache[project_ir.project_name] = project_ir
 
     def get(self, project_name):
         return self._cache.get(project_name)
