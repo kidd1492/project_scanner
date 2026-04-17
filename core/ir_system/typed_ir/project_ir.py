@@ -169,3 +169,74 @@ class ProjectIR:
         symbols.extend(f.html_events)
         return symbols
 
+    # -------------------------
+    # COUNT HELPERS
+    # -------------------------
+
+    def count_file_types(self):
+        counts = {"py": 0, "js": 0, "html": 0, "css": 0}
+        for f in self.files:
+            if f.type in counts:
+                counts[f.type] += 1
+        return counts
+
+    def count_symbols(self):
+        total_functions = 0
+        total_classes = 0
+        total_methods = 0
+        total_imports = 0
+
+        for f in self.files:
+            total_functions += len(f.functions)
+            total_classes += len(f.classes)
+            total_imports += len(f.imports)
+
+            for cls in f.classes:
+                total_methods += len(cls.methods)
+
+        return {
+            "functions": total_functions,
+            "classes": total_classes,
+            "methods": total_methods,
+            "imports": total_imports,
+        }
+
+    def count_routes(self):
+        return sum(len(f.routes) for f in self.files)
+
+    def count_js_functions(self):
+        return sum(len(f.js_functions) for f in self.files)
+
+    def count_html_events(self):
+        return sum(len(f.html_events) for f in self.files)
+
+    def count_api_calls(self):
+        total = 0
+        for f in self.files:
+            for jsf in f.js_functions:
+                if jsf.api_call:
+                    total += 1
+        return total
+
+    def summary(self):
+        """
+        Unified summary used by dashboard + charts.
+        """
+        file_types = self.count_file_types()
+        symbols = self.count_symbols()
+
+        return {
+            "total_files": len(self.files),
+            "py_files": file_types["py"],
+            "js_files": file_types["js"],
+            "html_files": file_types["html"],
+            "css_files": file_types["css"],
+            "functions": symbols["functions"],
+            "classes": symbols["classes"],
+            "methods": symbols["methods"],
+            "imports": symbols["imports"],
+            "routes": self.count_routes(),
+            "js_functions": self.count_js_functions(),
+            "html_events": self.count_html_events(),
+            "api_calls": self.count_api_calls(),
+        }

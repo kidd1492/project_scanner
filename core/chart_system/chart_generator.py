@@ -13,15 +13,10 @@ def _ensure_output_dir(project_name):
 
 
 def file_type_pie(project_ir, project_name):
-    files = project_ir.files
-    type_counts = {}
+    counts = project_ir.count_file_types()
 
-    for f in files:
-        ftype = f.type
-        type_counts[ftype] = type_counts.get(ftype, 0) + 1
-
-    labels = list(type_counts.keys())
-    sizes = list(type_counts.values())
+    labels = list(counts.keys())
+    sizes = list(counts.values())
 
     plt.figure(figsize=(8, 8))
     plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=140)
@@ -33,14 +28,14 @@ def file_type_pie(project_ir, project_name):
 
 
 def symbol_distribution_bar(project_ir, project_name):
-    counts = compute_ir_counts(project_ir)
+    counts = project_ir.summary()
 
     labels = ["Functions", "Classes", "Methods", "Imports"]
     values = [
         counts["functions"],
         counts["classes"],
         counts["methods"],
-        counts["imports"]
+        counts["imports"],
     ]
 
     plt.figure(figsize=(10, 6))
@@ -57,12 +52,12 @@ def symbol_distribution_bar(project_ir, project_name):
 
 
 def route_vs_js_bar(project_ir, project_name):
-    counts = compute_ir_counts(project_ir)
+    counts = project_ir.summary()
 
     labels = ["API Routes", "JS Functions"]
     values = [
         counts["routes"],
-        counts["js_functions"]
+        counts["js_functions"],
     ]
 
     plt.figure(figsize=(8, 5))
@@ -79,7 +74,7 @@ def route_vs_js_bar(project_ir, project_name):
 
 
 def api_call_distribution_bar(project_ir, project_name):
-    counts = compute_ir_counts(project_ir)
+    counts = project_ir.summary()
 
     labels = ["API Calls"]
     values = [counts["api_calls"]]
@@ -98,7 +93,7 @@ def api_call_distribution_bar(project_ir, project_name):
 
 
 def html_event_distribution_bar(project_ir, project_name):
-    counts = compute_ir_counts(project_ir)
+    counts = project_ir.summary()
 
     labels = ["HTML Events"]
     values = [counts["html_events"]]
