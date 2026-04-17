@@ -2,7 +2,9 @@
 
 from dataclasses import dataclass
 from typing import List
-from .typed_ir import IRFile
+from .ir_file import IRFile
+
+
 
 # -------------------------
 # PROJECT IR

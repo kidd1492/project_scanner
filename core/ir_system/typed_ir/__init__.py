@@ -1,14 +1,8 @@
-# Export ProjectIR (moved to its own file)
 from .project_ir import ProjectIR
-
-# Export the remaining IR classes (still in typed_ir.py for now)
-from .typed_ir import (
-    Route,
-    IRClass,
-    IRMethod,
-    IRFunction,
-    IRFile,
-    IRJSFunction,
-    IREvent,
-)
-
+from .ir_file import IRFile
+from .ir_function import IRFunction
+from .ir_method import IRMethod
+from .ir_class import IRClass
+from .ir_route import Route
+from .ir_js_function import IRJSFunction
+from .ir_event import IREvent
