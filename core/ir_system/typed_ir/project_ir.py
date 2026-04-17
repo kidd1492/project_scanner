@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field
-from typing import List, Optional
+from dataclasses import dataclass
+from typing import List
 from .typed_ir import IRFile
 
 # -------------------------
@@ -69,3 +69,99 @@ class ProjectIR:
             file_types=d["file_types"],
             files=[IRFile.from_dict(f) for f in d["files"]],
         )
+
+
+    def get_all_symbols(self):
+        symbols = []
+        for f in self.files:
+            symbols.extend(f.functions)
+            symbols.extend(f.classes)
+            for cls in f.classes:
+                symbols.extend(cls.methods)
+            symbols.extend(f.routes)
+            symbols.extend(f.js_functions)
+            symbols.extend(f.html_events)
+        return symbols
+
+
+    def get_all_files(self):
+        return self.files
+
+
+    def get_file_by_symbol(self, symbol_id):
+        for f in self.files:
+            # functions
+            for fn in f.functions:
+                if fn.symbol_id == symbol_id:
+                    return f
+
+            # classes + methods
+            for cls in f.classes:
+                if cls.symbol_id == symbol_id:
+                    return f
+                for m in cls.methods:
+                    if m.symbol_id == symbol_id:
+                        return f
+
+            # routes
+            for r in f.routes:
+                if r.symbol_id == symbol_id:
+                    return f
+
+            # js functions
+            for jsf in f.js_functions:
+                if jsf.symbol_id == symbol_id:
+                    return f
+
+            # html events
+            for ev in f.html_events:
+                if ev.symbol_id == symbol_id:
+                    return f
+
+        return None
+
+
+    def get_calls_of(self, symbol_id):
+        symbol = self.find_symbol(symbol_id)
+        return symbol.calls if symbol else []
+
+
+    def get_routes(self):
+        routes = []
+        for f in self.files:
+            routes.extend(f.routes)
+        return routes
+
+
+    def get_js_functions(self):
+        js = []
+        for f in self.files:
+            js.extend(f.js_functions)
+        return js
+
+
+    def get_html_events(self):
+        events = []
+        for f in self.files:
+            events.extend(f.html_events)
+        return events
+
+
+    def find_symbols_by_name(self, name):
+        return [s for s in self.get_all_symbols() if s.name == name]
+
+  
+    def find_symbols_by_file(self, path):
+        f = self.find_file(path)
+        if not f:
+            return []
+        symbols = []
+        symbols.extend(f.functions)
+        symbols.extend(f.classes)
+        for cls in f.classes:
+            symbols.extend(cls.methods)
+        symbols.extend(f.routes)
+        symbols.extend(f.js_functions)
+        symbols.extend(f.html_events)
+        return symbols
+

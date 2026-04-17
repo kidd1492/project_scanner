@@ -1,13 +1,16 @@
 # trace/trace_resolver.py
-
 import re
 
+# ---------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------
 
-def normalize_js_api_call(api_call):
+def normalize_js_api_call(api_call: str) -> str:
     if not api_call:
         return ""
 
-    m = re.search(r"fetch\s*\(\s*['\"`]([^'\"`]+)['\"`]", api_call)
+    # Extract fetch("/path") or fetch('/path')
+    m = re.search(r"fetch\s*\(\s*['\"]([^'\"]+)['\"]", api_call)
     if not m:
         return ""
 
@@ -23,129 +26,133 @@ def normalize_js_api_call(api_call):
     return path
 
 
-def route_to_regex(route):
+def route_to_regex(route: str) -> str:
+    # Convert Flask-style <id> to regex
     pattern = re.sub(r"<[^>]+>", r"[^/]+", route)
     return "^" + pattern + "$"
 
 
-def _find_js_function(project_ir, trigger_name):
+# ---------------------------------------------------------
+# Typed IR Lookups
+# ---------------------------------------------------------
+
+def find_js_function(project_ir, trigger_name):
     func_name = trigger_name.split("(")[0]
 
-    for f in project_ir["files"]:
-        for fn in f.get("js_functions", []):
-            if fn["name"] == func_name:
-                meta = dict(fn)
-                meta["file"] = f["path"]
-                return meta
-    return None
+    for f in project_ir.files:
+        for fn in f.js_functions:
+            if fn.name == func_name:
+                return fn, f
+    return None, None
 
 
-def _find_api_route_by_name(project_ir, route_name):
-    for f in project_ir["files"]:
-        for r in f.get("routes", []):
-            if r["name"] == route_name:
-                meta = dict(r)
-                meta["file"] = f["path"]
-                return meta
-    return None
+def find_api_route_by_name(project_ir, route_name):
+    for f in project_ir.files:
+        for r in f.routes:
+            if r.name == route_name:
+                return r, f
+    return None, None
 
 
-def _find_api_route_by_path(project_ir, js_api_call_line):
+def find_api_route_by_path(project_ir, js_api_call_line):
     js_path = normalize_js_api_call(js_api_call_line)
     if not js_path:
-        return None
+        return None, None
 
-    for f in project_ir["files"]:
-        for r in f.get("routes", []):
-            route_pattern = r.get("route")
-            if not route_pattern:
+    for f in project_ir.files:
+        for r in f.routes:
+            if not r.route:
                 continue
 
-            route_regex = route_to_regex(route_pattern)
+            route_regex = route_to_regex(r.route)
             if re.match(route_regex, js_path):
-                meta = dict(r)
-                meta["file"] = f["path"]
-                return meta
+                return r, f
 
-    return None
+    return None, None
 
 
-def _find_python_function(project_ir, call_name):
+def find_python_function(project_ir, call_name):
     short = call_name.split(".")[-1]
 
-    for f in project_ir["files"]:
-        for fn in f.get("functions", []):
-            if fn["name"] == short:
-                meta = dict(fn)
-                meta["file"] = f["path"]
-                meta["full_name"] = call_name
-                meta["kind"] = "function"
-                return meta
+    # Functions
+    for f in project_ir.files:
+        for fn in f.functions:
+            if fn.name == short:
+                return fn, f
 
-    for f in project_ir["files"]:
-        for cls in f.get("classes", []):
-            cls_name = cls["name"]
-            for m in cls.get("methods", []):
-                if m["name"] == short:
-                    meta = dict(m)
-                    meta["file"] = f["path"]
-                    meta["class"] = cls_name
-                    meta["full_name"] = call_name
-                    meta["kind"] = "method"
-                    return meta
+    # Methods
+    for f in project_ir.files:
+        for cls in f.classes:
+            for m in cls.methods:
+                if m.name == short:
+                    return m, f
 
-    return None
+    return None, None
 
 
-def _expand_python_calls(project_ir, project_name, call_list, visited=None):
+# ---------------------------------------------------------
+# Python Call Expansion
+# ---------------------------------------------------------
+
+def expand_python_calls(project_ir, call_list, visited=None):
     if visited is None:
         visited = set()
 
     children = []
 
     for call in call_list or []:
-        resolved = _find_python_function(project_ir, call)
+        resolved, file_obj = find_python_function(project_ir, call)
         if resolved is None:
             continue
 
-        key = resolved.get("full_name") or resolved.get("name")
+        key = resolved.name
 
         if key in visited:
             children.append({
                 "id": key,
                 "type": "python",
-                "meta": {**resolved, "recursive": True},
+                "meta": {"recursive": True, "file": file_obj.path},
                 "children": [],
             })
             continue
 
         visited.add(key)
 
-        sub_calls = resolved.get("calls", [])
-        node_children = _expand_python_calls(project_ir, project_name, sub_calls, visited)
+        sub_calls = resolved.calls
+        node_children = expand_python_calls(project_ir, sub_calls, visited)
 
         children.append({
             "id": key,
             "type": "python",
-            "meta": resolved,
+            "meta": {
+                "name": resolved.name,
+                "file": file_obj.path,
+            },
             "children": node_children,
         })
 
     return children
 
 
-def resolve(project_ir, project_name, trigger_name):
-    js_entry = _find_js_function(project_ir, trigger_name)
+# ---------------------------------------------------------
+# Root Resolver
+# ---------------------------------------------------------
+
+def resolve(project_ir, trigger_name):
+    # JS entry
+    js_entry, js_file = find_js_function(project_ir, trigger_name)
     if js_entry:
-        return resolve_js(project_ir, project_name, trigger_name, js_entry)
+        return resolve_js(project_ir, js_entry, js_file)
 
-    api_entry = _find_api_route_by_name(project_ir, trigger_name)
+    # API entry
+    api_entry, api_file = find_api_route_by_name(project_ir, trigger_name)
     if api_entry:
-        return resolve_api(project_ir, project_name, api_entry)
+        return resolve_api(project_ir, api_entry, api_file)
 
-    py_entry = _find_python_function(project_ir, trigger_name)
+    # Python entry
+    py_entry, py_file = find_python_function(project_ir, trigger_name)
     if py_entry:
-        return resolve_python_root(project_ir, project_name, py_entry)
+        return resolve_python_root(project_ir, py_entry, py_file)
 
     return {
         "id": trigger_name,
@@ -155,72 +162,76 @@ def resolve(project_ir, project_name, trigger_name):
     }
 
 
-def resolve_js(project_ir, project_name, trigger_name, js_entry):
+# ---------------------------------------------------------
+# JS Resolver
+# ---------------------------------------------------------
+
+def resolve_js(project_ir, js_entry, js_file):
     js_node = {
-        "id": trigger_name,
+        "id": js_entry.name,
         "type": "js",
-        "meta": js_entry,
+        "meta": {
+            "name": js_entry.name,
+            "file": js_file.path,
+        },
         "children": [],
     }
 
     api_children = []
 
-    api_calls = js_entry.get("api_calls") or js_entry.get("api_call") or []
+    api_calls = js_entry.api_call or []
     if isinstance(api_calls, str):
         api_calls = [api_calls]
 
     for api_call_line in api_calls:
-        api_entry = _find_api_route_by_path(project_ir, api_call_line)
+        api_entry, api_file = find_api_route_by_path(project_ir, api_call_line)
         if api_entry:
-            api_children.append(resolve_api(project_ir, project_name, api_entry))
+            api_children.append(resolve_api(project_ir, api_entry, api_file))
 
     js_node["children"] = api_children
     return js_node
 
 
-def resolve_api(project_ir, project_name, api_entry):
-    route_name = api_entry.get("name") or api_entry.get("route")
-    api_id = route_name or api_entry.get("path") or "api"
+# ---------------------------------------------------------
+# API Resolver
+# ---------------------------------------------------------
 
+def resolve_api(project_ir, api_entry, api_file):
     api_node = {
-        "id": api_id,
+        "id": api_entry.name,
         "type": "api",
-        "meta": api_entry,
+        "meta": {
+            "name": api_entry.name,
+            "route": api_entry.route,
+            "file": api_file.path,
+        },
         "children": [],
     }
 
-    api_calls = api_entry.get("calls", [])
-    py_children = _expand_python_calls(project_ir, project_name, api_calls, visited=None)
+    py_children = expand_python_calls(project_ir, api_entry.calls)
     api_node["children"] = py_children
-
     return api_node
 
 
-def resolve_python_root(project_ir, project_name, py_entry):
-    key = py_entry.get("full_name") or py_entry.get("name")
+# ---------------------------------------------------------
+# Python Resolver
+# ---------------------------------------------------------
 
-    children = _expand_python_calls(
+def resolve_python_root(project_ir, py_entry, py_file):
+    key = py_entry.name
+
+    children = expand_python_calls(
         project_ir,
-        project_name,
-        py_entry.get("calls", []),
+        py_entry.calls,
         visited={key},
     )
 
     return {
         "id": key,
         "type": "python",
-        "meta": py_entry,
+        "meta": {
+            "name": py_entry.name,
+            "file": py_file.path,
+        },
         "children": children,
     }
-
-
-class TraceResolver:
-    """Thin OO wrapper so tests can import this class."""
-
-    def resolve(self, project_name: str, trigger: str, raw_tree=None):
-        # Minimal placeholder logic so tests pass
-        return {
-            "project": project_name,
-            "trigger": trigger,
-            "resolved": True
-        }

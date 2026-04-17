@@ -23,7 +23,6 @@ def create_app():
     # -----------------------------------
     # Infrastructure layer
     # -----------------------------------
-    ir_cache = IRCache()                 # dict IR
     typed_ir_cache = TypedIRCache()      # typed IR
 
     # -----------------------------------
@@ -31,7 +30,7 @@ def create_app():
     # -----------------------------------
     dashboard_service = DashboardService(typed_ir_cache)
     explorer_service = ExplorerService(typed_ir_cache)
-    trace_service = TraceService(ir_cache)
+    trace_service = TraceService(typed_ir_cache)
     project_service = ProjectService()
 
     # -----------------------------------
