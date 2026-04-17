@@ -29,8 +29,8 @@ def create_app():
     # -----------------------------------
     # Service layer
     # -----------------------------------
-    dashboard_service = DashboardService(ir_cache, typed_ir_cache)
-    explorer_service = ExplorerService(ir_cache)
+    dashboard_service = DashboardService(typed_ir_cache)
+    explorer_service = ExplorerService(typed_ir_cache)
     trace_service = TraceService(ir_cache)
     project_service = ProjectService()
 
