@@ -22,11 +22,12 @@ def create_app():
     # Infrastructure layer
     # -----------------------------------
     typed_ir_cache = TypedIRCache()
+    typed_ir_cache.preload_all()
 
     # -----------------------------------
-    # Service layer
+    # Service layer (ALL share same cache)
     # -----------------------------------
-    project_service = ProjectService()
+    project_service = ProjectService(typed_ir_cache)
     dashboard_service = DashboardService(typed_ir_cache)
     explorer_service = ExplorerService(typed_ir_cache)
     trace_service = TraceService(typed_ir_cache)

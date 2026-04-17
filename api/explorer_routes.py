@@ -1,4 +1,5 @@
 # api/explorer_routes.py
+
 from flask import Blueprint, jsonify, render_template
 
 explorer_bp = Blueprint("explorer", __name__)

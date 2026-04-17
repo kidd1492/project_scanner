@@ -8,14 +8,14 @@ class DashboardService:
         self.typed_ir_cache = typed_ir_cache
 
     def get_counts_typed(self, project_name):
-        project_ir = self.typed_ir_cache.load(project_name)
+        project_ir = self.typed_ir_cache.get(project_name)
         if not project_ir:
             return {"error": "IR not found", "total_files": 0}
 
         return compute_ir_counts(project_ir)
 
     def generate_charts(self, project_name):
-        project_ir = self.typed_ir_cache.load(project_name)
+        project_ir = self.typed_ir_cache.get(project_name)
         if not project_ir:
             return {"status": "error"}
 

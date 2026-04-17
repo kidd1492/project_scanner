@@ -1,4 +1,5 @@
 # api/trace_routes.py
+
 from flask import Blueprint, render_template, jsonify, request
 
 trace_bp = Blueprint("trace", __name__, url_prefix="/trace")

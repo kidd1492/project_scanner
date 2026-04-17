@@ -2,12 +2,10 @@
 
 import os
 from core.ir_system.builder import build_project_ir
-from infrastructure.typed_ir_cache import TypedIRCache
-
 
 class ProjectService:
-    def __init__(self, cache_dir="cache"):
-        self.cache = TypedIRCache(cache_dir)
+    def __init__(self, typed_ir_cache):
+        self.cache = typed_ir_cache
 
     def get_existing_projects(self):
         if not os.path.exists(self.cache.cache_dir):
@@ -18,7 +16,7 @@ class ProjectService:
         ]
 
     def load_project(self, project_name):
-        project_ir = self.cache.load(project_name)
+        project_ir = self.cache.get(project_name)
         if not project_ir:
             return {"error": "Project not found"}
 

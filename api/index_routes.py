@@ -1,6 +1,6 @@
 # api/index_routes.py
+
 from flask import Blueprint, render_template, jsonify
-from services import project_service
 import os
 
 index_bp = Blueprint("index", __name__)
@@ -17,4 +17,3 @@ def scan_project(term):
         return jsonify({"results": "Invalid Path"}), 400
     result = index_bp.project_service.generate_project_data(term)
     return jsonify(result)
-
