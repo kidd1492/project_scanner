@@ -2,12 +2,12 @@ from flask import Flask
 import os
 
 from infrastructure.typed_ir_cache import TypedIRCache
-
 from services.dashboard_service import DashboardService
 from services.explorer_service import ExplorerService
 from services.trace_service import TraceService
 from services.project_service import ProjectService
 
+from services.analysis_service import AnalysisService
 
 def ensure_directories():
     os.makedirs("cache", exist_ok=True)
@@ -32,6 +32,8 @@ def create_app():
     explorer_service = ExplorerService(typed_ir_cache)
     trace_service = TraceService(typed_ir_cache)
 
+    analysis_service = AnalysisService(typed_ir_cache)
+
     # -----------------------------------
     # API layer (Blueprints)
     # -----------------------------------
@@ -40,19 +42,27 @@ def create_app():
     from api.trace_routes import trace_bp
     from api.explorer_routes import explorer_bp
 
+    from api.analysis_routes import analysis_bp
+
     # Inject services into blueprints
     index_bp.project_service = project_service
     dashboard_bp.project_service = project_service
     explorer_bp.project_service = project_service
 
+    analysis_bp.project_service = project_service
+
     dashboard_bp.dashboard_service = dashboard_service
     explorer_bp.explorer_service = explorer_service
     trace_bp.trace_service = trace_service
+
+    analysis_bp.analysis_service = analysis_service
 
     # Register blueprints
     app.register_blueprint(index_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(trace_bp)
     app.register_blueprint(explorer_bp)
+
+    app.register_blueprint(analysis_bp)
 
     return app
