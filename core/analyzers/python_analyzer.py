@@ -1,6 +1,9 @@
 # core/analyzers/python_analyzer.py
 
 import ast
+from pathlib import Path
+
+from .base_analyzer import BaseAnalyzer
 from .python_extractors import (
     RouteExtractor,
     ClassExtractor,
@@ -8,7 +11,6 @@ from .python_extractors import (
     ImportExtractor,
     attach_parents,
 )
-from .base_analyzer import BaseAnalyzer
 from core.ir_system.typed_ir import (
     Route,
     IRClass,
@@ -22,13 +24,17 @@ class PythonAnalyzer(BaseAnalyzer):
     file_type = "py"
 
     def analyze_file(self, file: str) -> IRFile:
+        # Normalize path
         file = file.replace("\\", "/")
-        with open(file, "r", encoding="utf-8") as f:
+        path = Path(file)
+
+        with path.open("r", encoding="utf-8") as f:
             source_code = f.read()
 
         tree = ast.parse(source_code)
         attach_parents(tree)
 
+        # Run extractors
         imp_ex = ImportExtractor(file)
         imp_ex.visit(tree)
 
@@ -41,6 +47,7 @@ class PythonAnalyzer(BaseAnalyzer):
         func_ex = FunctionExtractor(file)
         func_ex.visit(tree)
 
+        # Build IR objects
         routes = [
             Route(
                 name=r["name"],
@@ -51,12 +58,12 @@ class PythonAnalyzer(BaseAnalyzer):
                 file=r["file"],
                 source=r["source"],
                 line=r["line"],
-                symbol_id=f'{r["source"]}::{r["name"]}',
+                symbol_id=f'{r["source"]} :: {r["name"]}',
             )
             for r in route_ex.routes
         ]
 
-        classes = []
+        classes: list[IRClass] = []
         for c in class_ex.classes:
             methods = [
                 IRMethod(
@@ -65,7 +72,7 @@ class PythonAnalyzer(BaseAnalyzer):
                     returns=m.get("returns"),
                     calls=m.get("calls", []),
                     line=m["line"],
-                    symbol_id=f'{c["source"]}::{c["name"]}.{m["name"]}',
+                    symbol_id=f'{c["source"]} :: {c["name"]}.{m["name"]}',
                 )
                 for m in c.get("methods", [])
             ]
@@ -77,7 +84,7 @@ class PythonAnalyzer(BaseAnalyzer):
                     file=c["file"],
                     source=c["source"],
                     line=c["line"],
-                    symbol_id=f'{c["source"]}::{c["name"]}',
+                    symbol_id=f'{c["source"]} :: {c["name"]}',
                 )
             )
 
@@ -90,7 +97,7 @@ class PythonAnalyzer(BaseAnalyzer):
                 file=f_["file"],
                 source=f_["source"],
                 line=f_["line"],
-                symbol_id=f'{f_["source"]}::{f_["name"]}',
+                symbol_id=f'{f_["source"]} :: {f_["name"]}',
             )
             for f_ in func_ex.functions
         ]
@@ -98,7 +105,7 @@ class PythonAnalyzer(BaseAnalyzer):
         imports = [imp["module"] for imp in imp_ex.imports]
 
         return IRFile(
-            path=file,
+            path=str(path),
             source=source_code,
             type="py",
             routes=routes,
@@ -109,6 +116,3 @@ class PythonAnalyzer(BaseAnalyzer):
             js_functions=[],
             api_calls=[],
         )
-
-    def analyze_files(self, file_list):
-        return [self.analyze_file(f) for f in file_list]

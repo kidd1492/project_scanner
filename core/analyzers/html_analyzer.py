@@ -1,10 +1,13 @@
 # core/analyzers/html_analyzer.py
 
-from bs4 import BeautifulSoup
-import re
 from pathlib import Path
+import re
+
+from bs4 import BeautifulSoup
+
 from .base_analyzer import BaseAnalyzer
 from core.ir_system.typed_ir import IREvent, IRJSFunction, IRFile
+
 
 EVENT_ATTR_PATTERN = re.compile(r"^on[a-zA-Z]+$")
 FUNC_CALL_PATTERN = re.compile(r"([a-zA-Z_]\w*)\s*\(")
@@ -14,15 +17,18 @@ class HTMLAnalyzer(BaseAnalyzer):
     file_type = "html"
 
     def analyze_file(self, file: str) -> IRFile:
+        # Normalize path
         file = file.replace("\\", "/")
-        source = Path(file).name
-        content = Path(file).read_text(encoding="utf-8", errors="ignore")
+        path = Path(file)
+        source_name = path.name
+
+        content = path.read_text(encoding="utf-8", errors="ignore")
         soup = BeautifulSoup(content, "html.parser")
 
-        html_events = []
-        js_functions = []
+        html_events: list[IREvent] = []
+        js_functions: list[IRJSFunction] = []
 
-        # Event attributes
+        # Event attributes: onclick, onsubmit, etc.
         for tag in soup.find_all(True):
             for attr, value in tag.attrs.items():
                 if EVENT_ATTR_PATTERN.match(attr):
@@ -32,14 +38,14 @@ class HTMLAnalyzer(BaseAnalyzer):
                             IREvent(
                                 event=attr,
                                 name=func,
-                                file=file,
-                                source=source,
+                                file=str(path),
+                                source=source_name,
                                 line=getattr(tag, "sourceline", None),
-                                symbol_id=f"{source}::{func}",
+                                symbol_id=f"{source_name} :: {func}",
                             )
                         )
 
-        # Script blocks
+        # Script blocks: inline JS functions
         for script in soup.find_all("script"):
             if script.string:
                 js_code = script.string
@@ -51,20 +57,22 @@ class HTMLAnalyzer(BaseAnalyzer):
                             args=[],
                             calls=[],
                             api_call="",
-                            file=file,
-                            source=source,
+                            file=str(path),
+                            source=source_name,
                             line=getattr(script, "sourceline", None),
-                            symbol_id=f"{source}::{func}",
+                            symbol_id=f"{source_name} :: {func}",
                         )
                     )
 
         return IRFile(
-            path=file,
+            path=str(path),
             source=content,
             type="html",
+            routes=[],
+            functions=[],
+            classes=[],
+            imports=[],
             html_events=html_events,
             js_functions=js_functions,
+            api_calls=[],
         )
-
-    def analyze_files(self, file_list):
-        return [self.analyze_file(f) for f in file_list]
