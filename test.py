@@ -1,14 +1,51 @@
-from services.trace_service import load_ir
-#from core.ir_system.ir_reader import load_ir
+from core.ir_system.typed_ir.ir_class import IRClass
+from infrastructure.typed_ir_cache import TypedIRCache
+#print(type(ir))
+
+class AnalysisService:
+    def __init__(self, typed_ir_cache):
+        self.typed_ir_cache = typed_ir_cache
+        self.files = self.typed_ir_cache.files
+
+    def get_python_files(self):
+        return [f for f in self.files if f.path.endswith(".html")]
 
 
-def compair_ir(project_name):
-    ir_reader = load_ir(project_name)
-    one = ir_reader.keys()
-    return one
+
+if __name__ == "__main__":
+    ir = TypedIRCache().load("project_scanner")
+    graph_service = AnalysisService(ir)
+
+    js_files = graph_service.get_python_files()
+    print(js_files[0].source)
 
 
 
+
+
+    '''
+    py_files = file_service.get_python_files()
+
+    one = py_files[12].classes[0]
+    print(f"class name : {one.name}")
+    methods = one.get_methods()
+    [print(f"{m.name}") for m in methods]
+
+    print(methods[1])
+    print()
+    print(py_files[12].source)
+
+    
+    js_analyzer = ir.get_file_by_symbol("project_ir.py::ProjectIR")
+    methods = js_analyzer.classes[0].methods
+    #[print(f"{m.name} : {m.args}") for m in methods]
+
+    routes = ir.get_routes()
+    [print(f"name : {r.name} route: {r.route} id: {r.symbol_id}") for r in routes]
+    '''
+
+    
+'''
 def who_called(project_name, function_name):
     ir = load_ir(project_name)["ir"]["files"]
     #print(ir.keys())
@@ -31,18 +68,4 @@ def who_called(project_name, function_name):
             if f in api_calls["calls"]:
                 callers.append(f)
     return callers
-
-
-if __name__ == "__main__":
-    project_name = "project_scanner"
-    function_name = '_ensure_output_dir'
-
-    #ir_reader = compair_ir(project_name)
-    #print(ir_reader)
-    
-    callers = who_called(project_name, function_name)
-
-    for item in callers:
-        print(f"called by : {item['name']}\nfrom : {item['file']}\n")
-    
-
+'''

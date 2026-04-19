@@ -22,6 +22,3 @@ class ExplorerService:
         symbol = project_ir.find_symbol(symbol_id)
         return symbol.to_dict() if symbol else None
 
-    def get_file_source(self, path):
-        with open(path, "r", encoding="utf-8") as f:
-            return f.read()

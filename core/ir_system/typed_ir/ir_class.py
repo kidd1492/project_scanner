@@ -12,6 +12,9 @@ class IRClass:
     line: int
     symbol_id: str
 
+    def get_methods(self):
+        return self.methods
+
     def to_dict(self):
         return {
             "name": self.name,
