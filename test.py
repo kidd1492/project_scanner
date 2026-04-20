@@ -17,8 +17,6 @@ class Service:
 
 if __name__ == "__main__":
     project_name = "project_scanner"
-
     cache = TypedIRCache("cache")
-    service = Service(cache)
-    service.load_projects()
-    #service.load_project(project_name)
+    project = cache.load(project_name)
+    print(project.summary().get("methods"))
