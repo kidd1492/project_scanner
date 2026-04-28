@@ -1,7 +1,7 @@
 # services/project_service.py
 
 import os
-from core.ir_system.builder import build_project_ir
+from domain.analysis.builder import build_project_ir
 
 class ProjectService:
     def __init__(self, typed_ir_cache):

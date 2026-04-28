@@ -11,7 +11,7 @@ from .python_extractors import (
     ImportExtractor,
     attach_parents,
 )
-from core.ir_system.typed_ir import (
+from domain.analysis.analysis_objects import (
     Route,
     IRClass,
     IRMethod,

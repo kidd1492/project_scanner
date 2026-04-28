@@ -3,10 +3,10 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
 
-from .ir_file import IRFile
-from .ir_route import Route
-from .ir_js_function import IRJSFunction
-from .ir_event import IREvent
+from .analysis_objects.ir_file import IRFile
+from .analysis_objects.ir_route import Route
+from .analysis_objects.ir_js_function import IRJSFunction
+from .analysis_objects.ir_event import IREvent
 
 
 @dataclass

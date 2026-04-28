@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 from .base_analyzer import BaseAnalyzer
-from core.ir_system.typed_ir import IRJSFunction, IRFile
+from domain.analysis.analysis_objects import IRJSFunction, IRFile
 
 
 # Match several JS function forms:

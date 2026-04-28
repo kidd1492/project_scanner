@@ -1,5 +1,5 @@
 # test_ir.py
-from services.project_service import ProjectService
+from domain.analysis.project_service import ProjectService
 from infrastructure.typed_ir_cache import TypedIRCache
 
 
@@ -19,4 +19,4 @@ if __name__ == "__main__":
     project_name = "project_scanner"
     cache = TypedIRCache("cache")
     project = cache.load(project_name)
-    print(project.summary().get("methods"))
+    print(project)

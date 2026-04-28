@@ -2,10 +2,10 @@
 
 import os
 from utilities.file_discovery import discover_files
-from core.analyzers.python_analyzer import PythonAnalyzer
-from core.analyzers.js_analyzer import JSAnalyzer
-from core.analyzers.html_analyzer import HTMLAnalyzer
-from core.ir_system.typed_ir import ProjectIR
+from domain.analysis.analyzers.python_analyzer import PythonAnalyzer
+from domain.analysis.analyzers.js_analyzer import JSAnalyzer
+from domain.analysis.analyzers.html_analyzer import HTMLAnalyzer
+from domain.analysis.project_ir import ProjectIR
 
 
 def build_project_ir(directory: str) -> ProjectIR:
