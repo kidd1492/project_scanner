@@ -23,9 +23,11 @@ from domain.analysis.analysis_objects import (
 class PythonAnalyzer(BaseAnalyzer):
     file_type = "py"
 
+    """TODO move this to the infrastructure/file_system/file_repository.py
+    discover_files and list_files"""
     def analyze_file(self, file: str) -> IRFile:
         # Normalize path
-        file = file.replace("\\", "/")
+        file = file.replace("\\", "/") # fix this shit
         path = Path(file)
 
         with path.open("r", encoding="utf-8") as f:
