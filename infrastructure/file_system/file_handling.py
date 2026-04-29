@@ -15,14 +15,10 @@ def open_json(path):
 
 from pathlib import Path
 
-class OpenFileTool:
-    """
-    Persistence abstraction for analyzers.
-    Analyzers NEVER touch the filesystem directly.
-    They call this tool to read file content.
-    """
+# infrastructure/file_system/file_handling.py
 
-    def read(self, path: str) -> str:
-        normalized = path.replace("\\", "/")
-        p = Path(normalized)
-        return p.read_text(encoding="utf-8", errors="ignore")
+class OpenFileTool:
+    def __call__(self, path: str) -> str:
+        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+            return f.read()
+

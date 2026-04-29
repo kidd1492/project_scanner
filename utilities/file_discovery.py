@@ -1,6 +1,5 @@
 # utilities/file_discovery.py
 
-
 import os
 
 def discover_files(directory: str):
@@ -10,25 +9,15 @@ def discover_files(directory: str):
     ]
     ignored_directories = [".git", "env", "venv", "__pycache__"]
 
-    categorized = {}
+    file_list = []
 
     for root, dirs, files in os.walk(directory):
         dirs[:] = [d for d in dirs if d not in ignored_directories]
 
         for file in files:
             if any(file.endswith(ext) for ext in allowed_extensions):
-                ext = file.split('.')[-1]
                 full_path = os.path.abspath(os.path.join(root, file))
                 full_path = full_path.replace("\\", "/")
-                categorized.setdefault(ext, []).append(full_path)
+                file_list.append(full_path)
 
-    file_types = [
-        {"type": ext, "count": len(paths), "files": paths}
-        for ext, paths in categorized.items()
-    ]
-
-    total_files = 0
-    for type in file_types:
-        total_files += type.get("count")
-
-    return file_types, total_files
+    return file_list

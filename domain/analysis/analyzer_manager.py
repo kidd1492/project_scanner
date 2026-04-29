@@ -1,16 +1,36 @@
-from .analyzers.base_analyzer import BaseAnalyzer
+
+from domain.analysis.analyzers.python_analyzer import PythonAnalyzer
+from domain.analysis.analyzers.html_analyzer import HTMLAnalyzer
+from domain.analysis.analyzers.js_analyzer import JSAnalyzer
+
 
 class AnalyzerManager:
-    def __init__(self, analyzers: list[BaseAnalyzer], open_file_tool):
-        self.analyzers = analyzers
+    def __init__(self, open_file_tool):
         self.open_file_tool = open_file_tool
 
-    def analyze_files(self, files: list[str]):
-        all_objects = []
-        for path in files:
-            analyzer = self._pick_analyzer(path)
+        self.file_type_analyzer_map = {
+            "py": PythonAnalyzer(),
+            "js": JSAnalyzer(),
+            "html": HTMLAnalyzer(),
+        }
+
+    def run_analyzers(self, file_list):
+        """
+        file_list = ["a.py", "b.js", "c.html"]
+        """
+
+        final = []
+
+        for path in file_list:
+            ext = path.split(".")[-1]
+
+            analyzer = self.file_type_analyzer_map.get(ext)
             if not analyzer:
                 continue
-            content = self.open_file_tool.read(path)
-            all_objects.extend(analyzer.analyze(path, content))
-        return all_objects
+
+            content = self.open_file_tool(path)
+            ir_obj = analyzer.analyze_file(path, content)
+
+            final.append(ir_obj)
+
+        return final
