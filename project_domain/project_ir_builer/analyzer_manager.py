@@ -1,7 +1,7 @@
-
-from project_domain.project_ir_builer_service.analyzers.python_analyzer import PythonAnalyzer
-from project_domain.project_ir_builer_service.analyzers.html_analyzer import HTMLAnalyzer
-from project_domain.project_ir_builer_service.analyzers.js_analyzer import JSAnalyzer
+from project_domain.project_ir_builer.builder import build_project_ir
+from project_domain.project_ir_builer.analyzers.python_analyzer import PythonAnalyzer
+from project_domain.project_ir_builer.analyzers.html_analyzer import HTMLAnalyzer
+from project_domain.project_ir_builer.analyzers.js_analyzer import JSAnalyzer
 
 
 class AnalyzerManager:
@@ -14,7 +14,7 @@ class AnalyzerManager:
             "html": HTMLAnalyzer(),
         }
 
-    def run_analyzers(self, file_list):
+    def run_analyzers(self, file_list, root):
         """
         file_list = ["a.py", "b.js", "c.html"]
         """
@@ -32,5 +32,5 @@ class AnalyzerManager:
             ir_obj = analyzer.analyze_file(path, content)
 
             final.append(ir_obj)
-
-        return final
+        return build_project_ir(root, final)
+        

@@ -11,13 +11,13 @@ from .python_extractors import (
     ImportExtractor,
     attach_parents,
 )
-from project_domain.project_ir_builer_service.analysis_objects import (
+from project_domain.project_ir_builer.project_ir_objects import (
     Route,
     IRClass,
     IRMethod,
     IRFunction,
 )
-from project_domain.project_ir_builer_service.analysis_objects.ir_file import IRFile
+from project_domain.project_ir_builer.project_ir_objects.ir_file import IRFile
 
 class PythonAnalyzer(BaseAnalyzer):
     file_type = "py"

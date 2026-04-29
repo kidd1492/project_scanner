@@ -1,21 +1,23 @@
 # domain/analysis/project_service.py
 
 from utilities.file_discovery import discover_files
-from project_domain.builder import build_project_ir
+
 
 class ProjectService:
-    def __init__(self, analyzer_manager, builder):
+    def __init__(self, analyzer_manager):
         self.analyzer_manager = analyzer_manager
-        self.builder = builder
+
 
     def scan_project(self, root: str):
+
         # 1. Persistence: discover file paths
+        '''this should be a class and this service should own it
+        and use comp'''
         file_list = discover_files(root)
 
-        # 2. Factory #1: analyzers → IR objects
-        ir_objects = self.analyzer_manager.run_analyzers(file_list)
+        # 2. Factory #1: file_list, root → IR objects
+        '''should return the final ProjectIR'''
+        project_ir = self.analyzer_manager.run_analyzers(file_list, root)
 
-        # 4. Factory #3: IRFile → ProjectIR
-        return build_project_ir(root, ir_objects)
 
-        #return ir_objects
+        return project_ir
