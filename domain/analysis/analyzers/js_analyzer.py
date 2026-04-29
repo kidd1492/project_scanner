@@ -33,13 +33,12 @@ FETCH_CALL_PATTERN = re.compile(r"fetch\s*\([^)]*\)")
 class JSAnalyzer(BaseAnalyzer):
     file_type = "js"
 
-    def analyze_file(self, file: str) -> IRFile:
+    def analyze_file(self, path: str, content: str) -> IRFile:
         # Normalize path
         file = file.replace("\\", "/")
         path = Path(file)
         source_name = path.name
-
-        content = path.read_text(encoding="utf-8", errors="ignore")
+        
         js_functions: list[IRJSFunction] = []
 
         for match in FUNCTION_PATTERN.finditer(content):

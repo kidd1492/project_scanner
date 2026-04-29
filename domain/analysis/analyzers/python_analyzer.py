@@ -24,13 +24,11 @@ class PythonAnalyzer(BaseAnalyzer):
 
     """TODO move this to the infrastructure/file_system/file_repository.py
     discover_files and list_files"""
-    def analyze_file(self, file: str) -> IRFile:
+    def analyze_file(self, path: str, content: str) -> IRFile:
         # Normalize path
-        file = file.replace("\\", "/") # fix this shit
+        file = path.replace("\\", "/")
         path = Path(file)
-
-        with path.open("r", encoding="utf-8") as f:
-            source_code = f.read()
+        source_code = content
 
         tree = ast.parse(source_code)
         attach_parents(tree)
