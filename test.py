@@ -1,4 +1,4 @@
-from project_domain.analyzer_manager import AnalyzerManager
+from project_domain.project_ir_builer_service.analyzer_manager import AnalyzerManager
 from project_domain.project_service import ProjectService
 from project_domain.builder import build_project_ir
 from infrastructure.file_system.file_handling import OpenFileTool

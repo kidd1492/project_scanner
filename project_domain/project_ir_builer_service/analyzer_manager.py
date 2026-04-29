@@ -1,7 +1,7 @@
 
-from project_domain.analysis.analyzers.python_analyzer import PythonAnalyzer
-from project_domain.analysis.analyzers.html_analyzer import HTMLAnalyzer
-from project_domain.analysis.analyzers.js_analyzer import JSAnalyzer
+from project_domain.project_ir_builer_service.analyzers.python_analyzer import PythonAnalyzer
+from project_domain.project_ir_builer_service.analyzers.html_analyzer import HTMLAnalyzer
+from project_domain.project_ir_builer_service.analyzers.js_analyzer import JSAnalyzer
 
 
 class AnalyzerManager:
