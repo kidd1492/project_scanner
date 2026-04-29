@@ -1,7 +1,7 @@
 # domain/analysis/project_service.py
 
 from utilities.file_discovery import discover_files
-
+from project_domain.builder import build_project_ir
 
 class ProjectService:
     def __init__(self, analyzer_manager, builder):
@@ -19,6 +19,6 @@ class ProjectService:
         # ir_files = self.builder.build_files(ir_objects)
 
         # 4. Factory #3: IRFile → ProjectIR
-        # return self.builder.build_project_ir(root, ir_files)
+        return build_project_ir(root, ir_objects)
 
-        return ir_objects
+        #return ir_objects

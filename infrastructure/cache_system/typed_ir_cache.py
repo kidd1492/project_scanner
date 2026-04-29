@@ -3,7 +3,7 @@
 import os
 import json
 from infrastructure.file_system.file_handling import open_json
-from domain.analysis.project_ir import ProjectIR
+from project_domain.project_ir import ProjectIR
 
 class TypedIRCache:
     def __init__(self, cache_dir="cache"):

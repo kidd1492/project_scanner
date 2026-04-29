@@ -1,6 +1,6 @@
-from domain.analysis.analyzer_manager import AnalyzerManager
-from domain.analysis.project_service import ProjectService
-from domain.analysis.builder import build_project_ir
+from project_domain.analyzer_manager import AnalyzerManager
+from project_domain.project_service import ProjectService
+from project_domain.builder import build_project_ir
 from infrastructure.file_system.file_handling import OpenFileTool
 
 if __name__ == "__main__":
