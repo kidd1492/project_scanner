@@ -16,9 +16,8 @@ from domain.analysis.analysis_objects import (
     IRClass,
     IRMethod,
     IRFunction,
-    IRFile,
 )
-
+from domain.analysis.file_object.ir_file import IRFile
 
 class PythonAnalyzer(BaseAnalyzer):
     file_type = "py"

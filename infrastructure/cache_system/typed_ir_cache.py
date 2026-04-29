@@ -2,7 +2,7 @@
 
 import os
 import json
-from utilities.file_handling import open_json
+from infrastructure.file_system.file_handling import open_json
 from domain.analysis.project_ir import ProjectIR
 
 class TypedIRCache:

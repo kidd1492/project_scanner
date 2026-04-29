@@ -1,17 +1,16 @@
 from domain.analysis.analyzer_manager import AnalyzerManager
-from domain.analysis.analyzers.base_analyzer import BaseAnalyzer  
-from utilities.file_discovery import discover_files
-from utilities.file_handling import OpenFileTool
-
+from domain.analysis.project_service import ProjectService
+from domain.analysis import builder
+from domain.analysis.analyzers.base_analyzer import BaseAnalyzer
+from infrastructure.file_system.file_handling import OpenFileTool
 
 if __name__ == "__main__":
 
-    open_file_tool = OpenFileTool()
     directory_path = "C:/Users/chris/Desktop/project_scanner"
-    files = discover_files(directory_path)
-    analyzer_manager = AnalyzerManager([BaseAnalyzer], open_file_tool)
-
-    object = analyzer_manager.analyze_files(files)
-    print(object[0])
+    base_analyzer = BaseAnalyzer
+    analyzer_manager = AnalyzerManager(base_analyzer, open_file_tool=OpenFileTool())
+    project_service = ProjectService(analyzer_manager, builder)
+    analyzed = project_service.scan_project(directory_path)
+    print(analyzed)
 
 
