@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from .base_analyzer import BaseAnalyzer
 from project_domain.analysis.analysis_objects import IREvent, IRJSFunction
-from project_domain.analysis.file_object.ir_file import IRFile
+from project_domain.analysis.analysis_objects.ir_file import IRFile
 
 
 EVENT_ATTR_PATTERN = re.compile(r"^on[a-zA-Z]+$")

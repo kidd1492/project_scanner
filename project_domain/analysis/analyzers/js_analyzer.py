@@ -5,7 +5,7 @@ from pathlib import Path
 
 from .base_analyzer import BaseAnalyzer
 from project_domain.analysis.analysis_objects import IRJSFunction
-from project_domain.analysis.file_object.ir_file import IRFile
+from project_domain.analysis.analysis_objects.ir_file import IRFile
 
 
 # Match several JS function forms:

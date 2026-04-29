@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
 
-from .analysis.file_object.ir_file import IRFile
+from .analysis.analysis_objects.ir_file import IRFile
 from .analysis.analysis_objects.ir_route import Route
 from .analysis.analysis_objects.ir_js_function import IRJSFunction
 from .analysis.analysis_objects.ir_event import IREvent

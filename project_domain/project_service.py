@@ -15,9 +15,6 @@ class ProjectService:
         # 2. Factory #1: analyzers → IR objects
         ir_objects = self.analyzer_manager.run_analyzers(file_list)
 
-        # 3. Factory #2: IR objects → IRFile
-        # ir_files = self.builder.build_files(ir_objects)
-
         # 4. Factory #3: IRFile → ProjectIR
         return build_project_ir(root, ir_objects)
 

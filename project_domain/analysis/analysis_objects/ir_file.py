@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field 
 from typing import List 
  
-from ..analysis_objects.ir_route import Route 
-from ..analysis_objects.ir_function import IRFunction 
-from ..analysis_objects.ir_class import IRClass 
-from ..analysis_objects.ir_event import IREvent 
-from ..analysis_objects.ir_js_function import IRJSFunction 
+from .ir_route import Route 
+from .ir_function import IRFunction 
+from .ir_class import IRClass 
+from .ir_event import IREvent 
+from .ir_js_function import IRJSFunction 
  
 @dataclass 
 class IRFile: 
