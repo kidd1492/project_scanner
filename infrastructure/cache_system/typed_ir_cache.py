@@ -15,9 +15,10 @@ class TypedIRCache:
         os.makedirs(self.cache_dir, exist_ok=True)
 
     def preload_all(self):
+        print(f"\n\npreload\n\n")
         for project_name in os.listdir(self.cache_dir):
             project_dir = os.path.join(self.cache_dir, project_name)
-            project_file = os.path.join(project_dir, "project.json")
+            project_file = os.path.join(project_dir, f"{project_name}.json")
 
             if os.path.exists(project_file):
                 data = self.file_reader.read_json(project_file)
