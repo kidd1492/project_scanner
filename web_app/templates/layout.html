@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<nav>
+    {% block nav %}
+    <ul class="nav">
+        <li><a href="/">Home</a></li>
+
+        {% if project %}
+            <li><a href="/dashboard/{{ project.project_name }}">Dashboard</a></li>
+            <li><a href="/explorer/{{ project.project_name }}">Explorer</a></li>
+            <li><a href="/trace/{{ project.project_name }}">Traces</a></li>
+            <li><a href="/mermaid/{{ project.project_name }}">Mermaid Diagrams</a></li>
+            <li><a href="/analysis/{{ project.project_name }}">Analysis</a></li>
+        {% endif %}
+
+        <li><a href="/template-builder">Template Builder</a></li>
+        <li><a href="/brainstorm">Brainstorming</a></li>
+        <li><a href="/security">Security Scanner</a></li>
+    </ul>
+    {% endblock %}
+</nav>
+
+{% block body %}{% endblock %}
+
+<script src="{{ url_for('static', filename='js_files/javascript.js') }}"></script>
+
+</body>
+</html>
