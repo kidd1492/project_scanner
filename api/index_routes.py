@@ -40,7 +40,7 @@ def api_scan_project():
 
 
 # -----------------------------
-# API: Get a scanned project
+# API: Get a scanned project (raw IR)
 # -----------------------------
 @index_bp.route("/api/project/<project_name>")
 def api_get_project(project_name):
@@ -57,19 +57,19 @@ def api_get_project(project_name):
 # -----------------------------
 @index_bp.route("/api/projects")
 def api_list_projects():
-    # persistence._cache holds loaded IRs
     cache = index_bp.project_service.persistance._cache
-
-    return jsonify({
-        "projects": list(cache.keys())
-    })
+    return jsonify({"projects": list(cache.keys())})
 
 
+# -----------------------------
+# API: Dashboard Data (DashboardIR)
+# -----------------------------
 @index_bp.route("/api/dashboard/<project_name>")
 def api_dashboard(project_name):
     project_ir = index_bp.project_service.persistance.load(project_name)
+
     if not project_ir:
         return jsonify({"error": "Project not found"}), 404
 
-    dashboard = index_bp.dashboard_builder.build(project_ir)
-    return jsonify(dashboard.to_dict())
+    dashboard_ir = index_bp.dashboard_builder.build(project_ir)
+    return jsonify(dashboard_ir.to_dict())

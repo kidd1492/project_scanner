@@ -39,7 +39,7 @@ function loadProjects() {
         .then(r => r.json())
         .then(data => {
             const list = document.getElementById("project-list");
-            if (!list) return; // only on landing page
+            if (!list) return;
 
             list.innerHTML = "";
 
@@ -61,12 +61,12 @@ function loadProjects() {
 
 
 // -----------------------------
-// Load project details on dashboard
+// Load dashboard data
 // -----------------------------
 function loadDashboard(projectName) {
     if (!projectName) return;
 
-    fetch(`/api/project/${projectName}`)
+    fetch(`/api/dashboard/${projectName}`)
         .then(r => r.json())
         .then(data => {
             if (data.error) {
@@ -74,12 +74,44 @@ function loadDashboard(projectName) {
                 return;
             }
 
+            // Summary
             document.getElementById("project-title").innerText = data.project_name;
             document.getElementById("file-count").innerText = data.total_files;
+            document.getElementById("route-count").innerText = data.routes;
+            document.getElementById("js-count").innerText = data.js_functions;
+            document.getElementById("html-event-count").innerText = data.html_events;
+            document.getElementById("api-call-count").innerText = data.api_calls;
+
+            // Charts
+            renderCharts(projectName);
         })
         .catch(err => {
             console.error("Dashboard load error:", err);
         });
+}
+
+
+// -----------------------------
+// Render charts (PNG images)
+// -----------------------------
+function renderCharts(projectName) {
+    const container = document.getElementById("chart-container");
+    if (!container) return;
+
+    const charts = [
+        "file_types.png",
+        "symbol_distribution.png",
+        "routes_vs_js.png",
+        "api_calls.png",
+        "html_events.png"
+    ];
+
+    charts.forEach(name => {
+        const img = document.createElement("img");
+        img.src = `/static/projects/${projectName}/${name}`;
+        img.classList.add("chart-image");
+        container.appendChild(img);
+    });
 }
 
 
