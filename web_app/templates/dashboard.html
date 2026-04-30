@@ -4,51 +4,44 @@
 {% block body %}
 <div id="dashboard-root" data-project="{{ project_name }}" class="dashboard-container">
 
-    <!-- Title -->
-    <h1 id="project-title" class="dashboard-title">Loading...</h1>
-
-    <!-- Summary Section -->
-    <section class="dashboard-section">
-        <h2>Project Summary</h2>
-        <div class="summary-grid">
-            <div class="summary-item">
-                <span class="summary-label">Total Files:</span>
-                <span id="file-count" class="summary-value">...</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Routes:</span>
-                <span id="route-count" class="summary-value">...</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">JS Functions:</span>
-                <span id="js-count" class="summary-value">...</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">HTML Events:</span>
-                <span id="html-event-count" class="summary-value">...</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">API Calls:</span>
-                <span id="api-call-count" class="summary-value">...</span>
-            </div>
+     <!-- Overview Panel -->
+    <div class="dash-box" id="overview-box">
+        <h2>{{ project }}</h2>
+        <div id="overview-content">
+            <!-- Filled by JS -->
         </div>
-    </section>
+    </div>
 
-    <!-- Charts Section -->
-    <section class="dashboard-section">
-        <h2>Charts</h2>
-        <div id="chart-container" class="chart-grid">
-            <!-- JS will insert <img> tags here -->
-        </div>
-    </section>
+    <!-- File Type Pie -->
+    <div class="dash-box">
+        <h3>File Type Distribution</h3>
+        <img id="chart-file-types" class="chart-img" />
+    </div>
 
-    <!-- Detailed Breakdown Section -->
-    <section class="dashboard-section">
-        <h2>Detailed Breakdown</h2>
-        <div id="dashboard-content">
-            <!-- JS will populate this -->
-        </div>
-    </section>
+    <!-- Symbol Distribution -->
+    <div class="dash-box">
+        <h3>Functions / Classes / Methods / Imports</h3>
+        <img id="chart-symbols" class="chart-img" />
+    </div>
+
+    <!-- Routes vs JS -->
+    <div class="dash-box">
+        <h3>Routes vs JS Functions</h3>
+        <img id="chart-routes-js" class="chart-img" />
+    </div>
+
+    <!-- API Calls -->
+    <div class="dash-box">
+        <h3>API Call Distribution</h3>
+        <img id="chart-api-calls" class="chart-img" />
+    </div>
+
+    <!-- HTML Events -->
+    <div class="dash-box">
+        <h3>HTML Event Distribution</h3>
+        <img id="chart-html-events" class="chart-img" />
+    </div>
 
 </div>
+
 {% endblock %}
