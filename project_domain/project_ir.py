@@ -211,7 +211,6 @@ class ProjectIR:
             "project_name": self.project_name,
             "total_files": self.total_files,
             "root": self.root,
-            "file_types": self.file_types,
             "files": [f.to_dict() for f in self.files],
         }
 
@@ -221,6 +220,5 @@ class ProjectIR:
             project_name=d["project_name"],
             total_files=d["total_files"],
             root=d["root"],
-            file_types=d["file_types"],
             files=[IRFile.from_dict(f) for f in d["files"]],
         )

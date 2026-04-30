@@ -1,7 +1,7 @@
 # domain/analysis/project_service.py
-
+from infrastructure.cache_system.typed_ir_cache import TypedIRCache
 from utilities.file_discovery import discover_files
-
+cache = TypedIRCache()
 
 class ProjectService:
     def __init__(self, analyzer_manager):
@@ -18,6 +18,6 @@ class ProjectService:
         # 2. Factory #1: file_list, root → IR objects
         '''should return the final ProjectIR'''
         project_ir = self.analyzer_manager.run_analyzers(file_list, root)
-
+        cache.save(project_ir)
 
         return project_ir

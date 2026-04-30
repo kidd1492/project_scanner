@@ -9,4 +9,4 @@ if __name__ == "__main__":
     analyzer_manager = AnalyzerManager(open_file_tool=OpenFileTool())
     project_service = ProjectService(analyzer_manager)
     analyzed = project_service.scan_project(directory_path)
-    print(analyzed)
+    print(analyzed.total_files)
