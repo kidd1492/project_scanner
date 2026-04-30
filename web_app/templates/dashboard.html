@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div id="dashboard-root" data-project="{{ project_name }}" class="dashboard-container">
+
+    <h1 id="project-title">Loading...</h1>
+
+    <div class="chunk-block">
+        <h2>Project Summary</h2>
+        <p>Total files: <span id="file-count">...</span></p>
+    </div>
+
+    <div id="dashboard-content"></div>
+
+</div>
+{% endblock %}
