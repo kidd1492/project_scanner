@@ -1,16 +1,15 @@
-# core/ir_system/builder.py
+# project_domain/project_ir_builder/project_ir_builder.py
 
 import os
 from project_domain.project_ir import ProjectIR
 
+class ProjectIRBuilder:
+    """Pure, deterministic builder for ProjectIR."""
 
-def build_project_ir(directory, ir_files: list) -> ProjectIR:
-    
-    ir_files = ir_files
-
-    return ProjectIR(
-        project_name=os.path.basename(directory),
-        total_files=len(ir_files),
-        root=directory,
-        files=ir_files,
-    )
+    def build(self, directory: str, ir_files: list) -> ProjectIR:
+        return ProjectIR(
+            project_name=os.path.basename(directory),
+            total_files=len(ir_files),
+            root=directory,
+            files=ir_files,
+        )
