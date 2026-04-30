@@ -4,14 +4,51 @@
 {% block body %}
 <div id="dashboard-root" data-project="{{ project_name }}" class="dashboard-container">
 
-    <h1 id="project-title">Loading...</h1>
+    <!-- Title -->
+    <h1 id="project-title" class="dashboard-title">Loading...</h1>
 
-    <div class="chunk-block">
+    <!-- Summary Section -->
+    <section class="dashboard-section">
         <h2>Project Summary</h2>
-        <p>Total files: <span id="file-count">...</span></p>
-    </div>
+        <div class="summary-grid">
+            <div class="summary-item">
+                <span class="summary-label">Total Files:</span>
+                <span id="file-count" class="summary-value">...</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Routes:</span>
+                <span id="route-count" class="summary-value">...</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">JS Functions:</span>
+                <span id="js-count" class="summary-value">...</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">HTML Events:</span>
+                <span id="html-event-count" class="summary-value">...</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">API Calls:</span>
+                <span id="api-call-count" class="summary-value">...</span>
+            </div>
+        </div>
+    </section>
 
-    <div id="dashboard-content"></div>
+    <!-- Charts Section -->
+    <section class="dashboard-section">
+        <h2>Charts</h2>
+        <div id="chart-container" class="chart-grid">
+            <!-- JS will insert <img> tags here -->
+        </div>
+    </section>
+
+    <!-- Detailed Breakdown Section -->
+    <section class="dashboard-section">
+        <h2>Detailed Breakdown</h2>
+        <div id="dashboard-content">
+            <!-- JS will populate this -->
+        </div>
+    </section>
 
 </div>
 {% endblock %}

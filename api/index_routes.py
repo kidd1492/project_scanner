@@ -63,3 +63,13 @@ def api_list_projects():
     return jsonify({
         "projects": list(cache.keys())
     })
+
+
+@index_bp.route("/api/dashboard/<project_name>")
+def api_dashboard(project_name):
+    project_ir = index_bp.project_service.persistance.load(project_name)
+    if not project_ir:
+        return jsonify({"error": "Project not found"}), 404
+
+    dashboard = index_bp.dashboard_builder.build(project_ir)
+    return jsonify(dashboard.to_dict())
