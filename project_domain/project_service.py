@@ -1,5 +1,5 @@
 # domain/analysis/project_service.py
-
+import os
 class ProjectService:
     def __init__(self, discover_files, analyzer_manager, persistance):
         self.discover_files = discover_files
@@ -19,3 +19,11 @@ class ProjectService:
         self.persistance.save(project_ir)
 
         return project_ir
+    
+    def get_existing_projects(self):
+        if not os.path.exists(self.persistance.cache_dir):
+            return []
+        return [
+            name for name in os.listdir(self.persistance.cache_dir)
+            if os.path.isdir(os.path.join(self.persistance.cache_dir, name))
+        ]

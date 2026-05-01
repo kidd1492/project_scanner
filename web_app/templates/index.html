@@ -17,7 +17,11 @@
 
             <!-- JS will populate this list -->
             <ul id="project-list">
-                <li>Loading projects...</li>
+                {% for p in projects %}
+                <li><a href="/dashboard/{{ p }}">{{ p }}</a></li>
+                {% else %}
+                <li>No projects found</li>
+                {% endfor %}
             </ul>
         </div>
 

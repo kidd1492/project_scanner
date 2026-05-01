@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify, render_template
 
+
 index_bp = Blueprint("index", __name__)
 
 @index_bp.route("/")
-def landing_page():
-    return render_template("index.html")
+def index():
+    projects = index_bp.project_service.get_existing_projects()
+    return render_template("index.html", projects=projects)
 
 @index_bp.route("/dashboard/<project_name>")
 def dashboard_page(project_name):

@@ -28,31 +28,6 @@ function scanProject() {
 }
 
 
-// Load list of scanned projects
-function loadProjects() {
-    fetch("/api/projects")
-        .then(r => r.json())
-        .then(data => {
-            const list = document.getElementById("project-list");
-            if (!list) return;
-
-            list.innerHTML = "";
-
-            if (data.projects.length === 0) {
-                list.innerHTML = "<li>No projects found</li>";
-                return;
-            }
-
-            data.projects.forEach(name => {
-                const li = document.createElement("li");
-                li.innerHTML = `<a href="/dashboard/${name}">${name}</a>`;
-                list.appendChild(li);
-            });
-        })
-        .catch(err => console.error("Project list error:", err));
-}
-
-
 // Load dashboard data
 function loadDashboard(projectName) {
     if (!projectName) return;
@@ -110,7 +85,6 @@ function renderCharts(projectName) {
 
 // Auto-run
 window.addEventListener("DOMContentLoaded", () => {
-    loadProjects();
 
     const dashboardRoot = document.getElementById("dashboard-root");
     if (dashboardRoot) {
