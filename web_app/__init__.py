@@ -61,7 +61,7 @@ def create_app():
 
     # Inject services + builders into blueprint
     index_bp.project_service = project_service
-    index_bp.dashboard_builder = dashboard_builder   # NEW
+    index_bp.project_service.dashboard_builder = dashboard_builder   # NEW
 
     # Register blueprints
     app.register_blueprint(index_bp)

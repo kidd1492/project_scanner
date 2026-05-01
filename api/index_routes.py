@@ -50,5 +50,5 @@ def api_dashboard(project_name):
     if not project_ir:
         return jsonify({"error": "Project not found"}), 404
 
-    dashboard_ir = index_bp.dashboard_builder.build_dashboard(project_ir)
+    dashboard_ir = index_bp.project_service.dashboard_builder.build_dashboard(project_ir)
     return jsonify(dashboard_ir.to_dict())
