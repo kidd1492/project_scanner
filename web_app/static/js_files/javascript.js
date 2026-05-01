@@ -73,14 +73,29 @@ function loadDashboard(projectName) {
                 document.getElementById("dashboard-content").innerText = data.error;
                 return;
             }
-
+            const box = document.getElementById("overview-content");
             // Summary
-            document.getElementById("project-title").innerText = data.project_name;
-            document.getElementById("file-count").innerText = data.total_files;
-            document.getElementById("route-count").innerText = data.routes;
-            document.getElementById("js-count").innerText = data.js_functions;
-            document.getElementById("html-event-count").innerText = data.html_events;
-            document.getElementById("api-call-count").innerText = data.api_calls;
+            box.innerHTML = `
+                <ul>
+                    <li><b>Total Files:</b> ${data.total_files}</li>
+
+                    <li><b>Python Files:</b> ${data.file_type_counts.py}</li>
+                    <li><b>JS Files:</b> ${data.file_type_counts.js}</li>
+                    <li><b>HTML Files:</b> ${data.file_type_counts.html}</li>
+                    <li><b>CSS Files:</b> ${data.file_type_counts.css}</li>
+
+                    <li><b>Functions:</b> ${data.symbol_counts.functions}</li>
+                    <li><b>Classes:</b> ${data.symbol_counts.classes}</li>
+                    <li><b>Methods:</b> ${data.symbol_counts.methods}</li>
+                    <li><b>Imports:</b> ${data.symbol_counts.imports}</li>
+
+                    <li><b>Routes:</b> ${data.routes}</li>
+                    <li><b>JS Functions:</b> ${data.js_functions}</li>
+                    <li><b>HTML Events:</b> ${data.html_events}</li>
+                    <li><b>API Calls:</b> ${data.api_calls}</li>
+                </ul>
+            `;
+
 
             // Charts
             renderCharts(projectName);
@@ -120,6 +135,7 @@ function renderCharts(projectName) {
 // -----------------------------
 window.addEventListener("DOMContentLoaded", () => {
     loadProjects();
+    
 
     const dashboardRoot = document.getElementById("dashboard-root");
     if (dashboardRoot) {
