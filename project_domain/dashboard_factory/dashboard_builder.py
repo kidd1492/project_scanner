@@ -4,7 +4,7 @@ class DashboardBuilder:
     def __init__(self, plot_tool=None):
         self.plot_tool = plot_tool
 
-    def build(self, project_ir):
+    def build_dashboard(self, project_ir):
         dashboard_ir = DashboardIR(
             project_name=project_ir.project_name,
             root=project_ir.root,

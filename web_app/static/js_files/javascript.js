@@ -1,6 +1,4 @@
-// -----------------------------
 // Scan a new project
-// -----------------------------
 function scanProject() {
     const path = document.getElementById("project-path").value;
 
@@ -20,7 +18,6 @@ function scanProject() {
             alert(data.error);
             return;
         }
-
         alert("Project scanned successfully.");
         window.location.href = `/dashboard/${data.project_name}`;
     })
@@ -31,9 +28,7 @@ function scanProject() {
 }
 
 
-// -----------------------------
 // Load list of scanned projects
-// -----------------------------
 function loadProjects() {
     fetch("/api/projects")
         .then(r => r.json())
@@ -54,15 +49,11 @@ function loadProjects() {
                 list.appendChild(li);
             });
         })
-        .catch(err => {
-            console.error("Project list error:", err);
-        });
+        .catch(err => console.error("Project list error:", err));
 }
 
 
-// -----------------------------
 // Load dashboard data
-// -----------------------------
 function loadDashboard(projectName) {
     if (!projectName) return;
 
@@ -73,22 +64,20 @@ function loadDashboard(projectName) {
                 document.getElementById("dashboard-content").innerText = data.error;
                 return;
             }
+
             const box = document.getElementById("overview-content");
-            // Summary
+
             box.innerHTML = `
                 <ul>
                     <li><b>Total Files:</b> ${data.total_files}</li>
-
                     <li><b>Python Files:</b> ${data.file_type_counts.py}</li>
                     <li><b>JS Files:</b> ${data.file_type_counts.js}</li>
                     <li><b>HTML Files:</b> ${data.file_type_counts.html}</li>
                     <li><b>CSS Files:</b> ${data.file_type_counts.css}</li>
-
                     <li><b>Functions:</b> ${data.symbol_counts.functions}</li>
                     <li><b>Classes:</b> ${data.symbol_counts.classes}</li>
                     <li><b>Methods:</b> ${data.symbol_counts.methods}</li>
                     <li><b>Imports:</b> ${data.symbol_counts.imports}</li>
-
                     <li><b>Routes:</b> ${data.routes}</li>
                     <li><b>JS Functions:</b> ${data.js_functions}</li>
                     <li><b>HTML Events:</b> ${data.html_events}</li>
@@ -96,46 +85,32 @@ function loadDashboard(projectName) {
                 </ul>
             `;
 
-
-            // Charts
             renderCharts(projectName);
         })
-        .catch(err => {
-            console.error("Dashboard load error:", err);
-        });
+        .catch(err => console.error("Dashboard load error:", err));
 }
 
 
-// -----------------------------
-// Render charts (PNG images)
-// -----------------------------
+// Render charts
 function renderCharts(projectName) {
-    const container = document.getElementById("chart-container");
-    if (!container) return;
+    const charts = {
+        "chart-file-types": "file_types.png",
+        "chart-symbols": "symbol_distribution.png",
+        "chart-routes-js": "routes_vs_js.png",
+        "chart-api-calls": "api_calls.png",
+        "chart-html-events": "html_events.png"
+    };
 
-    const charts = [
-        "file_types.png",
-        "symbol_distribution.png",
-        "routes_vs_js.png",
-        "api_calls.png",
-        "html_events.png"
-    ];
-
-    charts.forEach(name => {
-        const img = document.createElement("img");
-        img.src = `/static/projects/${projectName}/${name}`;
-        img.classList.add("chart-image");
-        container.appendChild(img);
+    Object.entries(charts).forEach(([id, file]) => {
+        const img = document.getElementById(id);
+        img.src = `/static/projects/${projectName}/${file}`;
     });
 }
 
 
-// -----------------------------
-// Auto-run on page load
-// -----------------------------
+// Auto-run
 window.addEventListener("DOMContentLoaded", () => {
     loadProjects();
-    
 
     const dashboardRoot = document.getElementById("dashboard-root");
     if (dashboardRoot) {
