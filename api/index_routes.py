@@ -5,7 +5,7 @@ index_bp = Blueprint("index", __name__)
 
 @index_bp.route("/")
 def index():
-    projects = index_bp.project_service.get_existing_projects()
+    projects = index_bp.project_service.persistance.list_all_projects()
     return render_template("index.html", projects=projects)
 
 @index_bp.route("/dashboard/<project_name>")
@@ -21,6 +21,8 @@ def api_scan_project():
 
     if not path:
         return jsonify({"error": "No path provided"}), 400
+    if index_bp.project_service.persistance.exists(path):
+        return jsonify({"error": "Project Exist"})
 
     try:
         project_ir = index_bp.project_service.scan_project(path)

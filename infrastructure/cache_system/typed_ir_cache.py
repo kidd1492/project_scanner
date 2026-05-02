@@ -14,15 +14,12 @@ class TypedIRCache:
 
         os.makedirs(self.cache_dir, exist_ok=True)
 
-    def preload_all(self):
-        print(f"\n\npreload\n\n")
-        for project_name in os.listdir(self.cache_dir):
-            project_dir = os.path.join(self.cache_dir, project_name)
-            project_file = os.path.join(project_dir, f"{project_name}.json")
+    def exists(self, root):
+        project_name = os.path.basename(root)
+        project_file = os.path.join(self.cache_dir, project_name, "project.json")
+        return os.path.exists(project_file)
 
-            if os.path.exists(project_file):
-                data = self.file_reader.read_json(project_file)
-                self._cache[project_name] = ProjectIR.from_dict(data)
+
 
     def load(self, project_name):
         # in-memory cache hit
@@ -53,3 +50,12 @@ class TypedIRCache:
 
     def get(self, project_name):
         return self._cache.get(project_name)
+    
+
+    def list_all_projects(self):
+        if not os.path.exists(self.cache_dir):
+            return []
+        return [
+            name for name in os.listdir(self.cache_dir)
+            if os.path.isdir(os.path.join(self.cache_dir, name))
+        ]   
