@@ -18,6 +18,7 @@ if __name__ == "__main__":
     file_reader = FileReader()
     plot_tool =PlotTool()
     persistence = TypedIRCache(cache_dir="cache", file_reader=file_reader)
+    dashboard_builder = DashboardBuilder(plot_tool=plot_tool)
 
     # --- Builder Layer ---
     project_ir_builder = ProjectIRBuilder()
@@ -29,19 +30,24 @@ if __name__ == "__main__":
     # --- Service Layer ---
     project_service = ProjectService(
         discover_files=file_discovery,
+        dashboard_builder=dashboard_builder,
         analyzer_manager=analyzer_manager,
         persistance=persistence
     )
 
-    dashboard_services = DashboardBuilder(plot_tool=plot_tool)
 
     # --- Execute Scan ---
-    project_ir = project_service.persistance.load("project_scanner_refactor")
+    project_ir = project_service.scan_project(directory_path)
+
+    print(f"ProjectIR Project Name : {project_ir.project_name}")
+
+    '''
     #project_ir = project_service.scan_project(directory_path)
-    dashboard = dashboard_services.build(project_ir)
+    dashboard = dashboard_builder.build(project_ir)
 
     print(f"dashboard_name = {dashboard.project_name}")
     print(f"dashboard_name = {dashboard.root}")
     print(f"dashboard_name = {dashboard.total_files}")
     print(f"dashboard_name = {dashboard.file_type_counts}")
     print(f"dashboard_name = {dashboard.__dict__}")
+    '''
