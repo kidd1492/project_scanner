@@ -5,12 +5,12 @@ import os
 from infrastructure.file_system.file_handling import FileReader
 from infrastructure.file_system.file_discovery import FileDiscovery
 from infrastructure.cache_system.typed_ir_cache import TypedIRCache
-from infrastructure.plotting.plot_tool import PlotTool   # NEW
+from infrastructure.plotting.plot_tool import PlotTool
 
 # --- Builder Layer ---
 from project_domain.project_ir_builer.builder import ProjectIRBuilder
 from project_domain.project_ir_builer.analyzer_manager import AnalyzerManager
-from project_domain.dashboard_factory.dashboard_builder import DashboardBuilder  # NEW
+from project_domain.dashboard_factory.dashboard_builder import DashboardBuilder
 
 # --- Service Layer ---
 from project_domain.project_service import ProjectService
@@ -18,7 +18,7 @@ from project_domain.project_service import ProjectService
 
 def ensure_directories():
     os.makedirs("cache", exist_ok=True)
-    os.makedirs("web_app/static/projects", exist_ok=True)  # for charts
+    os.makedirs("web_app/static/projects", exist_ok=True)
 
 
 def create_app():
@@ -32,7 +32,7 @@ def create_app():
     file_discovery = FileDiscovery()
     file_reader = FileReader()
     persistence = TypedIRCache(cache_dir="cache", file_reader=file_reader)
-    plot_tool = PlotTool(base_dir="web_app/static/projects")   # NEW
+    plot_tool = PlotTool(base_dir="web_app/static/projects")
 
     # -----------------------------------
     # Builder Layer
@@ -43,7 +43,7 @@ def create_app():
         project_ir_builder=project_ir_builder
     )
 
-    dashboard_builder = DashboardBuilder(plot_tool=plot_tool)  # NEW
+    dashboard_builder = DashboardBuilder(plot_tool=plot_tool)
 
     # -----------------------------------
     # Service Layer
@@ -51,7 +51,8 @@ def create_app():
     project_service = ProjectService(
         discover_files=file_discovery,
         analyzer_manager=analyzer_manager,
-        persistance=persistence
+        persistance=persistence,
+        dashboard_builder=dashboard_builder
     )
 
     # -----------------------------------
@@ -59,11 +60,8 @@ def create_app():
     # -----------------------------------
     from api.index_routes import index_bp
 
-    # Inject services + builders into blueprint
     index_bp.project_service = project_service
-    index_bp.project_service.dashboard_builder = dashboard_builder   # NEW
 
-    # Register blueprints
     app.register_blueprint(index_bp)
 
     return app
